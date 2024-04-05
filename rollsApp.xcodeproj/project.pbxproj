@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
+		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CC2BBC49950086E9F5 /* AppDelegate.swift */; };
 		15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */; };
 		15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D22BBC49950086E9F5 /* Main.storyboard */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
+		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15E908C92BBC49950086E9F5 /* rollsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rollsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
+				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -84,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				15E908E62BBC51330086E9F5 /* AllOrdersView.swift */,
+				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -188,9 +194,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */,
 				15E908EF2BBC631C0086E9F5 /* Model.swift in Sources */,
 				15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */,
 				15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */,
+				15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */,
 				15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */,
 				15E908E42BBC4E4D0086E9F5 /* OrderViewController.swift in Sources */,
 			);

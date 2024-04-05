@@ -115,7 +115,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalTo(viewInImageView.snp.right)
         }
         
-        //labelss
+        //labels
         
         let phoneLabel: UILabel = {
             let label = UILabel()

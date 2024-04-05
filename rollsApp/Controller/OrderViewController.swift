@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol OrderViewControllerDelegate: AnyObject {
+    func reloadCollection()
+}
+
 class OrderViewController: UIViewController {
     
     var mainView: AllOrdersView?
@@ -15,19 +19,22 @@ class OrderViewController: UIViewController {
         super.viewDidLoad()
         mainView = AllOrdersView()
         self.view = mainView
-        settingsCollection()
-        
+        mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
     }
     
-    private func settingsCollection() {
-       
-        //настройки коллекции
+    @objc private func newOrder() {
+        let vc = NewOrderViewController()
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}
+
+extension OrderViewController: OrderViewControllerDelegate {
+    func reloadCollection() {
+        mainView?.collectionView?.reloadData()
+        print(12)
     }
     
     
-   
-
-
-   
-
 }
