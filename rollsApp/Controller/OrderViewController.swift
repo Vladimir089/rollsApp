@@ -25,7 +25,7 @@ class OrderViewController: UIViewController {
     @objc private func newOrder() {
         let vc = NewOrderViewController()
         vc.delegate = self
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.present(vc, animated: true)
     }
     
 }

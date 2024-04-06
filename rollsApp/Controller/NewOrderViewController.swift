@@ -18,6 +18,11 @@ class NewOrderViewController: UIViewController {
         self.view = mainView
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.reloadCollection()
+    }
+   
+    
 
    
 }
