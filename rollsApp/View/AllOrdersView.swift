@@ -78,7 +78,7 @@ class AllOrdersView: UIView {
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrModel.count
+        return ordersArr.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -119,7 +119,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let phoneLabel: UILabel = {
             let label = UILabel()
-            label.text = "+798222524966"  //меняем
+            label.text = "\(ordersArr[indexPath.row].phone)"  //меняем
             label.font = .systemFont(ofSize: 17, weight: .semibold)
             label.textColor = .black
             return label
@@ -132,20 +132,21 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let adressLabel: UILabel = {
             let label = UILabel()
-            label.text = "Ленина, 130, Терезе"     //меняем
+            label.text = "\(ordersArr[indexPath.row].address)"     //меняем
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
             return label
         }()
         cell.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
-            make.left.right.equalTo(phoneLabel)
+            make.left.equalTo(phoneLabel)
+            make.right.equalToSuperview().inset(113)
             make.top.equalTo(phoneLabel.snp.bottom)
         }
         
         let statusLabel: UILabel = {
             let label = UILabel()
-            label.text = "Готовится"     //меняем
+            label.text = "\(ordersArr[indexPath.row].status)"     //меняем
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
             return label
@@ -188,7 +189,8 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         }
         let timeLabel: UILabel = {
             let label = UILabel()
-            label.text = "9:41 am"  //меняем
+            let time = ordersArr[indexPath.row].formattedCreatedTime ?? "0:00"
+            label.text = "\(time)"
             label.font = .systemFont(ofSize: 15, weight: .regular)
             label.textColor = UIColor(red: 60/255, green: 60/255, blue: 67/255, alpha: 0.6)
             return label

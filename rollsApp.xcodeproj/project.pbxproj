@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
+		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
+		15B8FF512BC414B7005E3562 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF502BC414B7005E3562 /* Order.swift */; };
 		15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CC2BBC49950086E9F5 /* AppDelegate.swift */; };
 		15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */; };
 		15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D22BBC49950086E9F5 /* Main.storyboard */; };
@@ -24,6 +26,8 @@
 /* Begin PBXFileReference section */
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
+		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		15B8FF502BC414B7005E3562 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		15E908C92BBC49950086E9F5 /* rollsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rollsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				15E908EE2BBC631C0086E9F5 /* Model.swift */,
+				15B8FF4E2BC41138005E3562 /* LoginModel.swift */,
+				15B8FF502BC414B7005E3562 /* Order.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -197,8 +203,10 @@
 				15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */,
 				15E908EF2BBC631C0086E9F5 /* Model.swift in Sources */,
 				15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */,
+				15B8FF512BC414B7005E3562 /* Order.swift in Sources */,
 				15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */,
 				15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */,
+				15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */,
 				15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */,
 				15E908E42BBC4E4D0086E9F5 /* OrderViewController.swift in Sources */,
 			);
@@ -354,7 +362,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = rollsApp/Info.plist;
+				INFOPLIST_FILE = rollsApp/Dops/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -386,7 +394,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = rollsApp/Info.plist;
+				INFOPLIST_FILE = rollsApp/Dops/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
