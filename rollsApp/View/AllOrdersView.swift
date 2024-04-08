@@ -78,7 +78,7 @@ class AllOrdersView: UIView {
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ordersArr.count
+        return orderStatus.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -90,6 +90,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         let imageView: UIImageView = {
             let image: UIImage = .image //тут меняем картинку
             let imageView = UIImageView(image: image)
+            imageView.alpha = 0
             return imageView
         }()
         let viewInImageView = UIView(frame: CGRect(x: 0, y: 0, width: 78, height: cell.bounds.height))
@@ -102,9 +103,11 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.centerY.equalToSuperview().offset(-5)
         }
         
+        
         let separatorView: UIView = {
             let view = UIView()
             view.backgroundColor = .separator
+            view.alpha = 0
             return view
         }()
         cell.addSubview(separatorView)
@@ -119,9 +122,10 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let phoneLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(ordersArr[indexPath.row].phone)"  //меняем
+            label.text = "\(orderStatus[indexPath.row].0.phone)"  //меняем
             label.font = .systemFont(ofSize: 17, weight: .semibold)
             label.textColor = .black
+            label.alpha = 0
             return label
         }()
         cell.addSubview(phoneLabel)
@@ -129,14 +133,16 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalTo(viewInImageView.snp.right)
             make.top.equalTo(imageView.snp.top)
         }
-        
+
         let adressLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(ordersArr[indexPath.row].address)"     //меняем
+            label.text = "\(orderStatus[indexPath.row].0.address)"     //меняем
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
+            label.alpha = 0
             return label
         }()
+        
         cell.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
             make.left.equalTo(phoneLabel)
@@ -146,9 +152,10 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let statusLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(ordersArr[indexPath.row].status)"     //меняем
+            label.text = "\(orderStatus[indexPath.row].0.status)"     //меняем
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
+            label.alpha = 0
             return label
         }()
         cell.addSubview(statusLabel)
@@ -159,14 +166,37 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let inCellButton: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle("Вызвать", for: .normal) //меняем
+            button.setTitle(orderStatus[indexPath.row].1, for: .normal) //меняем
             button.setTitleColor(UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1), for: .normal) //меняем
             button.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
             button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+            button.isUserInteractionEnabled = false
             button.layer.cornerRadius = 10
+            button.alpha = 0
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
             return button
         }()
+       
+        switch inCellButton.titleLabel?.text {
+        case "Заказ отменен":
+            inCellButton.isHidden = true
+        case "Вызвать":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = true
+            inCellButton.setTitleColor(UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1), for: .normal)
+        case "В пути":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.setTitleColor(UIColor(red: 165/255, green: 179/255, blue: 7/255, alpha: 1), for: .normal)
+        case "Подъехал":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.setTitleColor(UIColor(red: 250/255, green: 0/255, blue: 2/255, alpha: 1), for: .normal)
+        case .none:
+            break
+        case .some(_):
+            break
+        }
         cell.addSubview(inCellButton)
         inCellButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview().offset(14)
@@ -175,9 +205,12 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             
         }
         
+        
+        
         let arrowImageView: UIImageView = {
             let image: UIImage = .arrow
             let imageView = UIImageView(image: image)
+            imageView.alpha = 0
             return imageView
         }()
         cell.addSubview(arrowImageView)
@@ -187,12 +220,14 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.right.equalTo(inCellButton.snp.right)
             make.centerY.equalTo(phoneLabel)
         }
+        
         let timeLabel: UILabel = {
             let label = UILabel()
-            let time = ordersArr[indexPath.row].formattedCreatedTime ?? "0:00"
+            let time = orderStatus[indexPath.row].0.formattedCreatedTime ?? "0:00"
             label.text = "\(time)"
             label.font = .systemFont(ofSize: 15, weight: .regular)
             label.textColor = UIColor(red: 60/255, green: 60/255, blue: 67/255, alpha: 0.6)
+            label.alpha = 0
             return label
         }()
         cell.addSubview(timeLabel)
@@ -200,7 +235,20 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.right.equalTo(arrowImageView.snp.left).inset(-8)
             make.centerY.equalTo(phoneLabel)
         }
-       
+        UIView.animate(withDuration: 0.5) {
+            imageView.alpha = 100
+            separatorView.alpha = 100
+            phoneLabel.alpha = 100
+            adressLabel.alpha = 100
+            
+        }
+        UIView.animate(withDuration: 0.3) {
+            
+            statusLabel.alpha = 100
+            inCellButton.alpha = 100
+            arrowImageView.alpha = 100
+            timeLabel.alpha = 100
+        }
         
         return cell
     }

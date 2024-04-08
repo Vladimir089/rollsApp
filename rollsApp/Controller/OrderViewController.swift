@@ -16,6 +16,7 @@ class OrderViewController: UIViewController {
     
     var mainView: AllOrdersView?
     var timer: Timer?
+
     
     override func loadView() {
         login(login: "Bairam", password: "1122")
@@ -51,7 +52,7 @@ class OrderViewController: UIViewController {
         self.present(vc, animated: true)
     }
     
-    func getAllOrders(isTimer: Bool) {
+    func getAllOrders(isTimer: Bool)  {
         let cafeId = 1 //тест
         let headers: HTTPHeaders = [
                 HTTPHeader.authorization(bearerToken: authKey),
@@ -62,12 +63,10 @@ class OrderViewController: UIViewController {
             case .success(_):
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
                     if isTimer == true {
-                        ordersArr.removeAll()
                         orderStatus.removeAll()
                     }
-                    ordersArr = order.orders
+                    self.getOrderDetail(orders: order.orders)
                     
-                    self.getOrderDetail()
                 }
                 
             case .failure(let error):
@@ -76,36 +75,46 @@ class OrderViewController: UIViewController {
         }
     }
     
-    func getOrderDetail() { //тут проблема
+    func getOrderDetail(orders: [Order]) {
+        // Сортировка массива заказов по дате создания
+        
+       
+        let dispatchGroup = DispatchGroup()
+        
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
-        let dispatchGroup = DispatchGroup()
-        
-        for order in ordersArr {
+
+        for order in orders {
             dispatchGroup.enter()
-            
             let currentOrder = order
-            
+            print(currentOrder.createdDate)
             AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(currentOrder.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
                 switch response.result {
                 case .success(_):
                     if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
                         orderStatus.append((currentOrder, status.orderStatus))
+
                     }
-                case .failure(let error):
-                    print(1)
+                case .failure(_):
+                    orderStatus.append((currentOrder, "Заказ отменен"))
+
                 }
-                debugPrint(response)
                 dispatchGroup.leave()
             }
         }
-        
         dispatchGroup.notify(queue: .main) {
+            orderStatus.sort { (item1, item2) -> Bool in
+                let date1 = item1.0.createdDate ?? Date()
+                let date2 = item2.0.createdDate ?? Date()
+                return date1 > date2
+            }
             self.reloadCollection()
         }
     }
+
+
 
 
 
@@ -128,7 +137,6 @@ class OrderViewController: UIViewController {
                 case .success( _):
                     if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
                         authKey = login.authToken
-                        print(authKey)
                         self.getAllOrders(isTimer: false)
                     }
                    
@@ -145,7 +153,7 @@ class OrderViewController: UIViewController {
 extension OrderViewController: OrderViewControllerDelegate {
     func reloadCollection() {
         mainView?.collectionView?.reloadData()
-        //print(orderStatus)
+        
     }
     
     

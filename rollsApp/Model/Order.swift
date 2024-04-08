@@ -68,6 +68,5 @@ struct OrdersResponse: Codable {
     let orders: [Order]
 }
 
-var ordersArr = [Order]()
 var orderStatus: [(Order, String)] = []
 
