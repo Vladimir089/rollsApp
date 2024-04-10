@@ -10,7 +10,7 @@ import SnapKit
 import Alamofire
 
 class SimilarAdressTable: UIView {
-
+    
     var delelagate: NewOrderViewProtocol?
     var adressArr = [String]()
     
@@ -21,8 +21,8 @@ class SimilarAdressTable: UIView {
         create()
     }
     
-
-
+    
+    
     func reload(address: String) {
         let headers: HTTPHeaders = [.accept("application/json")]
         adressArr.removeAll()
@@ -39,14 +39,16 @@ class SimilarAdressTable: UIView {
                 } else {
                     print("Value not found")
                 }
-
+                
                 if let fullAddresses = json["full_addresses"] as? [String] {
                     print("Full addresses:")
-                    for address in fullAddresses {
-                        print(fullAddresses)
-                        self.adressArr = fullAddresses
+                    
+                    print(fullAddresses)
+                    self.adressArr = fullAddresses
+                    DispatchQueue.main.async {
                         self.tableView?.reloadData()
                     }
+                    
                 } else {
                     print("Full addresses not found")
                 }
@@ -60,26 +62,27 @@ class SimilarAdressTable: UIView {
     func getCostAdress() {
         let headers: HTTPHeaders = [.accept("application/json")]
         AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=1&address=\(adress)", method: .get, headers: headers).responseJSON { response in
-               switch response.result {
-               case .success(let value):
-                   if let json = value as? [String: Any],
-                      let totalCost = json["address_cost"] as? Double {
-                       print(totalCost)
-                       self.delelagate?.fillTextField(adress: adress, cost: "\(totalCost)")
-                   }
-               case .failure(let error):
-                   print("Request failed with error:", error)
-               }
-           }
+            switch response.result {
+            case .success(let value):
+                if let json = value as? [String: Any],
+                   let totalCost = json["address_cost"] as? Double {
+                    print(totalCost)
+                    self.delelagate?.fillTextField(adress: adress, cost: "\(totalCost)")
+                }
+            case .failure(let error):
+                print("Request failed with error:", error)
+            }
+        }
     }
-
-
+    
+    
     @objc func cellTapped(_ gestureRecognizer: UITapGestureRecognizer) {
         guard let cell = gestureRecognizer.view as? UITableViewCell else {
             return
         }
         print(1)
         let indexPath = IndexPath(row: cell.tag, section: 0)
+        print("vfcc \(adressArr)")
         adress = adressArr[indexPath.row]
         getCostAdress()
     }

@@ -232,7 +232,26 @@ class NewOrderView: UIView {
         }
         similadAdressView.delelagate = self
         
+        let sSoboiLabel = generateLabel(text: "С собой",
+                                       font: UIFont.systemFont(ofSize: 15, weight: .bold),
+                                       isUnderlining: true,
+                                       textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         
+        let stoleLabel = generateLabel(text: "Стол",
+                                       font: UIFont.systemFont(ofSize: 15, weight: .bold),
+                                       isUnderlining: true,
+                                       textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
+        
+        contentView.addSubview(stoleLabel)
+        stoleLabel.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(25)
+            make.centerY.equalTo(adressLabel.snp.centerY)
+        }
+        contentView.addSubview(sSoboiLabel)
+        sSoboiLabel.snp.makeConstraints { make in
+            make.right.equalTo(stoleLabel.snp.left).inset(-10)
+            make.centerY.equalTo(adressLabel.snp.centerY)
+        }
         
     }
     
@@ -445,7 +464,6 @@ extension NewOrderView: NewOrderViewProtocol {
     func fillTextField(adress: String, cost: String) {
         adressTextField?.text = adress
         similarLabel?.text = "\(cost) ₽  "
-        adressTextField?.endEditing(true)
         UIView.animate(withDuration: 0.5) { [self] in
             self.frame.origin.y = 0
             similadAdressView.snp.updateConstraints { make in
@@ -453,6 +471,7 @@ extension NewOrderView: NewOrderViewProtocol {
             }
             self.layoutIfNeeded()
         }
+        adressTextField?.endEditing(true)
         self.adressButton?.setTitle(nil, for: .normal)
         UIView.animate(withDuration: 0.5) {
             self.adressButton?.snp.updateConstraints { make in
