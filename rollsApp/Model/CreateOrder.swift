@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 var menuItemsArr = [String: Int]() //тут сам заказ, надо перевести в массив строк при создании заказа
+var adress = ""
+
 
 var allDishes: [(Dish, UIImage)] = []
 

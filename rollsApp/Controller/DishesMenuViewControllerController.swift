@@ -160,23 +160,23 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         let countLabel: UIButton = {
             let button = UIButton()
             if let count = menuItemsArr[dish.0.name] {
-                button.setTitle("x\(count)", for: .normal)
+                button.setTitle("\(count)", for: .normal)
                 button.isHidden = false
             } else {
                 button.isHidden = true
             }
-            button.backgroundColor = UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1)
+            button.backgroundColor = .systemRed
             button.tintColor = .black
             button.titleLabel?.font = .systemFont(ofSize: 12, weight: .regular)
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
-            button.layer.cornerRadius = 10
+            button.layer.cornerRadius = 11
             return button
         }()
         cell.addSubview(countLabel)
         countLabel.snp.makeConstraints { make in
             make.right.top.equalToSuperview()
             make.height.equalTo(22)
-            make.width.equalTo(30)
+            make.width.equalTo(22)
         }
         
         return cell

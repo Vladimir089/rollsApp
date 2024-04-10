@@ -14,6 +14,7 @@ protocol NewOrderViewControllerDelegate: AnyObject {
 
 protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func showVC()
+    func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
 }
 
 class NewOrderViewController: UIViewController {
@@ -70,11 +71,37 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
+        var a = ""
+        
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("*/*")
+        ]
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(phoneNumber)&cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(let value):
+                if let json = value as? [String: Any],
+                   let address = json["address"] as? [String: Any],
+                   let addressValue = address["address"] as? String {
+                    a = addressValue
+                }
+            case .failure(_):
+                a = ""
+            }
+            completion(a)
+        }
+    }
+
+    
     func showVC() {
         print(1)
         let vc = DishesMenuViewControllerController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true)
     }
+    
+    
     
 }
