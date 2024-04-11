@@ -18,9 +18,9 @@ struct Order: Codable {
     let id: Int
     let phone: String
     let menuItems: String
-    let clientsNumber: Int?
+    let clientsNumber: Int
     let address: String
-    let totalCost: Double?
+    let totalCost: Int
     let paymentMethod: String
     let paymentStatus: String
     let status: String
@@ -54,8 +54,10 @@ struct Order: Codable {
     
 
     enum CodingKeys: String, CodingKey {
-        case id, phone, clientsNumber, address, totalCost, status, cookingTime, orderOnTime
+        case id, phone, address, status, cookingTime, orderOnTime
         case menuItems = "menu_items"
+        case totalCost = "total_cost"
+        case clientsNumber = "clients_number"
         case paymentMethod = "payment_method"
         case paymentStatus = "payment_status"
         case createdDateString = "created_date"

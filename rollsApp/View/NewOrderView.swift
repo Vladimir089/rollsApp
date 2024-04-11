@@ -10,6 +10,7 @@ import SnapKit
 
 protocol NewOrderViewProtocol: AnyObject {
     func fillTextField(adress: String, cost: String)
+    func fillButton(coast: String)
 }
 
 class NewOrderView: UIView {
@@ -24,6 +25,10 @@ class NewOrderView: UIView {
     var adressTextField: UITextField?
     let similadAdressView = SimilarAdressTable()
     var similarLabel: UILabel?
+    var commentTextField: UITextField?
+    var oplataSegmentedControl: UISegmentedControl?
+    var createOrderButton: UIButton?
+    let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     
     
     
@@ -36,7 +41,7 @@ class NewOrderView: UIView {
         super.layoutSubviews()
         layoutIfNeeded()
         updateContentSize()
-        print(menuItemsArr)
+        updateCreateOrderButtonState()
     }
     
     func updateContentSize() {
@@ -49,8 +54,22 @@ class NewOrderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+
+    
+    private func updateCreateOrderButtonState() {
+        if phoneTextField?.text != "" && adressTextField?.text != "" && menuItemsArr.count != 0 {
+            createOrderButton?.isEnabled = true
+            print(1)
+        } else {
+            createOrderButton?.isEnabled = false
+            print(2)
+        }
+    }
+
+    
     @objc func hideKeyboard() {
         phoneTextField?.endEditing(true)
+        updateCreateOrderButtonState()
     }
     
     func settingsView() {
@@ -177,7 +196,7 @@ class NewOrderView: UIView {
                                        font: UIFont.systemFont(ofSize: 15, weight: .regular),
                                        isUnderlining: false,
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
-        contentView.addSubview(adressLabel)
+        scrollView.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
             make.left.equalTo(newOrderLabel.snp.left).inset(10)
             make.top.equalTo(tableView!.snp.bottom).inset(-20)
@@ -253,6 +272,106 @@ class NewOrderView: UIView {
             make.centerY.equalTo(adressLabel.snp.centerY)
         }
         
+        let commentLabel = generateLabel(text: "КОММЕНТАРИЙ",
+                                       font: UIFont.systemFont(ofSize: 15, weight: .regular),
+                                       isUnderlining: false,
+                                       textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
+        contentView.addSubview(commentLabel)
+        commentLabel.snp.makeConstraints { make in
+            make.left.equalTo(newOrderLabel.snp.left).inset(10)
+            make.top.equalTo(similadAdressView.snp.bottom).inset(-20)
+        }
+        
+        commentTextField = {
+            let textField = UITextField()
+            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+            textField.leftViewMode = .always
+            textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+            textField.rightViewMode = .always
+            textField.textColor = .black
+            textField.backgroundColor = .white
+            textField.layer.cornerRadius = 10
+            textField.delegate = self
+            return textField
+        }()
+        scrollView.addSubview(commentTextField!)
+        commentTextField?.snp.makeConstraints({ make in
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo(commentLabel.snp.bottom).inset(-10)
+            make.height.equalTo(44)
+        })
+        
+        oplataSegmentedControl = {
+            
+            let segmentedControl = UISegmentedControl(items: itemsForSegmented)
+            segmentedControl.selectedSegmentIndex = 0
+            return segmentedControl
+        }()
+        scrollView.addSubview(oplataSegmentedControl!)
+        oplataSegmentedControl?.snp.makeConstraints({ make in
+            make.height.equalTo(44)
+            make.top.equalTo((commentTextField?.snp.bottom)!).inset(-15)
+            make.left.right.equalTo(commentTextField!)
+        })
+        
+        createOrderButton = {
+            let button = UIButton(type: .system)
+            button.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+            button.setTitle("Создать 0 ₽", for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+            button.tintColor = .white
+            button.addTarget(self, action: #selector(createOrder), for: .touchUpInside)
+            button.layer.cornerRadius = 12
+            return button
+        }()
+
+        scrollView.addSubview(createOrderButton!)
+        createOrderButton?.snp.makeConstraints({ make in
+            make.height.equalTo(50)
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo((oplataSegmentedControl?.snp.bottom)!).inset(-15)
+        })
+        
+        let botView: UIView = {
+            let view = UIView()
+            view.backgroundColor = .clear
+            return view
+        }()
+        contentView.addSubview(botView)
+        botView.snp.makeConstraints { make in
+            make.height.equalTo(100) //мб тут сдеклать высоту таблицы
+            make.left.right.equalToSuperview()
+            make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
+        }
+        
+    }
+    
+    
+    @objc func createOrder() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let currentDate = Date()
+       print(12)
+        
+        let phone = phoneTextField?.text ?? ""
+        var menuItems = ""
+        let clientNumber = 1
+        let adress = adress
+        let coast = totalCoast
+        let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]
+        let timeOrder = dateFormatter.string(from: currentDate)
+        let idCafe = cafeID
+        print(timeOrder)
+
+        
+        for (index, item) in menuItemsArr.enumerated() {
+            menuItems.append("\(item.key) - \(item.value)")
+            if index != menuItemsArr.count - 1 {
+                menuItems.append(", ")
+            }
+        }
+        
+        delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe)
     }
     
     @objc func fillAdress() {
@@ -303,9 +422,18 @@ extension NewOrderView: UITextFieldDelegate {
                 similadAdressView.snp.updateConstraints { make in
                     make.height.equalTo(0)
                 }
+                commentTextField?.isUserInteractionEnabled = true
                 self.layoutIfNeeded()
                 textField.endEditing(true)
             }
+        }
+        if textField == commentTextField {
+            UIView.animate(withDuration: 0.5) { [self] in
+                self.frame.origin.y = 0
+                self.layoutIfNeeded()
+            }
+            commentTextField?.endEditing(true)
+            adressTextField?.isUserInteractionEnabled = true
         }
         return true
     }
@@ -323,10 +451,11 @@ extension NewOrderView: UITextFieldDelegate {
                     }
                 }
                 if adress == "" {
+                    
                     self.adressButton?.setTitle(nil, for: .normal)
                     UIView.animate(withDuration: 0.5) {
                         self.adressButton?.snp.updateConstraints { make in
-                            make.height.equalTo(0)
+                            //make.height.equalTo(0)
                         }
                         self.layoutIfNeeded()
                     }
@@ -342,9 +471,19 @@ extension NewOrderView: UITextFieldDelegate {
                 similadAdressView.snp.updateConstraints { make in
                     make.height.equalTo(280)
                 }
+                commentTextField?.isUserInteractionEnabled = false
+                self.layoutIfNeeded()
+            }
+           
+        }
+        if textField == commentTextField {
+            UIView.animate(withDuration: 0.5) { [self] in
+                self.frame.origin.y -= 280
+                adressTextField?.isUserInteractionEnabled = false
                 self.layoutIfNeeded()
             }
         }
+       
         return true
     }
     
@@ -354,7 +493,10 @@ extension NewOrderView: UITextFieldDelegate {
                 similadAdressView.reload(address: a)
             }
         }
+        updateCreateOrderButtonState()
     }
+    
+    
 }
 
 
@@ -441,43 +583,67 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
         let key = Array(menuItemsArr.keys)[indexPath.row]
         menuItemsArr.removeValue(forKey: key)
         print(menuItemsArr)
-
+        similadAdressView.getCostAdress()
         tableView?.beginUpdates()
         tableView?.deleteRows(at: [indexPath], with: .automatic)
         tableView?.endUpdates()
+        updateCreateOrderButtonState()
 
         UIView.animate(withDuration: 0.5) {
+            // Восстановление состояния адреса перед обновлением таблицы
+            let previousAdress = self.adressButton?.titleLabel?.text
+            let previousAdressText = self.adressTextField?.text
+            
+            // Обновление данных в таблице
             self.tableView?.reloadData()
-            self.layoutIfNeeded()
+            
+            // Восстановление состояния адреса после обновления таблицы
+            self.adressButton?.setTitle(previousAdress, for: .normal)
+            self.adressTextField?.text = previousAdressText
+            
+            // Пересчет высоты таблицы
             self.tableView?.snp.updateConstraints({ make in
                 make.height.equalTo((menuItemsArr.count + 1) * 44)
             })
+            
+            // Обновление размера и содержимого scrollView
+            self.layoutIfNeeded()
             self.scrollView.layoutIfNeeded()
-            self.tableView?.layoutIfNeeded()
             self.updateContentSize()
         }
     }
 
+    
+
 }
 
 extension NewOrderView: NewOrderViewProtocol {
+    func fillButton(coast: String) {
+        createOrderButton?.setTitle("Создать \(coast) ₽", for: .normal)
+        totalCoast = Int(coast) ?? 0
+        print(totalCoast)
+    }
+    
     func fillTextField(adress: String, cost: String) {
         adressTextField?.text = adress
         similarLabel?.text = "\(cost) ₽  "
-        UIView.animate(withDuration: 0.5) { [self] in
+        UIView.animate(withDuration: 0.3) { [self] in
             self.frame.origin.y = 0
             similadAdressView.snp.updateConstraints { make in
                 make.height.equalTo(0)
             }
+            commentTextField?.alpha = 100
             self.layoutIfNeeded()
         }
         adressTextField?.endEditing(true)
-        self.adressButton?.setTitle(nil, for: .normal)
-        UIView.animate(withDuration: 0.5) {
-            self.adressButton?.snp.updateConstraints { make in
-                make.height.equalTo(0)
+        if adressTextField?.text != "" {
+            self.adressButton?.setTitle(nil, for: .normal)
+            UIView.animate(withDuration: 0.5) {
+                self.adressButton?.snp.updateConstraints { make in
+                    make.height.equalTo(0)
+                }
+                self.layoutIfNeeded()
             }
-            self.layoutIfNeeded()
         }
     }
     

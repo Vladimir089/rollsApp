@@ -13,6 +13,7 @@ class DishesMenuViewControllerController: UIViewController {
     var closeButton: UIButton?
     var collectionView: UICollectionView?
     var categoryStorage = Set<String>()
+    var coast: SimilarAdressTable?
     
     
     override func viewDidLoad() {
@@ -103,8 +104,7 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         for i in allDishes {
             categoryStorage.insert(i.0.category)
         }
-        print(categoryStorage)
-        print(allDishes)
+
         
         return categoryStorage.count
     }
@@ -220,6 +220,8 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             menuItemsArr[dish.name] = 1
         }
         collectionView.reloadItems(at: [indexPath])
+        
+        coast?.getCostAdress()
     }
     
 }

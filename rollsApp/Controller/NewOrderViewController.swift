@@ -15,6 +15,7 @@ protocol NewOrderViewControllerDelegate: AnyObject {
 protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func showVC()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int) -> Bool
 }
 
 class NewOrderViewController: UIViewController {
@@ -35,6 +36,8 @@ class NewOrderViewController: UIViewController {
     
     deinit {
         menuItemsArr.removeAll()
+        adress = ""
+        totalCoast = 0
         print(menuItemsArr)
     }
 
@@ -71,6 +74,7 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
         var a = ""
         
@@ -98,8 +102,38 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     func showVC() {
         print(1)
         let vc = DishesMenuViewControllerController()
+        vc.coast = mainView?.similadAdressView
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true)
+    }
+    
+    
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int) -> Bool {
+        print( phonee, menuItems, clientsNumber, adress, totalCost, paymentMethod, timeOrder, cafeID)
+        
+        let headers: HTTPHeaders = [HTTPHeader.accept("application/json"), HTTPHeader.contentType("application/json"), HTTPHeader.authorization(bearerToken: authKey)]
+        let parameters: [String : Any] = [
+            "phone": phonee,
+            "menu_items": menuItems,
+            "clients_number": Int(clientsNumber),
+            "address": adress,
+            "total_cost": Double(totalCost),
+            "payment_method": paymentMethod,
+            //"order_on_time": timeOrder,  к определенному времени
+            "cafe_id": cafeID]
+        
+        
+        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(_):
+                print(1)
+            case .failure(_):
+                print(2)
+            }
+        }
+        
+        
+        return true
     }
     
     

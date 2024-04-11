@@ -25,7 +25,7 @@ class SimilarAdressTable: UIView {
     
     func reload(address: String) {
         let headers: HTTPHeaders = [.accept("application/json")]
-        adressArr.removeAll()
+
         AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?value=\(address)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -44,6 +44,7 @@ class SimilarAdressTable: UIView {
                     print("Full addresses:")
                     
                     print(fullAddresses)
+                    self.adressArr.removeAll()
                     self.adressArr = fullAddresses
                     DispatchQueue.main.async {
                         self.tableView?.reloadData()
@@ -61,18 +62,46 @@ class SimilarAdressTable: UIView {
     
     func getCostAdress() {
         let headers: HTTPHeaders = [.accept("application/json")]
-        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=1&address=\(adress)", method: .get, headers: headers).responseJSON { response in
+        
+        var menu = ""
+
+        for (index, item) in menuItemsArr.enumerated() {
+            menu.append("\(item.key) - \(item.value)")
+            if index != menuItemsArr.count - 1 { // Проверяем, не последний ли элемент в массиве
+                menu.append(", ")
+            }
+        }
+
+        print(menu)
+        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
-                if let json = value as? [String: Any],
-                   let totalCost = json["address_cost"] as? Double {
-                    print(totalCost)
-                    self.delelagate?.fillTextField(adress: adress, cost: "\(totalCost)")
+                if let json = value as? [String: Any] {
+                    if let totalCost = json["total_cost"] as? Int,
+                       let addressCost = json["address_cost"] as? Int {
+                        print("Total cost:", totalCost)
+                        print("Address cost:", addressCost)
+                        
+                        print(adress)
+                        DispatchQueue.main.async {
+                            self.delelagate?.fillTextField(adress: adress, cost: "\(addressCost)")
+                            self.delelagate?.fillButton(coast: "\(totalCost)")
+                        }
+                    }
+                } else {
+                    print("Invalid JSON format")
                 }
+                
             case .failure(let error):
                 print("Request failed with error:", error)
             }
         }
+    
+
+    }
+    
+    deinit {
+        print("пока%(")
     }
     
     
@@ -80,9 +109,7 @@ class SimilarAdressTable: UIView {
         guard let cell = gestureRecognizer.view as? UITableViewCell else {
             return
         }
-        print(1)
         let indexPath = IndexPath(row: cell.tag, section: 0)
-        print("vfcc \(adressArr)")
         adress = adressArr[indexPath.row]
         getCostAdress()
     }
@@ -150,13 +177,11 @@ extension SimilarAdressTable: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         adress = adressArr[indexPath.row]
-        print(1)
         getCostAdress()
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         adress = adressArr[indexPath.row]
-        print(1)
         getCostAdress()
         return indexPath
     }

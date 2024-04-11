@@ -13,14 +13,16 @@ let cafeID = 2
 
 protocol OrderViewControllerDelegate: AnyObject {
     func reloadCollection()
+    func createButtonGo(index: Int)
 }
+
 
 class OrderViewController: UIViewController {
     
     var mainView: AllOrdersView?
     var timer: Timer?
-
-
+    
+    
     override func loadView() {
         login(login: "Bairam", password: "1122")
         //startTimer()
@@ -32,7 +34,7 @@ class OrderViewController: UIViewController {
         mainView = AllOrdersView()
         self.view = mainView
         mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
-        
+        mainView?.delegate = self
     }
     @objc func timerAction() {
         getAllOrders(isTimer: true)
@@ -56,19 +58,16 @@ class OrderViewController: UIViewController {
     }
     
     func getAllOrders(isTimer: Bool)  {
+        orderStatus.removeAll()
         let headers: HTTPHeaders = [
-                HTTPHeader.authorization(bearerToken: authKey),
-                HTTPHeader.accept("application/json")
-            ]
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("application/json")
+        ]
         AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(_):
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                    
-                        orderStatus.removeAll()
-                    
                     self.getOrderDetail(orders: order.orders)
-                    
                 }
                 
             case .failure(let error):
@@ -79,12 +78,11 @@ class OrderViewController: UIViewController {
     
     func getOrderDetail(orders: [Order]) {
         let dispatchGroup = DispatchGroup()
-        
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
-
+        
         for order in orders {
             dispatchGroup.enter()
             let currentOrder = order
@@ -93,11 +91,11 @@ class OrderViewController: UIViewController {
                 case .success(_):
                     if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
                         orderStatus.append((currentOrder, status.orderStatus))
-                        
+                        print("статус \(status.orderStatus)")
                     }
                 case .failure(_):
-                    orderStatus.append((currentOrder, "Заказ отменен"))
-
+                    orderStatus.append((currentOrder, "Вызвать"))
+                    print(1)
                 }
                 dispatchGroup.leave()
             }
@@ -114,7 +112,7 @@ class OrderViewController: UIViewController {
             
         }
     }
-
+    
     func login(login: String, password: String) {
         let headers: HTTPHeaders = [
             "accept": "*/*",
@@ -126,21 +124,21 @@ class OrderViewController: UIViewController {
             "password": password
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-            .responseJSON { response in
-                switch response.result {
-                case .success( _):
-                    if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
-                        authKey = login.authToken
-                        self.getAllOrders(isTimer: false)
-                        self.getDishes()
-                    }
-                   
-                case .failure(let error):
-                    print("Произошла ошибка: \(error)")
-
+        AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success( _):
+                if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
+                    authKey = login.authToken
+                    
+                    self.getAllOrders(isTimer: false)
+                    self.getDishes()
                 }
+                
+            case .failure(let error):
+                print("Произошла ошибка: \(error)")
+                
             }
+        }
     }
     
     func getDishes() {
@@ -151,7 +149,6 @@ class OrderViewController: UIViewController {
             HTTPHeader.accept("application/json")
         ]
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).responseData{ response in
-            debugPrint(response)
             switch response.result {
             case .success(_):
                 if let data = response.data, let dishes = try? JSONDecoder().decode(DishesResponse.self, from: data) {
@@ -164,35 +161,75 @@ class OrderViewController: UIViewController {
                 print(error)
             }
         }
-       
+        
     }
     
     
     func getImage(d: Dish) {
-        
-        AF.request(d.img ?? "").responseImage { response in
-            
-            switch response.result {
-            case .success(let image):
-                allDishes.append((d, image))
-            case .failure(let error):
-                allDishes.append((d, .imageDishes))
+        //http://arbamarket.ru/media/main/dishes/image_27.png
+        if let url = d.img {
+            AF.request("http://arbamarket.ru\(url)").responseImage { response in
+                switch response.result {
+                case .success(let image):
+                    allDishes.append((d, image))
+                case .failure(let error):
+                    allDishes.append((d, .imageDishes))
+                }
+                
             }
-           
         }
     }
-
-
+    
+    
     
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
-    func reloadCollection() {
-        getAllOrders(isTimer: false)
-        mainView?.collectionView?.reloadData()
+    func createButtonGo(index: Int) {
+        let dispatchGroup = DispatchGroup()
         
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("*/*")
+        ]
+        if orderStatus.count < index {
+            return
+        }
+        
+        dispatchGroup.enter()
+        let currentOrder = orderStatus[index]
+        AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.0.id)&cafe_id=\(currentOrder.0.cafeID)", method: .post, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(_):
+                print(response)
+            case .failure(_):
+                print(1)
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .global()) {
+            DispatchQueue.main.sync {
+                self.getAllOrders(isTimer: false)
+            }
+            
+        }
+    }
+    
+    func reloadCollection() {
+        regenerateTable()
+        mainView?.collectionView?.reloadData()
     }
     
     
 }
 
+extension OrderViewController { //для обновления чтобы таблица не моргала
+    func regenerateTable() { //тут сохраняем старый массив, делаем запрос и сравниваем его с новым
+        
+    }
+    
+    func getStatus() { //тут получаем статусы доставки и обновляем массив
+        
+    }
+}

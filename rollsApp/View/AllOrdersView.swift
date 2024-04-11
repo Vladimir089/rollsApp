@@ -12,6 +12,7 @@ class AllOrdersView: UIView {
     
     var addNewOrderButton: UIButton?
     var collectionView: UICollectionView?
+    var delegate: OrderViewControllerDelegate?
 
 
     override init(frame: CGRect) {
@@ -60,6 +61,7 @@ class AllOrdersView: UIView {
             let collection = UICollectionView(frame: frame, collectionViewLayout: layout)
             layout.minimumLineSpacing = 0
             collection.delegate = self
+            collection.showsVerticalScrollIndicator = false
             collection.dataSource = self
             collection.backgroundColor = .white
             collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "1")
@@ -178,12 +180,13 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         }()
        
         switch inCellButton.titleLabel?.text {
-        case "Заказ отменен":
-            inCellButton.isHidden = true
         case "Вызвать":
             inCellButton.isHidden = false
             inCellButton.isUserInteractionEnabled = true
             inCellButton.setTitleColor(UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1), for: .normal)
+            
+            inCellButton.tag = indexPath.row
+            inCellButton.addTarget(self, action: #selector(goCourier(sender:)), for: .touchUpInside)
         case "В пути":
             inCellButton.isHidden = false
             inCellButton.isUserInteractionEnabled = false
@@ -255,6 +258,11 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 85)
+    }
+    
+    @objc func goCourier(sender: UIButton) {
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        delegate?.createButtonGo(index: indexPath.row)
     }
     
     
