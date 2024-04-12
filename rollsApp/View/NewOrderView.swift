@@ -30,6 +30,8 @@ class NewOrderView: UIView {
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     
+    var fallView: UIView?
+    
     
     
     override init(frame: CGRect) {
@@ -304,6 +306,9 @@ class NewOrderView: UIView {
         oplataSegmentedControl = {
             
             let segmentedControl = UISegmentedControl(items: itemsForSegmented)
+            segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
+            segmentedControl.selectedSegmentTintColor = .white
+            segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
             segmentedControl.selectedSegmentIndex = 0
             return segmentedControl
         }()
@@ -318,7 +323,7 @@ class NewOrderView: UIView {
             let button = UIButton(type: .system)
             button.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
             button.setTitle("Создать 0 ₽", for: .normal)
-            button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+            button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
             button.tintColor = .white
             button.addTarget(self, action: #selector(createOrder), for: .touchUpInside)
             button.layer.cornerRadius = 12
@@ -344,6 +349,41 @@ class NewOrderView: UIView {
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
         
+        fallView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+            view.alpha = 0
+            view.layer.cornerRadius = 20
+            return view
+        }()
+        addSubview(fallView!)
+        fallView!.snp.makeConstraints { make in
+            make.height.width.equalTo(200)
+            make.centerY.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        
+        let image: UIImage = .fall
+        let imageView = UIImageView(image: image)
+        fallView!.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.height.equalTo(100)
+            make.width.equalTo(120)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        
+        let label = UILabel()
+        label.text = "Ошибка в создании"
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.textColor = .black
+        label.textAlignment = .center
+        fallView?.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo(imageView.snp.bottom).inset(-10)
+        }
+        
     }
     
     
@@ -364,14 +404,30 @@ class NewOrderView: UIView {
         print(timeOrder)
 
         
-        for (index, item) in menuItemsArr.enumerated() {
-            menuItems.append("\(item.key) - \(item.value)")
+        for (index, (key, value)) in menuItemsArr.enumerated() {
+            let count = value.0
+            menuItems.append("\(key) - \(count)")
+
             if index != menuItemsArr.count - 1 {
                 menuItems.append(", ")
             }
         }
         
-        delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe)
+        delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
+            if success {
+                self.delegate?.succesCreate()
+                
+            } else {
+                UIView.animate(withDuration: 0.8) {
+                    self.fallView?.alpha = 100
+                }
+                
+                UIView.animate(withDuration: 0.5, delay: 2.0, options: [], animations: {
+                    self.fallView?.alpha = 0
+                }, completion: nil)
+            }
+        }
+
     }
     
     @objc func fillAdress() {
@@ -542,17 +598,31 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             }
             delButton.addTarget(self, action: #selector(delButtonTapped(_:)), for: .touchUpInside)
             let label = UILabel()
-            let key = Array(menuItemsArr.keys)[indexPath.row]
-            let value = menuItemsArr[key]
-            if let c = value {
-                label.text = "\(key) - \(c)"
+            let key = Array(menuItemsArr.keys)[indexPath.row] // Получаем ключ по индексу строки
+            if let value = menuItemsArr[key] {
+                let count = value.0 // Получаем первый элемент кортежа, представляющий количество
+                label.text = "\(key) - \(count)"
             }
+  
             
             label.font = .systemFont(ofSize: 18, weight: .regular)
             label.textColor = .black
             cell.addSubview(label)
             label.snp.makeConstraints { make in
                 make.left.equalTo(delButton.snp.right).inset(-10)
+                make.centerY.equalToSuperview()
+            }
+            let costLabel = UILabel()
+            
+            costLabel.font = .systemFont(ofSize: 18, weight: .bold)
+            costLabel.textColor = .black
+            if let value = menuItemsArr[key] {
+                let count = value.1
+                costLabel.text = "\(count) ₽"
+            }
+            cell.addSubview(costLabel)
+            costLabel.snp.makeConstraints { make in
+                make.right.equalToSuperview().inset(15)
                 make.centerY.equalToSuperview()
             }
             
@@ -572,6 +642,8 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func addButtonTapped(_ sender: UIButton) {
+        phoneTextField?.endEditing(true)
+        adressTextField?.endEditing(true)
         delegate?.showVC()
     }
     

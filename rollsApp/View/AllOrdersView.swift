@@ -13,6 +13,7 @@ class AllOrdersView: UIView {
     var addNewOrderButton: UIButton?
     var collectionView: UICollectionView?
     var delegate: OrderViewControllerDelegate?
+    var greatView: UIView?
 
 
     override init(frame: CGRect) {
@@ -73,7 +74,58 @@ class AllOrdersView: UIView {
             make.bottom.equalToSuperview()
             make.top.equalTo((addNewOrderButton?.snp.bottom)!).inset(-40)
         })
+        
+        greatView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+            view.alpha = 0
+            view.layer.cornerRadius = 20
+            return view
+        }()
+        addSubview(greatView!)
+        greatView!.snp.makeConstraints { make in
+            make.height.width.equalTo(200)
+            make.centerY.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        
+        let image: UIImage = .ok
+        let imageView = UIImageView(image: image)
+        greatView!.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.height.width.equalTo(120)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        
+        let label = UILabel()
+        label.text = "Заказ добавлен"
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.textColor = .black
+        label.textAlignment = .center
+        greatView?.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo(imageView.snp.bottom).inset(-10)
+        }
+        
     }
+    
+    
+    func succes() {
+        UIView.animate(withDuration: 0.8) {
+            self.greatView?.alpha = 100
+        }
+        
+        UIView.animate(withDuration: 0.5, delay: 2.0, options: [], animations: {
+            self.greatView?.alpha = 0
+        }, completion: nil)
+        
+
+
+    }
+    
+    
     
 }
 

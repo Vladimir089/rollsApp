@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		159D8BF92BC964A20075DCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 159D8BF82BC964A20075DCB5 /* Assets.xcassets */; };
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
@@ -18,7 +19,6 @@
 		15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CC2BBC49950086E9F5 /* AppDelegate.swift */; };
 		15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */; };
 		15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D22BBC49950086E9F5 /* Main.storyboard */; };
-		15E908D62BBC49970086E9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D52BBC49970086E9F5 /* Assets.xcassets */; };
 		15E908D92BBC49970086E9F5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D72BBC49970086E9F5 /* LaunchScreen.storyboard */; };
 		15E908E42BBC4E4D0086E9F5 /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */; };
 		15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908E62BBC51330086E9F5 /* AllOrdersView.swift */; };
@@ -27,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		159D8BF82BC964A20075DCB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../../../../Library/Mobile Documents/.Trash/Assets.xcassets"; sourceTree = "<group>"; };
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -38,7 +39,6 @@
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		15E908D32BBC49950086E9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		15E908D52BBC49970086E9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		15E908D82BBC49970086E9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		15E908DA2BBC49970086E9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
@@ -119,12 +119,12 @@
 		15E908E52BBC50870086E9F5 /* Dops */ = {
 			isa = PBXGroup;
 			children = (
+				159D8BF82BC964A20075DCB5 /* Assets.xcassets */,
 				15E908D72BBC49970086E9F5 /* LaunchScreen.storyboard */,
 				15E908D22BBC49950086E9F5 /* Main.storyboard */,
 				15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */,
 				15E908DA2BBC49970086E9F5 /* Info.plist */,
 				15E908CC2BBC49950086E9F5 /* AppDelegate.swift */,
-				15E908D52BBC49970086E9F5 /* Assets.xcassets */,
 			);
 			path = Dops;
 			sourceTree = "<group>";
@@ -182,6 +182,8 @@
 				15E908E82BBC51590086E9F5 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				15E908EB2BBC51640086E9F5 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				15B8FF562BC5ADF7005E3562 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
+				159D8BFA2BC9D57A0075DCB5 /* XCRemoteSwiftPackageReference "socket" */,
+				159D8BFB2BC9D5D20075DCB5 /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = 15E908CA2BBC49950086E9F5 /* Products */;
 			projectDirPath = "";
@@ -198,7 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				15E908D92BBC49970086E9F5 /* LaunchScreen.storyboard in Resources */,
-				15E908D62BBC49970086E9F5 /* Assets.xcassets in Resources */,
+				159D8BF92BC964A20075DCB5 /* Assets.xcassets in Resources */,
 				15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,6 +455,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		159D8BFA2BC9D57A0075DCB5 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.7.5;
+			};
+		};
+		159D8BFB2BC9D5D20075DCB5 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		15B8FF562BC5ADF7005E3562 /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/AlamofireImage";

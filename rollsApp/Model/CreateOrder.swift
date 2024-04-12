@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-var menuItemsArr = [String: Int]() //тут сам заказ, надо перевести в массив строк при создании заказа
+var menuItemsArr = [String: (Int, Int)]() //тут сам заказ, надо перевести в массив строк при создании заказа
 var adress = ""
 var totalCoast = 0
 
@@ -21,7 +21,7 @@ struct Dish: Codable {
     let id: Int
     let name: String
     let category: String
-    let price: Double
+    let price: Int
     let img: String?
 }
 

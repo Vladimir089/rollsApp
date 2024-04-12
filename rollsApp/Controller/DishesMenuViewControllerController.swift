@@ -159,12 +159,13 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         
         let countLabel: UIButton = {
             let button = UIButton()
-            if let count = menuItemsArr[dish.0.name] {
+            if let count = menuItemsArr[dish.0.name]?.0 {
                 button.setTitle("\(count)", for: .normal)
                 button.isHidden = false
             } else {
                 button.isHidden = true
             }
+
             button.backgroundColor = .systemRed
             button.tintColor = .black
             button.titleLabel?.font = .systemFont(ofSize: 12, weight: .regular)
@@ -209,20 +210,28 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Получаем блюдо, соответствующее выбранной ячейке
+
+        // Создаем генератор тактильного отклика
+        let feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator.selectionChanged()
+        
         let categoryForSection = Array(categoryStorage)[indexPath.section]
         let filteredDishes = allDishes.filter { $0.0.category == categoryForSection }
         let dish = filteredDishes[indexPath.item].0
 
-        if let count = menuItemsArr[dish.name] {
-            menuItemsArr[dish.name] = count + 1
+        if var menuItem = menuItemsArr[dish.name] {
+            menuItem.0 += 1
+            menuItem.1 += dish.price
+            menuItemsArr[dish.name] = menuItem
         } else {
-            menuItemsArr[dish.name] = 1
+            menuItemsArr[dish.name] = (1, dish.price)
         }
+
         collectionView.reloadItems(at: [indexPath])
         
         coast?.getCostAdress()
     }
+
     
 }
 

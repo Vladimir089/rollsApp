@@ -9,11 +9,15 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
+
 let cafeID = 2
 
 protocol OrderViewControllerDelegate: AnyObject {
     func reloadCollection()
     func createButtonGo(index: Int)
+    func succes()
+    func startTime()
+    func stopTime()
 }
 
 
@@ -21,11 +25,13 @@ class OrderViewController: UIViewController {
     
     var mainView: AllOrdersView?
     var timer: Timer?
+    var newOrderStatus: [(Order, String)] = []
+    var indexPathsToUpdate: [IndexPath] = []
     
     
     override func loadView() {
         login(login: "Bairam", password: "1122")
-        //startTimer()
+        
     }
     
     override func viewDidLoad() {
@@ -37,12 +43,12 @@ class OrderViewController: UIViewController {
         mainView?.delegate = self
     }
     @objc func timerAction() {
-        getAllOrders(isTimer: true)
+        regenerateTable()
         print("Timer fired!")
     }
     
     func startTimer() {
-        let timeInterval: TimeInterval = 60.0
+        let timeInterval: TimeInterval = 30.0
         timer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
     }
     
@@ -63,11 +69,15 @@ class OrderViewController: UIViewController {
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("application/json")
         ]
+        
         AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(_):
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                    self.getOrderDetail(orders: order.orders)
+                   
+                    DispatchQueue.global().async {
+                        self.getOrderDetail(orders: order.orders)
+                    }
                 }
                 
             case .failure(let error):
@@ -77,41 +87,54 @@ class OrderViewController: UIViewController {
     }
     
     func getOrderDetail(orders: [Order]) {
-        let dispatchGroup = DispatchGroup()
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("*/*")
-        ]
-        
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 50
+  
         for order in orders {
-            dispatchGroup.enter()
-            let currentOrder = order
-            AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(currentOrder.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
-                switch response.result {
-                case .success(_):
-                    if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
-                        orderStatus.append((currentOrder, status.orderStatus))
-                        print("статус \(status.orderStatus)")
+            let operation = BlockOperation {
+                let dispatchGroup = DispatchGroup()
+                let headers: HTTPHeaders = [
+                    HTTPHeader.authorization(bearerToken: authKey),
+                    HTTPHeader.accept("*/*")
+                ]
+                
+                dispatchGroup.enter()
+                AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(order.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
+                    switch response.result {
+                    case .success(_):
+                        if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
+                            DispatchQueue.main.async {
+                                orderStatus.append((order, status.orderStatus))
+                                print("статус \(status.orderStatus)")
+                            }
+                        }
+                    case .failure(_):
+                        DispatchQueue.main.async {
+                            orderStatus.append((order, "Вызвать"))
+                            print(1)
+                        }
                     }
-                case .failure(_):
-                    orderStatus.append((currentOrder, "Вызвать"))
-                    print(1)
+                    dispatchGroup.leave()
                 }
-                dispatchGroup.leave()
+                dispatchGroup.wait()
             }
+            operationQueue.addOperation(operation)
         }
-        dispatchGroup.notify(queue: .global()) {
-            orderStatus.sort { (item1, item2) -> Bool in
-                let date1 = item1.0.createdDate ?? Date()
-                let date2 = item2.0.createdDate ?? Date()
-                return date1 > date2
-            }
-            DispatchQueue.main.sync {
-                self.mainView?.collectionView?.reloadData()
-            }
-            
+        
+        operationQueue.waitUntilAllOperationsAreFinished()
+        
+        orderStatus.sort { (item1, item2) -> Bool in
+            let date1 = item1.0.createdDate ?? Date()
+            let date2 = item2.0.createdDate ?? Date()
+            return date1 > date2
+        }
+        
+        DispatchQueue.main.async {
+            print(orderStatus)
+            self.mainView?.collectionView?.reloadData()
         }
     }
+
     
     func login(login: String, password: String) {
         let headers: HTTPHeaders = [
@@ -132,6 +155,7 @@ class OrderViewController: UIViewController {
                     
                     self.getAllOrders(isTimer: false)
                     self.getDishes()
+                    self.startTimer()
                 }
                 
             case .failure(let error):
@@ -185,6 +209,12 @@ class OrderViewController: UIViewController {
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
+    func succes() {
+        mainView?.succes()
+    }
+    
+    
+    
     func createButtonGo(index: Int) {
         let dispatchGroup = DispatchGroup()
         
@@ -218,18 +248,144 @@ extension OrderViewController: OrderViewControllerDelegate {
     
     func reloadCollection() {
         regenerateTable()
-        mainView?.collectionView?.reloadData()
+    }
+    
+    func stopTime() {
+        print(12)
+        stopTimer()
+    }
+    
+    func startTime() {
+        print(1333)
+        self.startTimer()
     }
     
     
 }
 
 extension OrderViewController { //для обновления чтобы таблица не моргала
-    func regenerateTable() { //тут сохраняем старый массив, делаем запрос и сравниваем его с новым
+    func regenerateTable() {
+        newOrderStatus.removeAll()
+        mainView?.addNewOrderButton?.isUserInteractionEnabled = false
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("application/json")
+        ]
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(_):
+                if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
+                   
+                    DispatchQueue.global().async {
+                        self.getOrderNewDetail(orders: order.orders)
+                    }
+                }
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+  
+    
+    func getOrderNewDetail(orders: [Order]) {
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 50
+  
+        for order in orders {
+            let operation = BlockOperation {
+                let dispatchGroup = DispatchGroup()
+                let headers: HTTPHeaders = [
+                    HTTPHeader.authorization(bearerToken: authKey),
+                    HTTPHeader.accept("*/*")
+                ]
+                
+                dispatchGroup.enter()
+                AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(order.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
+                    switch response.result {
+                    case .success(_):
+                        if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
+                            DispatchQueue.main.async {
+                                self.newOrderStatus.append((order, status.orderStatus))
+                            }
+                        }
+                    case .failure(_):
+                        DispatchQueue.main.async {
+                            self.newOrderStatus.append((order, "Вызвать"))
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.wait()
+            }
+            operationQueue.addOperation(operation)
+        }
+        
+        operationQueue.waitUntilAllOperationsAreFinished()
+        
+        
+        
+        
+        
+        updateOrderStatus()
+        
+        
         
     }
     
-    func getStatus() { //тут получаем статусы доставки и обновляем массив
+    
+    func updateOrderStatus() {
+        var indexPathsToInsert: [IndexPath] = []
+        var indexPathsToUpdate: [IndexPath] = []
+        var count = 0
+        for newOrder in newOrderStatus {
+                let (newOrderItem, newOrderStatus) = newOrder
+                if let index = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
+                    // Заказ уже присутствует в orderStatus, проверяем статус
+                    let (existingOrderItem, existingOrderStatus) = orderStatus[index]
+                    if existingOrderStatus != newOrderStatus {
+                        indexPathsToUpdate.append(IndexPath(row: index, section: 0))
+                        orderStatus[index] = (newOrderItem, newOrderStatus)
+                        indexPathsToUpdate.append(IndexPath(row: index, section: 0))
+                    }
+                } else {
+                    count += 1
+                    orderStatus.append(newOrder)
+                }
+            }
+
         
+        orderStatus.sort { (item1, item2) -> Bool in
+            let date1 = item1.0.createdDate ?? Date()
+            let date2 = item2.0.createdDate ?? Date()
+            return date1 > date2
+        }
+        
+        
+        DispatchQueue.main.async {
+            let newCount = (self.newOrderStatus.count - orderStatus.count) + count // Определяем количество новых элементов
+            guard newCount > 0 else {
+                self.mainView?.addNewOrderButton?.isUserInteractionEnabled = true
+                return
+            }
+
+            for index in 0..<newCount {
+                let indexPath = IndexPath(row: index, section: 0)
+                indexPathsToInsert.append(indexPath)
+            }
+
+            UIView.animate(withDuration: 0.8) {
+                self.mainView?.collectionView?.performBatchUpdates({
+                    self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
+                    self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
+                    self.mainView?.addNewOrderButton?.isUserInteractionEnabled = true
+                }, completion: nil)
+            }
+        }
+
     }
+
+    
 }

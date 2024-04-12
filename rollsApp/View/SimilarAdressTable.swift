@@ -65,12 +65,16 @@ class SimilarAdressTable: UIView {
         
         var menu = ""
 
-        for (index, item) in menuItemsArr.enumerated() {
-            menu.append("\(item.key) - \(item.value)")
-            if index != menuItemsArr.count - 1 { // Проверяем, не последний ли элемент в массиве
+        for (index, (key, value)) in menuItemsArr.enumerated() {
+            let count = value.0 // Получаем первое значение типа Int из кортежа
+            
+            menu.append("\(key) - \(count)")
+            
+            if index != menuItemsArr.count - 1 {
                 menu.append(", ")
             }
         }
+        
 
         print(menu)
         AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in

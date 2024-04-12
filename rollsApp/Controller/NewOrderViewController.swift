@@ -15,7 +15,8 @@ protocol NewOrderViewControllerDelegate: AnyObject {
 protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func showVC()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int) -> Bool
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
+    func succesCreate()
 }
 
 class NewOrderViewController: UIViewController {
@@ -30,6 +31,7 @@ class NewOrderViewController: UIViewController {
         mainView = NewOrderView()
         mainView?.delegate = self
         self.view = mainView
+        delegate?.stopTime()
         
     }
     
@@ -38,7 +40,9 @@ class NewOrderViewController: UIViewController {
         menuItemsArr.removeAll()
         adress = ""
         totalCoast = 0
-        print(menuItemsArr)
+        print("dsdfsdfsdfsdfee232323")
+        delegate?.startTime()
+        delegate?.reloadCollection()
     }
 
     
@@ -54,11 +58,13 @@ class NewOrderViewController: UIViewController {
         mainView?.updateContentSize()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        delegate?.reloadCollection()
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        print("dsdfsdfsdfsdfeee")
+//        delegate?.startTime()
+//        delegate?.reloadCollection()
+//    }
     
-    
+   
     
    
     
@@ -74,6 +80,11 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    func succesCreate() {
+        dismiss(animated: true, completion: nil)
+        delegate?.succes()
+    }
+    
     
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
         var a = ""
@@ -108,33 +119,34 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     }
     
     
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int) -> Bool {
-        print( phonee, menuItems, clientsNumber, adress, totalCost, paymentMethod, timeOrder, cafeID)
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
+        let headers: HTTPHeaders = [
+            HTTPHeader.accept("application/json"),
+            HTTPHeader.contentType("application/json"),
+            HTTPHeader.authorization(bearerToken: authKey)
+        ]
         
-        let headers: HTTPHeaders = [HTTPHeader.accept("application/json"), HTTPHeader.contentType("application/json"), HTTPHeader.authorization(bearerToken: authKey)]
         let parameters: [String : Any] = [
             "phone": phonee,
             "menu_items": menuItems,
-            "clients_number": Int(clientsNumber),
+            "clients_number": clientsNumber,
             "address": adress,
-            "total_cost": Double(totalCost),
+            "total_cost": totalCost,
             "payment_method": paymentMethod,
-            //"order_on_time": timeOrder,  к определенному времени
-            "cafe_id": cafeID]
-        
+            //"order_on_time": timeOrder,  // к определенному времени
+            "cafe_id": cafeID
+        ]
         
         AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             switch response.result {
             case .success(_):
-                print(1)
+                completion(true)
             case .failure(_):
-                print(2)
+                completion(false)
             }
         }
-        
-        
-        return true
     }
+
     
     
     
