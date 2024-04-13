@@ -11,6 +11,7 @@ import SnapKit
 protocol NewOrderViewProtocol: AnyObject {
     func fillTextField(adress: String, cost: String)
     func fillButton(coast: String)
+    func updateTable()
 }
 
 class NewOrderView: UIView {
@@ -30,7 +31,7 @@ class NewOrderView: UIView {
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     
-    var fallView: UIView?
+
     
     
     
@@ -44,6 +45,7 @@ class NewOrderView: UIView {
         layoutIfNeeded()
         updateContentSize()
         updateCreateOrderButtonState()
+        print(222222)
     }
     
     func updateContentSize() {
@@ -92,9 +94,9 @@ class NewOrderView: UIView {
         addSubview(hideView)
         hideView.snp.makeConstraints { make in
             make.height.equalTo(2)
-            make.width.equalTo(50)
+            make.width.equalTo(55)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(10)
+            make.top.equalToSuperview().inset(20)
         }
         
         let newOrderLabel: UILabel = {
@@ -349,40 +351,10 @@ class NewOrderView: UIView {
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
         
-        fallView = {
-            let view = UIView()
-            view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
-            view.alpha = 0
-            view.layer.cornerRadius = 20
-            return view
-        }()
-        addSubview(fallView!)
-        fallView!.snp.makeConstraints { make in
-            make.height.width.equalTo(200)
-            make.centerY.equalToSuperview()
-            make.centerX.equalToSuperview()
-        }
+       
         
-        let image: UIImage = .fall
-        let imageView = UIImageView(image: image)
-        fallView!.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.height.equalTo(100)
-            make.width.equalTo(120)
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
-        }
         
-        let label = UILabel()
-        label.text = "Ошибка в создании"
-        label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .black
-        label.textAlignment = .center
-        fallView?.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(imageView.snp.bottom).inset(-10)
-        }
+        
         
     }
     
@@ -413,21 +385,42 @@ class NewOrderView: UIView {
             }
         }
         
+       
+
+    
+        
         delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
             if success {
                 self.delegate?.succesCreate()
                 
             } else {
-                UIView.animate(withDuration: 0.8) {
-                    self.fallView?.alpha = 100
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.createOrderButton?.center.x -= 12
+                }) { _ in
+                    // Анимация движения кнопки вправо после завершения анимации влево
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.createOrderButton?.center.x += 24
+                    }) { _ in
+                        // Возврат кнопки в исходное положение после завершения анимации вправо
+                        UIView.animate(withDuration: 0.2, animations: {
+                            self.createOrderButton?.center.x -= 12
+                        })
+                    }
+                }
+                // Анимация изменения цвета кнопки
+                UIView.transition(with: self.createOrderButton!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                    self.createOrderButton?.backgroundColor = .red
+                }) { _ in
+                    // Возвращаем исходный цвет после завершения анимации
+                    UIView.transition(with: self.createOrderButton!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                        self.createOrderButton?.backgroundColor = .systemBlue
+                    }, completion: nil)
                 }
                 
-                UIView.animate(withDuration: 0.5, delay: 2.0, options: [], animations: {
-                    self.fallView?.alpha = 0
-                }, completion: nil)
+                
             }
         }
-
+        
     }
     
     @objc func fillAdress() {
@@ -690,6 +683,18 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension NewOrderView: NewOrderViewProtocol {
+    func updateTable() {
+        print("Обновляем")
+        self.tableView?.snp.updateConstraints({ make in
+            make.height.equalTo((menuItemsArr.count + 1) * 44)
+        })
+        self.tableView?.reloadData()
+        // Обновление размера и содержимого scrollView
+        self.layoutIfNeeded()
+        self.scrollView.layoutIfNeeded()
+        self.updateContentSize()
+    }
+    
     func fillButton(coast: String) {
         createOrderButton?.setTitle("Создать \(coast) ₽", for: .normal)
         totalCoast = Int(coast) ?? 0

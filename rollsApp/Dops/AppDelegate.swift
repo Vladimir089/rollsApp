@@ -10,6 +10,7 @@ import UIKit
 let navController = UINavigationController(rootViewController: OrderViewController())
 
 @main
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?

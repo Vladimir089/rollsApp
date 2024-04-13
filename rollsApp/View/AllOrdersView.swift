@@ -13,7 +13,6 @@ class AllOrdersView: UIView {
     var addNewOrderButton: UIButton?
     var collectionView: UICollectionView?
     var delegate: OrderViewControllerDelegate?
-    var greatView: UIView?
 
 
     override init(frame: CGRect) {
@@ -75,55 +74,12 @@ class AllOrdersView: UIView {
             make.top.equalTo((addNewOrderButton?.snp.bottom)!).inset(-40)
         })
         
-        greatView = {
-            let view = UIView()
-            view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
-            view.alpha = 0
-            view.layer.cornerRadius = 20
-            return view
-        }()
-        addSubview(greatView!)
-        greatView!.snp.makeConstraints { make in
-            make.height.width.equalTo(200)
-            make.centerY.equalToSuperview()
-            make.centerX.equalToSuperview()
-        }
-        
-        let image: UIImage = .ok
-        let imageView = UIImageView(image: image)
-        greatView!.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.height.width.equalTo(120)
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
-        }
-        
-        let label = UILabel()
-        label.text = "Заказ добавлен"
-        label.font = .systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .black
-        label.textAlignment = .center
-        greatView?.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(imageView.snp.bottom).inset(-10)
-        }
+       
         
     }
     
     
-    func succes() {
-        UIView.animate(withDuration: 0.8) {
-            self.greatView?.alpha = 100
-        }
-        
-        UIView.animate(withDuration: 0.5, delay: 2.0, options: [], animations: {
-            self.greatView?.alpha = 0
-        }, completion: nil)
-        
-
-
-    }
+    
     
     
     
@@ -138,6 +94,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "1", for: indexPath)
         cell.subviews.forEach { $0.removeFromSuperview() }
+        
+        
+
         
         //MARK: -UI
         
@@ -156,6 +115,34 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalToSuperview()
             make.centerY.equalToSuperview().offset(-5)
         }
+        
+        
+        if indexPathsToInsert.contains(indexPath) , isFirstLoadApp == false {
+                let greenDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
+                greenDot.backgroundColor = .systemGreen
+                greenDot.alpha = 1
+                greenDot.layer.cornerRadius = 7
+                cell.addSubview(greenDot)
+                let newLabel = UILabel()
+                newLabel.text = "new"
+                newLabel.font = .systemFont(ofSize: 11, weight: .regular)
+                newLabel.textColor = .white
+                greenDot.addSubview(newLabel)
+                newLabel.snp.makeConstraints { make in
+                    make.centerY.equalToSuperview()
+                    make.centerX.equalToSuperview()
+                }
+
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    UIView.animate(withDuration: 0.5) {
+                        greenDot.alpha = 0
+                    }
+                }
+            }
+        
+        
+        
         
         
         let separatorView: UIView = {
@@ -290,12 +277,13 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.right.equalTo(arrowImageView.snp.left).inset(-8)
             make.centerY.equalTo(phoneLabel)
         }
+        
+        
         UIView.animate(withDuration: 0.5) {
             imageView.alpha = 100
             separatorView.alpha = 100
             phoneLabel.alpha = 100
             adressLabel.alpha = 100
-            
         }
         UIView.animate(withDuration: 0.3) {
             
@@ -305,6 +293,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             timeLabel.alpha = 100
         }
         
+        
+        
+        
         return cell
     }
     
@@ -312,9 +303,37 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         return CGSize(width: collectionView.bounds.width, height: 85)
     }
     
+    
+
+    
+
+    
     @objc func goCourier(sender: UIButton) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
-        delegate?.createButtonGo(index: indexPath.row)
+            delegate?.createButtonGo(index: indexPath.row)
+
+            // Блокировка пользовательского взаимодействия с кнопкой
+            sender.isUserInteractionEnabled = false
+        // Анимация уменьшения и увеличения кнопки
+            UIView.animate(withDuration: 0.2, animations: {
+                sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }) { _ in
+                UIView.animate(withDuration: 0.2) {
+                    sender.transform = .identity
+                }
+            }
+            
+            // Изменение цвета фона на зеленый
+            let originalBackgroundColor = sender.backgroundColor
+            sender.backgroundColor = .systemGreen
+            
+            // Возврат к исходному цвету через 5 секунд
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIView.animate(withDuration: 0.5) {
+                    sender.backgroundColor = originalBackgroundColor
+                }
+            }
+
     }
     
     

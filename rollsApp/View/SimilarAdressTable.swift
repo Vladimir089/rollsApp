@@ -75,8 +75,6 @@ class SimilarAdressTable: UIView {
             }
         }
         
-
-        print(menu)
         AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -90,6 +88,7 @@ class SimilarAdressTable: UIView {
                         DispatchQueue.main.async {
                             self.delelagate?.fillTextField(adress: adress, cost: "\(addressCost)")
                             self.delelagate?.fillButton(coast: "\(totalCost)")
+                            self.delelagate?.updateTable()
                         }
                     }
                 } else {

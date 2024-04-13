@@ -14,7 +14,7 @@ class DishesMenuViewControllerController: UIViewController {
     var collectionView: UICollectionView?
     var categoryStorage = Set<String>()
     var coast: SimilarAdressTable?
-    
+    var delegate: NewOrderViewProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,32 +26,29 @@ class DishesMenuViewControllerController: UIViewController {
     
     func createMenu() {
         view.backgroundColor = .white
-        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
-        swipeGesture.direction = .down
-        view.addGestureRecognizer(swipeGesture)
-        
-        closeButton = {
-            let button = UIButton()
-            button.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 247/255, alpha: 1)
-            button.setImage(UIImage(systemName: "xmark"), for: .normal)
-            button.tintColor = UIColor(red: 133/255, green: 133/255, blue: 139/255, alpha: 1)
-            button.layer.cornerRadius = 12.5
-            button.isHidden = true //кнопка закрытия
-            button.addTarget(self, action: #selector(closeVC), for: .touchUpInside)
-            return button
+        let hideView: UIView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 1)
+            view.layer.cornerRadius = 1
+            return view
         }()
-        view.addSubview(closeButton!)
-        closeButton?.snp.makeConstraints({ make in
-            make.height.width.equalTo(25)
-            make.right.equalToSuperview().inset(10)
-            make.top.equalToSuperview().inset(50)
-        })
+        
+        view.addSubview(hideView)
+        hideView.snp.makeConstraints { make in
+            make.height.equalTo(2)
+            make.width.equalTo(55)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        
+        
         
         collectionView = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
             let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
             collection.backgroundColor = .white
+            collection.showsVerticalScrollIndicator = false
             collection.delegate = self
             collection.dataSource = self
             collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "1")
@@ -61,7 +58,7 @@ class DishesMenuViewControllerController: UIViewController {
         view.addSubview(collectionView!)
         collectionView?.snp.makeConstraints({ make in
             make.left.right.bottom.equalToSuperview().inset(10)
-            make.top.equalTo(closeButton!.snp.bottom).inset(-5)
+            make.top.equalTo(hideView.snp.bottom).inset(-5)
         })
         
         
@@ -87,16 +84,17 @@ class DishesMenuViewControllerController: UIViewController {
     
     @objc func closeVC() {
         stopTimer()
-        dismiss(animated: true, completion: nil)
+
     }
     
-    
-    @objc func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-        if gesture.state == .ended {
-            closeVC()
-        }
-    }  
+    deinit {
+        closeVC()
+        
+    }
+
 }
+
+
 
 
 extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -123,7 +121,6 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         let categoryForSection = Array(categoryStorage)[indexPath.section]
         let filteredDishes = allDishes.filter { $0.0.category == categoryForSection }
         let dish = filteredDishes[indexPath.item]
-        print(dish.0.category)
         
         //MAIN
         
@@ -131,6 +128,9 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             let image = dish.1
             let imageView = UIImageView(image: image)
             imageView.layer.cornerRadius = 13
+            imageView.contentMode = .scaleAspectFill
+            imageView.backgroundColor = .red
+            imageView.clipsToBounds = true
             return imageView
         }()
         cell.addSubview(imageView)
@@ -228,8 +228,8 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         }
 
         collectionView.reloadItems(at: [indexPath])
-        
         coast?.getCostAdress()
+        
     }
 
     

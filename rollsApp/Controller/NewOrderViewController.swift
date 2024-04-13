@@ -31,7 +31,6 @@ class NewOrderViewController: UIViewController {
         mainView = NewOrderView()
         mainView?.delegate = self
         self.view = mainView
-        delegate?.stopTime()
         
     }
     
@@ -41,8 +40,7 @@ class NewOrderViewController: UIViewController {
         adress = ""
         totalCoast = 0
         print("dsdfsdfsdfsdfee232323")
-        delegate?.startTime()
-        delegate?.reloadCollection()
+        delegate?.closeVC()
     }
 
     
@@ -57,12 +55,6 @@ class NewOrderViewController: UIViewController {
         mainView?.tableView?.layoutIfNeeded()
         mainView?.updateContentSize()
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        print("dsdfsdfsdfsdfeee")
-//        delegate?.startTime()
-//        delegate?.reloadCollection()
-//    }
     
    
     
@@ -82,7 +74,6 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     func succesCreate() {
         dismiss(animated: true, completion: nil)
-        delegate?.succes()
     }
     
     
@@ -114,7 +105,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         print(1)
         let vc = DishesMenuViewControllerController()
         vc.coast = mainView?.similadAdressView
-        vc.modalPresentationStyle = .fullScreen
+        vc.delegate = self.mainView
         self.present(vc, animated: true)
     }
     
