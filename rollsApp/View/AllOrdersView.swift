@@ -13,6 +13,7 @@ class AllOrdersView: UIView {
     var addNewOrderButton: UIButton?
     var collectionView: UICollectionView?
     var delegate: OrderViewControllerDelegate?
+    
 
 
     override init(frame: CGRect) {
@@ -117,29 +118,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         }
         
         
-        if indexPathsToInsert.contains(indexPath) , isFirstLoadApp == false {
-                let greenDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-                greenDot.backgroundColor = .systemGreen
-                greenDot.alpha = 1
-                greenDot.layer.cornerRadius = 7
-                cell.addSubview(greenDot)
-                let newLabel = UILabel()
-                newLabel.text = "new"
-                newLabel.font = .systemFont(ofSize: 11, weight: .regular)
-                newLabel.textColor = .white
-                greenDot.addSubview(newLabel)
-                newLabel.snp.makeConstraints { make in
-                    make.centerY.equalToSuperview()
-                    make.centerX.equalToSuperview()
-                }
-
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    UIView.animate(withDuration: 0.5) {
-                        greenDot.alpha = 0
-                    }
-                }
-            }
         
         
         
@@ -292,7 +270,38 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             arrowImageView.alpha = 100
             timeLabel.alpha = 100
         }
-        
+        if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath) {
+            print(isFirstLoadApp)
+                let greenDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
+                greenDot.backgroundColor = .systemGreen
+                greenDot.alpha = 0
+                greenDot.layer.cornerRadius = 7
+                cell.addSubview(greenDot)
+                let newLabel = UILabel()
+                newLabel.text = "new"
+                newLabel.font = .systemFont(ofSize: 11, weight: .regular)
+                newLabel.textColor = .white
+                greenDot.addSubview(newLabel)
+                newLabel.snp.makeConstraints { make in
+                    make.centerY.equalToSuperview()
+                    make.centerX.equalToSuperview()
+                }
+
+
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    UIView.animate(withDuration: 0.5) {
+                    
+                        
+                            greenDot.alpha = 1
+                        
+                    }
+                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                UIView.animate(withDuration: 0.5) {
+                    greenDot.alpha = 0
+                }
+            }
+            }
         
         
         
@@ -310,30 +319,30 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     @objc func goCourier(sender: UIButton) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
-            delegate?.createButtonGo(index: indexPath.row)
-
-            // Блокировка пользовательского взаимодействия с кнопкой
-            sender.isUserInteractionEnabled = false
-        // Анимация уменьшения и увеличения кнопки
-            UIView.animate(withDuration: 0.2, animations: {
-                sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            }) { _ in
-                UIView.animate(withDuration: 0.2) {
-                    sender.transform = .identity
-                }
+        delegate?.createButtonGo(index: indexPath.row)
+        
+        
+        sender.isUserInteractionEnabled = false
+        sender.setTitle("Заказ создан", for: .normal)
+        UIView.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                sender.transform = .identity
             }
-            
-            // Изменение цвета фона на зеленый
-            let originalBackgroundColor = sender.backgroundColor
-            sender.backgroundColor = .systemGreen
-            
-            // Возврат к исходному цвету через 5 секунд
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                UIView.animate(withDuration: 0.5) {
-                    sender.backgroundColor = originalBackgroundColor
-                }
+        }
+        
+        
+        let originalBackgroundColor = sender.backgroundColor
+        sender.backgroundColor = .systemGreen
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            UIView.animate(withDuration: 0.5) {
+                sender.backgroundColor = originalBackgroundColor
             }
-
+        }
+        
     }
     
     

@@ -11,7 +11,7 @@ import AlamofireImage
 
 
 let cafeID = 2
-var isFirstLoadApp = true
+var isFirstLoadApp = 0
 
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
@@ -32,9 +32,13 @@ class OrderViewController: UIViewController {
     let queue = DispatchQueue(label: "Timer")
     var isOpen = false
     var isWorkCicle = false
+    var refreshControl = UIRefreshControl()
+    
+    var startTime = Date()
     
     override func loadView() {
         login(login: "Bairam", password: "1122")
+        startTime = .now
     }
     
     override func viewDidLoad() {
@@ -44,8 +48,27 @@ class OrderViewController: UIViewController {
         self.view = mainView
         mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
         mainView?.delegate = self
+        setupRefreshControl()
     }
-   
+    
+    func setupRefreshControl() {
+        //refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        mainView?.collectionView?.refreshControl = refreshControl
+    }
+    
+    @objc func refreshData() {
+        // Показать индикатор загрузки
+        refreshControl.beginRefreshing()
+        
+        // Симуляция загрузки данных на 3 секунды
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            // Ваши операции загрузки данных
+            
+            // Скрыть индикатор загрузки
+            self.refreshControl.endRefreshing()
+        }
+    }
+    
     func backgroundTask() {
         isWorkCicle = true
         while true {
@@ -204,33 +227,53 @@ extension OrderViewController: OrderViewControllerDelegate {
 extension OrderViewController { //для обновления чтобы таблица не моргала
     func regenerateTable() {
         isLoad = true
+        refreshControl.beginRefreshing()
         print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         newOrderStatus.removeAll()
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("application/json")
-        ]
-        
-        AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
-            switch response.result {
-            case .success(_):
-                if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                   
-                    DispatchQueue.global().async {
-                        self.getOrderNewDetail(orders: order.orders)
+
+        if let cachedOrdersData = UserDefaults.standard.data(forKey: "cachedOrders"),
+           let cachedOrders = try? JSONDecoder().decode([Order].self, from: cachedOrdersData) {
+            // Используем кэшированные данные
+            getOrderNewDetail(orders: cachedOrders)
+        } else {
+            // Загружаем данные из сети
+            let headers: HTTPHeaders = [
+                HTTPHeader.authorization(bearerToken: authKey),
+                HTTPHeader.accept("application/json")
+            ]
+            
+            AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+                switch response.result {
+                case .success(_):
+                    if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
+                        // Сохраняем загруженные данные в кэш
+                        UserDefaults.standard.set(data, forKey: "cachedOrders")
+                        UserDefaults.standard.synchronize()
+                        
+                        DispatchQueue.global().async {
+                            
+                            let time: Date = .now
+
+                            print("Получение заказов \(time)")
+                            print("время запуска проги 1\(self.startTime)")
+                            
+                            self.getOrderNewDetail(orders: order.orders)
+                            
+                        }
                     }
+                    
+                case .failure(_):
+                    self.isLoad = false
+                    print("ERRRRRRRRROR")
+                    //self.isLoad = true
+                    return
                 }
-                
-            case .failure(_):
-                self.isLoad = false
-                print("ERRRRRRRRROR")
-                return
             }
         }
     }
+
     
-  
-    
+
     func getOrderNewDetail(orders: [Order]) {
 
         let operationQueue = OperationQueue()
@@ -313,8 +356,17 @@ extension OrderViewController { //для обновления чтобы таб�
                 if self.isOpen == false {
                     self.isLoad = false
                     print("УСПЕХ")
+                    
+                    let time: Date = .now
+
+                    print("Получение статусов \(time)")
+                    print("время запуска проги 2 \(self.startTime)")
+                    
                     self.reloadCollection()
-                    isFirstLoadApp = false
+                    self.refreshControl.endRefreshing()
+                    if isFirstLoadApp < 2 {
+                        isFirstLoadApp += 1
+                    }
                 }
             })
         }

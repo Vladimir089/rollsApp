@@ -129,7 +129,6 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             let imageView = UIImageView(image: image)
             imageView.layer.cornerRadius = 13
             imageView.contentMode = .scaleAspectFill
-            imageView.backgroundColor = .red
             imageView.clipsToBounds = true
             return imageView
         }()

@@ -11,6 +11,7 @@
 		159D8C022BCA9CF10075DCB5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C012BCA9CF10075DCB5 /* Alamofire */; };
 		159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C042BCA9D020075DCB5 /* SnapKit */; };
 		159D8C082BCA9D140075DCB5 /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C072BCA9D140075DCB5 /* AlamofireImage */; };
+		159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */; };
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
@@ -28,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdressViewController.swift; sourceTree = "<group>"; };
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
 				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
 				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
+				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			files = (
 				15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */,
 				15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */,
+				159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */,
 				15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */,
 				15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */,
 				15B8FF512BC414B7005E3562 /* Order.swift in Sources */,

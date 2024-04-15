@@ -17,6 +17,7 @@ protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
     func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
+    func showAdressVC()
 }
 
 class NewOrderViewController: UIViewController {
@@ -72,6 +73,13 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    func showAdressVC() {
+        let vc = AdressViewController()
+        vc.similadAdressView = mainView?.similadAdressView
+        vc.adress = self.mainView?.adressTextField?.text ?? ""
+        present(vc, animated: true)
+    }
+    
     func succesCreate() {
         dismiss(animated: true, completion: nil)
     }

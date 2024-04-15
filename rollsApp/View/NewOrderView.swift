@@ -247,12 +247,7 @@ class NewOrderView: UIView {
             make.height.equalTo(44)
         })
         
-        scrollView.addSubview(similadAdressView)
-        similadAdressView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo((adressTextField?.snp.bottom)!).inset(-5)
-            make.height.equalTo(0)
-        }
+
         similadAdressView.delelagate = self
         
         let sSoboiLabel = generateLabel(text: "С собой",
@@ -283,7 +278,7 @@ class NewOrderView: UIView {
         contentView.addSubview(commentLabel)
         commentLabel.snp.makeConstraints { make in
             make.left.equalTo(newOrderLabel.snp.left).inset(10)
-            make.top.equalTo(similadAdressView.snp.bottom).inset(-20)
+            make.top.equalTo(adressTextField!.snp.bottom).inset(-20)
         }
         
         commentTextField = {
@@ -468,9 +463,6 @@ extension NewOrderView: UITextFieldDelegate {
         if textField == adressTextField {
             UIView.animate(withDuration: 0.5) { [self] in
                 self.frame.origin.y = 0
-                similadAdressView.snp.updateConstraints { make in
-                    make.height.equalTo(0)
-                }
                 commentTextField?.isUserInteractionEnabled = true
                 self.layoutIfNeeded()
                 textField.endEditing(true)
@@ -515,14 +507,10 @@ extension NewOrderView: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == adressTextField {
-            UIView.animate(withDuration: 0.5) { [self] in
-                self.frame.origin.y -= 280
-                similadAdressView.snp.updateConstraints { make in
-                    make.height.equalTo(280)
-                }
-                commentTextField?.isUserInteractionEnabled = false
-                self.layoutIfNeeded()
-            }
+            
+            delegate?.showAdressVC()
+            adressTextField?.endEditing(true)
+            
            
         }
         if textField == commentTextField {
@@ -591,18 +579,31 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             }
             delButton.addTarget(self, action: #selector(delButtonTapped(_:)), for: .touchUpInside)
             let label = UILabel()
-            let key = Array(menuItemsArr.keys)[indexPath.row] // Получаем ключ по индексу строки
+            let key = Array(menuItemsArr.keys)[indexPath.row]
             if let value = menuItemsArr[key] {
-                let count = value.0 // Получаем первый элемент кортежа, представляющий количество
-                label.text = "\(key) - \(count)"
+                label.text = "\(key) - "
             }
-  
-            
             label.font = .systemFont(ofSize: 18, weight: .regular)
             label.textColor = .black
             cell.addSubview(label)
+            
+            let labelCount = UILabel()
+            if let value = menuItemsArr[key] {
+                let count = value.0
+                labelCount.text = "\(count)"
+            }
+            labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
+            labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
+            cell.addSubview(labelCount)
+            
+            
+            
             label.snp.makeConstraints { make in
                 make.left.equalTo(delButton.snp.right).inset(-10)
+                make.centerY.equalToSuperview()
+            }
+            labelCount.snp.makeConstraints { make in
+                make.left.equalTo(label.snp.right)
                 make.centerY.equalToSuperview()
             }
             let costLabel = UILabel()
@@ -644,13 +645,28 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
+        
+        
 
         let key = Array(menuItemsArr.keys)[indexPath.row]
-        menuItemsArr.removeValue(forKey: key)
-        print(menuItemsArr)
+        if var item = menuItemsArr[key] {
+            if item.0 > 1 {
+                var pricePerItem = item.1 / item.0
+                //var price = pricePerItem * item.0
+                
+                item.0 -= 1
+                item.1 -= pricePerItem
+                
+                menuItemsArr[key] = item
+                print(menuItemsArr)
+            } else {
+                menuItemsArr.removeValue(forKey: key)
+                tableView?.deleteRows(at: [indexPath], with: .automatic)
+            }
+        }
+
         similadAdressView.getCostAdress()
         tableView?.beginUpdates()
-        tableView?.deleteRows(at: [indexPath], with: .automatic)
         tableView?.endUpdates()
         updateCreateOrderButtonState()
 
@@ -706,9 +722,6 @@ extension NewOrderView: NewOrderViewProtocol {
         similarLabel?.text = "\(cost) ₽  "
         UIView.animate(withDuration: 0.3) { [self] in
             self.frame.origin.y = 0
-            similadAdressView.snp.updateConstraints { make in
-                make.height.equalTo(0)
-            }
             commentTextField?.alpha = 100
             self.layoutIfNeeded()
         }
