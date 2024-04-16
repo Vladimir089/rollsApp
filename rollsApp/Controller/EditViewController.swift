@@ -1,79 +1,64 @@
 //
-//  NewOrderViewController.swift
+//  EditViewController.swift
 //  rollsApp
 //
-//  Created by Владимир Кацап on 05.04.2024.
+//  Created by Владимир Кацап on 16.04.2024.
 //
 
 import UIKit
 import Alamofire
-protocol NewOrderViewControllerDelegate: AnyObject {
-//    func updateCollection()
-    func removeDelegates()
-}
 
-protocol NewOrderViewControllerShowWCDelegate: AnyObject {
+protocol EditViewControllerDelegate: AnyObject {
     func showVC()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
+    func updateOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
     func showAdressVC()
 }
 
-class NewOrderViewController: UIViewController {
+class EditViewController: UIViewController {
     
-    var mainView: NewOrderView?
     var delegate: OrderViewControllerDelegate?
+    var indexOne = 0
     
+    var mainView: EditView?
+    
+    override func loadView() {
+        mainView = EditView()
+        self.view = mainView
+        mainView?.delegate = self
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(menuItemsArr)
-        mainView = NewOrderView()
-        mainView?.delegate = self
-        self.view = mainView
+        mainView?.index = indexOne
+        navigationController?.navigationBar.barTintColor = .white
+        let image: UIImage = .image
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        let customView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30)) // Установите нужные размеры
+        customView.addSubview(imageView)
+        imageView.frame = customView.bounds
+        let barButtonItem = UIBarButtonItem(customView: customView)
+        self.navigationItem.rightBarButtonItem = barButtonItem
         
+        
+
     }
     
-    
+
     deinit {
         menuItemsArr.removeAll()
         menuItemIndex.removeAll()
         adress = ""
         totalCoast = 0
-        print("dsdfsdfsdfsdfee232323")
         delegate?.closeVC()
     }
 
-    
-    
-    override func viewDidLayoutSubviews() {
-        mainView?.tableView?.reloadData()
-        mainView?.layoutIfNeeded()
-        mainView?.tableView?.snp.updateConstraints({ make in
-            make.height.equalTo((menuItemsArr.count + 1) * 44)
-        })
-        mainView?.scrollView.layoutIfNeeded()
-        mainView?.tableView?.layoutIfNeeded()
-        mainView?.updateContentSize()
-    }
-    
-   
-    
-   
-    
-
-   
 }
 
 
-extension NewOrderViewController: NewOrderViewControllerDelegate {
-    func removeDelegates() {
-        delegate = nil
-    }
-}
-
-extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+extension EditViewController: EditViewControllerDelegate {
     func showAdressVC() {
         let vc = AdressViewController()
         vc.similadAdressView = mainView?.similadAdressView
@@ -82,7 +67,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     }
     
     func succesCreate() {
-        dismiss(animated: true, completion: nil)
+        navController.popToRootViewController(animated: true)
     }
     
     
@@ -114,12 +99,13 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         print(1)
         let vc = DishesMenuViewControllerController()
         vc.coast = mainView?.similadAdressView
-        vc.delegate = self.mainView
+        vc.delegateEdit = self.mainView
+        print(12)
         self.present(vc, animated: true)
     }
     
     
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
+    func updateOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.accept("application/json"),
             HTTPHeader.contentType("application/json"),
@@ -137,7 +123,8 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
             "cafe_id": cafeID
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/edit_order/\(orderId)/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 completion(true)

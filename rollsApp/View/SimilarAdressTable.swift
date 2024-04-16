@@ -14,6 +14,8 @@ class SimilarAdressTable: UIView {
     var delelagate: NewOrderViewProtocol?
     var adressArr = [String]()
     var secondDelegate: AdressViewControllerDelegate?
+    var editDelegate: EditViewProtocol?
+    
     
     var tableView: UITableView?
     
@@ -89,8 +91,14 @@ class SimilarAdressTable: UIView {
                         DispatchQueue.main.async {
                             self.delelagate?.fillTextField(adress: adress, cost: "\(addressCost)")
                             self.delelagate?.fillButton(coast: "\(totalCost)")
+                            
                             self.secondDelegate?.fillTextField(adress: adress)
+                            
                             self.delelagate?.updateTable()
+                            
+                            self.editDelegate?.fillButton(coast: "\(totalCost)")
+                            self.editDelegate?.fillTextField(adress: adress, cost: "\(addressCost)")
+                            self.editDelegate?.updateTable()
                         }
                     }
                 } else {

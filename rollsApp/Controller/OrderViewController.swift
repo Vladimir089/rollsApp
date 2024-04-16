@@ -19,6 +19,7 @@ protocol OrderViewControllerDelegate: AnyObject {
     func reloadCollection()
     func createButtonGo(index: Int)
     func closeVC()
+    func detailVC(index: Int)
 }
 
 
@@ -34,11 +35,11 @@ class OrderViewController: UIViewController {
     var isWorkCicle = false
     var refreshControl = UIRefreshControl()
     
-    var startTime = Date()
+
     
     override func loadView() {
         login(login: "Bairam", password: "1122")
-        startTime = .now
+
     }
     
     override func viewDidLoad() {
@@ -170,6 +171,26 @@ class OrderViewController: UIViewController {
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
+    func detailVC(index: Int) {
+        let vc = EditViewController()
+        isLoad = true
+        isOpen = true
+        vc.delegate = self
+        vc.indexOne = index
+        let backItem = UIBarButtonItem()
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 17), // Устанавливаем жирный шрифт размером 17
+            .foregroundColor: UIColor.black // Устанавливаем цвет текста в черный
+        ]
+        self.navigationItem.backBarButtonItem = backItem
+        backItem.title = "Заказ №\(orderStatus[index].0.id)"
+        backItem.setTitleTextAttributes(attributes, for: .normal)
+        
+        self.refreshControl.endRefreshing()
+
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func closeVC() {
         isLoad = false
         isOpen = false
@@ -227,13 +248,12 @@ extension OrderViewController: OrderViewControllerDelegate {
 extension OrderViewController { //для обновления чтобы таблица не моргала
     func regenerateTable() {
         isLoad = true
-        refreshControl.beginRefreshing()
+        self.refreshControl.beginRefreshing()
         print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         newOrderStatus.removeAll()
 
-        if let cachedOrdersData = UserDefaults.standard.data(forKey: "cachedOrders"),
+        if let cachedOrdersData = UserDefaults.standard.data(forKey: "cachedOrders1"),
            let cachedOrders = try? JSONDecoder().decode([Order].self, from: cachedOrdersData) {
-            // Используем кэшированные данные
             getOrderNewDetail(orders: cachedOrders)
         } else {
             // Загружаем данные из сети
@@ -242,23 +262,16 @@ extension OrderViewController { //для обновления чтобы таб�
                 HTTPHeader.accept("application/json")
             ]
             
-            AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+            AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
                 switch response.result {
                 case .success(_):
                     if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
                         // Сохраняем загруженные данные в кэш
-                        UserDefaults.standard.set(data, forKey: "cachedOrders")
+                        UserDefaults.standard.set(data, forKey: "cachedOrders1")
                         UserDefaults.standard.synchronize()
                         
                         DispatchQueue.global().async {
-                            
-                            let time: Date = .now
-
-                            print("Получение заказов \(time)")
-                            print("время запуска проги 1\(self.startTime)")
-                            
                             self.getOrderNewDetail(orders: order.orders)
-                            
                         }
                     }
                     
@@ -321,22 +334,58 @@ extension OrderViewController { //для обновления чтобы таб�
 
         
         print( newOrderStatus.count)
-        for newOrder in newOrderStatus {
-            
-            let (newOrderItem, newOrderStatus) = newOrder
-            if let index = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
-                let (_, existingOrderStatus) = orderStatus[index]
-                if existingOrderStatus != newOrderStatus {
-                    indexPathsToUpdate.append(IndexPath(row: index, section: 0))
-                    orderStatus[index] = (newOrderItem, newOrderStatus)
+        if isFirstLoadApp != 0 {
+            print("НЕ ПЕРВАЯ ЗАГРУЗКА")
+            for newOrder in newOrderStatus {
+                
+                let (newOrderItem, newOrderStatus) = newOrder
+                if let index = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
+                    let (_, existingOrderStatus) = orderStatus[index]
+                    let (existingOrder, _) = orderStatus[index]
+                    
+                    
+                    if (existingOrderStatus != newOrderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                        indexPathsToUpdate.append(IndexPath(row: index, section: 0))
+                        orderStatus[index] = (newOrderItem, newOrderStatus)
+                    }
+                    
+                    
+                    
+                } else {
+                    count += 1
+                    orderStatus.append(newOrder)
+                    // Добавляем новый индекс только если это новый элемент
+                    indexPathsToInsert.append(IndexPath(row: count - 1, section: 0))
                 }
-            } else {
-                count += 1
-                orderStatus.append(newOrder)
-                // Добавляем новый индекс только если это новый элемент
-                indexPathsToInsert.append(IndexPath(row: count - 1, section: 0))
             }
+        } else {
+            print("ПЕРВАЯ ЗАГРУЗКА")
+            DispatchQueue.concurrentPerform(iterations: newOrderStatus.count) { index in
+                let newOrder = newOrderStatus[index]
+                let (newOrderItem, newOrderStatus) = newOrder
+                
+                
+                if orderStatus.indices.contains(index), let existingIndex = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
+                    let (_, existingOrderStatus) = orderStatus[existingIndex]
+                    let (existingOrder, _) = orderStatus[existingIndex] 
+                    
+                    if (existingOrderStatus != newOrderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                        DispatchQueue.main.async {
+                            indexPathsToUpdate.append(IndexPath(row: existingIndex, section: 0))
+                            orderStatus[existingIndex] = (newOrderItem, newOrderStatus)
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        let count = orderStatus.count
+                        orderStatus.append(newOrder)
+                        indexPathsToInsert.append(IndexPath(row: count, section: 0))
+                    }
+                }
+            }
+
         }
+       
 
         orderStatus.sort { (item1, item2) -> Bool in
             let date1 = item1.0.createdDate ?? Date()
@@ -356,12 +405,6 @@ extension OrderViewController { //для обновления чтобы таб�
                 if self.isOpen == false {
                     self.isLoad = false
                     print("УСПЕХ")
-                    
-                    let time: Date = .now
-
-                    print("Получение статусов \(time)")
-                    print("время запуска проги 2 \(self.startTime)")
-                    
                     self.reloadCollection()
                     self.refreshControl.endRefreshing()
                     if isFirstLoadApp < 2 {
@@ -376,3 +419,5 @@ extension OrderViewController { //для обновления чтобы таб�
 
     
 }
+
+

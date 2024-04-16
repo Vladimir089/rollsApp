@@ -29,29 +29,29 @@ struct Order: Codable {
     let cafeID: Int
     let createdDateString: String // Строковое представление даты в формате ISO8601
 
+    // Форматирование времени создания заказа
     var formattedCreatedTime: String? {
-           guard let date = createdDate else { return nil }
-           
-           let dateFormatter = DateFormatter()
-           dateFormatter.dateFormat = "h:mm a"
-           dateFormatter.timeZone = TimeZone.current // Установка текущего часового пояса
-           return dateFormatter.string(from: date)
-       }
+        guard let date = createdDate else { return nil }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.timeZone = TimeZone.current // Установка текущего часового пояса
+        return dateFormatter.string(from: date)
+    }
 
-    
-    var createdDate: Date? { //+ 3 часа
-            let isoDateFormatter = ISO8601DateFormatter()
-            isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-            
-            if let date = isoDateFormatter.date(from: createdDateString) {
-                return date
-            } else {
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Ваш текущий формат
-                return dateFormatter.date(from: createdDateString)
-            }
+    // Преобразование строки с датой в объект типа Date
+    var createdDate: Date? {
+        let isoDateFormatter = ISO8601DateFormatter()
+        isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        if let date = isoDateFormatter.date(from: createdDateString) {
+            return date
+        } else {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Ваш текущий формат
+            return dateFormatter.date(from: createdDateString)
         }
-    
+    }
 
     enum CodingKeys: String, CodingKey {
         case id, phone, address, status, cookingTime, orderOnTime
@@ -61,9 +61,10 @@ struct Order: Codable {
         case paymentMethod = "payment_method"
         case paymentStatus = "payment_status"
         case createdDateString = "created_date"
-        case cafeID = "cafe_id"
+        case cafeID = "cafe"
     }
 }
+
 
 
 struct OrdersResponse: Codable {

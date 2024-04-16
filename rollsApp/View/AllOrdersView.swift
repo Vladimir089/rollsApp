@@ -56,6 +56,9 @@ class AllOrdersView: UIView {
             make.right.equalToSuperview().inset(15)
         })
         
+    
+
+        
         collectionView = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -72,10 +75,25 @@ class AllOrdersView: UIView {
         collectionView?.snp.makeConstraints({ make in
             make.left.right.equalToSuperview().inset(15)
             make.bottom.equalToSuperview()
-            make.top.equalTo((addNewOrderButton?.snp.bottom)!).inset(-40)
+            make.top.equalTo(orderLabel.snp.bottom).inset(-40)
         })
+
+//        let shadowView = UIView()
+//        shadowView.backgroundColor = .white
+//        shadowView.layer.shadowColor = UIColor.black.cgColor
+//        shadowView.layer.shadowOpacity = 0.6
+//        shadowView.layer.shadowOffset = CGSize(width: 0, height: 10)
+//        shadowView.layer.shadowRadius = 8
+//        shadowView.layer.masksToBounds = false
+//        addSubview(shadowView)
+//        shadowView.snp.makeConstraints { make in
+//            make.left.right.equalToSuperview()
+//            make.top.equalTo(collectionView!.snp.top)
+//            make.height.equalTo(1)
+//        }
         
        
+
         
     }
     
@@ -301,11 +319,45 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                     greenDot.alpha = 0
                 }
             }
+        }
+        
+        if indexPathsToUpdate.contains(indexPath) {
+            print(isFirstLoadApp)
+            let orangeDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
+            orangeDot.backgroundColor = .systemOrange
+            orangeDot.alpha = 0
+            orangeDot.layer.cornerRadius = 7
+            cell.addSubview(orangeDot)
+            let newLabel = UILabel()
+            newLabel.text = "edit"
+            newLabel.font = .systemFont(ofSize: 11, weight: .regular)
+            newLabel.textColor = .white
+            orangeDot.addSubview(newLabel)
+            newLabel.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.centerX.equalToSuperview()
             }
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                UIView.animate(withDuration: 0.5) {
+                    orangeDot.alpha = 1
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                UIView.animate(withDuration: 0.5) {
+                    orangeDot.alpha = 0
+                }
+            }
+        }
         
         
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.detailVC(index: indexPath.row)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

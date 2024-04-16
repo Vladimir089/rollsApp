@@ -12,6 +12,10 @@
 		159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C042BCA9D020075DCB5 /* SnapKit */; };
 		159D8C082BCA9D140075DCB5 /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C072BCA9D140075DCB5 /* AlamofireImage */; };
 		159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */; };
+		159D8C0F2BCEA1590075DCB5 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C0E2BCEA1590075DCB5 /* SDWebImage */; };
+		159D8C112BCEA1590075DCB5 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */; };
+		159D8C152BCEA7E90075DCB5 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C142BCEA7E90075DCB5 /* EditViewController.swift */; };
+		159D8C172BCEA7FF0075DCB5 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C162BCEA7FF0075DCB5 /* EditView.swift */; };
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
@@ -30,6 +34,8 @@
 /* Begin PBXFileReference section */
 		159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdressViewController.swift; sourceTree = "<group>"; };
+		159D8C142BCEA7E90075DCB5 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		159D8C162BCEA7FF0075DCB5 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -53,7 +59,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				159D8C022BCA9CF10075DCB5 /* Alamofire in Frameworks */,
+				159D8C112BCEA1590075DCB5 /* SDWebImageMapKit in Frameworks */,
 				159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */,
+				159D8C0F2BCEA1590075DCB5 /* SDWebImage in Frameworks */,
 				159D8C082BCA9D140075DCB5 /* AlamofireImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,6 +103,7 @@
 				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
 				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
 				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
+				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -105,6 +114,7 @@
 				15E908E62BBC51330086E9F5 /* AllOrdersView.swift */,
 				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
 				15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */,
+				159D8C162BCEA7FF0075DCB5 /* EditView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -152,6 +162,8 @@
 				159D8C012BCA9CF10075DCB5 /* Alamofire */,
 				159D8C042BCA9D020075DCB5 /* SnapKit */,
 				159D8C072BCA9D140075DCB5 /* AlamofireImage */,
+				159D8C0E2BCEA1590075DCB5 /* SDWebImage */,
+				159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */,
 			);
 			productName = rollsApp;
 			productReference = 15E908C92BBC49950086E9F5 /* rollsApp.app */;
@@ -185,6 +197,7 @@
 				159D8C002BCA9CF10075DCB5 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				159D8C032BCA9D020075DCB5 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				159D8C062BCA9D140075DCB5 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
+				159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 15E908CA2BBC49950086E9F5 /* Products */;
 			projectDirPath = "";
@@ -213,9 +226,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				159D8C152BCEA7E90075DCB5 /* EditViewController.swift in Sources */,
 				15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */,
 				15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */,
 				159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */,
+				159D8C172BCEA7FF0075DCB5 /* EditView.swift in Sources */,
 				15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */,
 				15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */,
 				15B8FF512BC414B7005E3562 /* Order.swift in Sources */,
@@ -481,6 +496,14 @@
 				minimumVersion = 4.3.0;
 			};
 		};
+		159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -498,6 +521,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 159D8C062BCA9D140075DCB5 /* XCRemoteSwiftPackageReference "AlamofireImage" */;
 			productName = AlamofireImage;
+		};
+		159D8C0E2BCEA1590075DCB5 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImageMapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
