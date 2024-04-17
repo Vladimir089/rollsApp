@@ -58,14 +58,8 @@ class OrderViewController: UIViewController {
     }
     
     @objc func refreshData() {
-        // Показать индикатор загрузки
         refreshControl.beginRefreshing()
-        
-        // Симуляция загрузки данных на 3 секунды
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            // Ваши операции загрузки данных
-            
-            // Скрыть индикатор загрузки
             self.refreshControl.endRefreshing()
         }
     }
@@ -76,10 +70,15 @@ class OrderViewController: UIViewController {
             if (isLoad == true && isOpen == true) || (isLoad == false && isOpen == true) || (isLoad == true && isOpen == false) {
                 sleep(1)
                 print("НЕТ")
+                DispatchQueue.main.sync { [self] in
+                    self.refreshControl.endRefreshing()
+                }
             } else {
                 print("ДА")
-                regenerateTable()
-                isWorkCicle = false
+                DispatchQueue.main.async { [self] in
+                    regenerateTable()
+                    isWorkCicle = false
+                }
                 break
             }
         }
@@ -249,13 +248,12 @@ extension OrderViewController { //для обновления чтобы таб�
     func regenerateTable() {
         isLoad = true
         self.refreshControl.beginRefreshing()
+                
+            
         print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         newOrderStatus.removeAll()
 
-        if let cachedOrdersData = UserDefaults.standard.data(forKey: "cachedOrders1"),
-           let cachedOrders = try? JSONDecoder().decode([Order].self, from: cachedOrdersData) {
-            getOrderNewDetail(orders: cachedOrders)
-        } else {
+        
             // Загружаем данные из сети
             let headers: HTTPHeaders = [
                 HTTPHeader.authorization(bearerToken: authKey),
@@ -282,7 +280,7 @@ extension OrderViewController { //для обновления чтобы таб�
                     return
                 }
             }
-        }
+        
     }
 
     
@@ -331,7 +329,7 @@ extension OrderViewController { //для обновления чтобы таб�
         indexPathsToUpdate.removeAll()
         print("Индекс патч \(indexPathsToInsert)")
         var count = 0
-
+        
         
         print( newOrderStatus.count)
         if isFirstLoadApp != 0 {
@@ -367,7 +365,7 @@ extension OrderViewController { //для обновления чтобы таб�
                 
                 if orderStatus.indices.contains(index), let existingIndex = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
                     let (_, existingOrderStatus) = orderStatus[existingIndex]
-                    let (existingOrder, _) = orderStatus[existingIndex] 
+                    let (existingOrder, _) = orderStatus[existingIndex]
                     
                     if (existingOrderStatus != newOrderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
                         DispatchQueue.main.async {
@@ -383,15 +381,23 @@ extension OrderViewController { //для обновления чтобы таб�
                     }
                 }
             }
-
+            
         }
-       
+        
 
         orderStatus.sort { (item1, item2) -> Bool in
-            let date1 = item1.0.createdDate ?? Date()
-            let date2 = item2.0.createdDate ?? Date()
-            return date1 > date2
+            if (item1.1 == "Заказ отменен" && item2.1 != "Заказ отменен") || (item1.1 == "Отклонен" && item2.1 != "Отклонен") || (item1.1 == "Завершен" && item2.1 != "Завершен") {
+                return false // item1 должен быть после item2
+            } else if (item1.1 != "Заказ отменен" && item2.1 == "Заказ отменен") || (item1.1 != "Отклонен" && item2.1 == "Отклонен") || (item1.1 != "Завершен" && item2.1 == "Завершен") {
+                return true // item1 должен быть перед item2
+            } else {
+                let date1 = item1.0.createdDate ?? Date()
+                let date2 = item2.0.createdDate ?? Date()
+                return date1 > date2
+            }
         }
+        
+
 
         DispatchQueue.main.sync {
             self.mainView?.collectionView?.performBatchUpdates({

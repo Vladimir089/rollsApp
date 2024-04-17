@@ -307,8 +307,10 @@ class NewOrderView: UIView {
             segmentedControl.selectedSegmentTintColor = .white
             segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
             segmentedControl.selectedSegmentIndex = 0
+            segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
             return segmentedControl
         }()
+        
         scrollView.addSubview(oplataSegmentedControl!)
         oplataSegmentedControl?.snp.makeConstraints({ make in
             make.height.equalTo(44)
@@ -351,6 +353,11 @@ class NewOrderView: UIView {
         
         
         
+    }
+    
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        let feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator.selectionChanged()
     }
     
     

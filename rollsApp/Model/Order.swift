@@ -27,7 +27,7 @@ struct Order: Codable {
     let cookingTime: String?
     let orderOnTime: String?
     let cafeID: Int
-    let createdDateString: String // Строковое представление даты в формате ISO8601
+    let createdDateString: String? // Строковое представление даты в формате ISO8601
 
     // Форматирование времени создания заказа
     var formattedCreatedTime: String? {
@@ -41,17 +41,27 @@ struct Order: Codable {
 
     // Преобразование строки с датой в объект типа Date
     var createdDate: Date? {
+        // Проверяем, что createdDateString не nil и не пустая строка
+        guard let dateString = createdDateString, !dateString.isEmpty else {
+            print("ERRRROROROROROROOROROROORORORORRR!!!!")
+            return nil
+        }
+
+        // Создаем экземпляр форматтера для ISO8601
         let isoDateFormatter = ISO8601DateFormatter()
         isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
-        if let date = isoDateFormatter.date(from: createdDateString) {
-            return date
+
+        // Пробуем разобрать дату из строки
+        if let date = isoDateFormatter.date(from: dateString) {
+            return date // Возвращаем полученную дату
         } else {
+            // Если не удалось разобрать дату из строки, используем другой форматтер
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Ваш текущий формат
-            return dateFormatter.date(from: createdDateString)
+            return dateFormatter.date(from: dateString) // Возвращаем дату
         }
     }
+
 
     enum CodingKeys: String, CodingKey {
         case id, phone, address, status, cookingTime, orderOnTime

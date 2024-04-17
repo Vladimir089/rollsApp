@@ -219,7 +219,7 @@ class EditView: UIView {
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         scrollView.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
-            make.left.equalTo(numberPhoneLabel.snp.left).inset(10)
+            make.left.equalTo(numberPhoneLabel.snp.left)
             make.top.equalTo(tableView!.snp.bottom).inset(-20)
         }
         
@@ -331,6 +331,7 @@ class EditView: UIView {
             segmentedControl.selectedSegmentTintColor = .white
             segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
             segmentedControl.selectedSegmentIndex = indexOplata
+            segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
             return segmentedControl
         }()
         scrollView.addSubview(oplataSegmentedControl!)
@@ -370,6 +371,11 @@ class EditView: UIView {
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
         
+    }
+    
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        let feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator.selectionChanged()
     }
     
     
