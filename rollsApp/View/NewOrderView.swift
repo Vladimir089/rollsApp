@@ -148,7 +148,18 @@ class NewOrderView: UIView {
         
         phoneTextField = {
             let textField = UITextField()
-            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+            let leftPaddingView = UIView(frame: CGRect(x: 10, y: 0, width: 37, height: 40))
+            let view = UIView(frame: CGRect(x: 5, y: 5, width: 30, height: 30))
+            view.backgroundColor = UIColor(hex: "#F2F2F7")
+            view.layer.cornerRadius = 5
+            let label = UILabel(frame: CGRect(x: 5, y: 5, width: 20, height: 20))
+            label.text = "+7"
+            
+            view.addSubview(label)
+            leftPaddingView.addSubview(view)
+            
+            
+            textField.leftView = leftPaddingView
             textField.leftViewMode = .always
             textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             textField.rightViewMode = .always
@@ -465,6 +476,14 @@ class NewOrderView: UIView {
 
 extension NewOrderView: UITextFieldDelegate {
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == phoneTextField {
+            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+            return newString.count <= 11
+        }
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.resignFirstResponder()
         if textField == adressTextField {
@@ -586,18 +605,25 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             }
             delButton.addTarget(self, action: #selector(delButtonTapped(_:)), for: .touchUpInside)
             let label = UILabel()
-            let key = Array(menuItemsArr.keys)[indexPath.row]
-            if let value = menuItemsArr[key] {
+            // Проверяем, что индекс не превышает границы массива
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let key = item.0
                 label.text = "\(key) - "
+            } else {
+                label.text = ""
             }
             label.font = .systemFont(ofSize: 18, weight: .regular)
             label.textColor = .black
             cell.addSubview(label)
-            
+
             let labelCount = UILabel()
-            if let value = menuItemsArr[key] {
-                let count = value.0
-                labelCount.text = "\(count)"
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let value = item.1.0
+                labelCount.text = "\(value)"
+            } else {
+                labelCount.text = ""
             }
             labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
             labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
@@ -617,10 +643,17 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             
             costLabel.font = .systemFont(ofSize: 18, weight: .bold)
             costLabel.textColor = .black
-            if let value = menuItemsArr[key] {
-                let count = value.1
-                costLabel.text = "\(count) ₽"
+            
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let value = item.1.1
+                costLabel.text = "\(value) ₽"
+            } else {
+                labelCount.text = ""
             }
+            
+            
+           
             cell.addSubview(costLabel)
             costLabel.snp.makeConstraints { make in
                 make.right.equalToSuperview().inset(15)
@@ -653,24 +686,20 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             return
         }
         
-        
-
-        let key = Array(menuItemsArr.keys)[indexPath.row]
-        if var item = menuItemsArr[key] {
-            if item.0 > 1 {
-                var pricePerItem = item.1 / item.0
-                //var price = pricePerItem * item.0
-                
-                item.0 -= 1
-                item.1 -= pricePerItem
-                
-                menuItemsArr[key] = item
+        if indexPath.row < menuItemsArr.count {
+            var item = menuItemsArr[indexPath.row]
+            if item.1.0 > 1 {
+                var pricePerItem = item.1.1 / item.1.0
+                item.1.0 -= 1
+                item.1.1 -= pricePerItem
+                menuItemsArr[indexPath.row] = item
                 print(menuItemsArr)
             } else {
-                menuItemsArr.removeValue(forKey: key)
+                menuItemsArr.remove(at: indexPath.row)
                 tableView?.deleteRows(at: [indexPath], with: .automatic)
             }
         }
+
 
         similadAdressView.getCostAdress()
         tableView?.beginUpdates()
@@ -678,23 +707,14 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
         updateCreateOrderButtonState()
 
         UIView.animate(withDuration: 0.5) {
-            // Восстановление состояния адреса перед обновлением таблицы
             let previousAdress = self.adressButton?.titleLabel?.text
             let previousAdressText = self.adressTextField?.text
-            
-            // Обновление данных в таблице
             self.tableView?.reloadData()
-            
-            // Восстановление состояния адреса после обновления таблицы
             self.adressButton?.setTitle(previousAdress, for: .normal)
             self.adressTextField?.text = previousAdressText
-            
-            // Пересчет высоты таблицы
             self.tableView?.snp.updateConstraints({ make in
                 make.height.equalTo((menuItemsArr.count + 1) * 44)
             })
-            
-            // Обновление размера и содержимого scrollView
             self.layoutIfNeeded()
             self.scrollView.layoutIfNeeded()
             self.updateContentSize()

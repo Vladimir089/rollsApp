@@ -13,6 +13,7 @@ import AlamofireImage
 let cafeID = 2
 var isFirstLoadApp = 0
 
+
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
 protocol OrderViewControllerDelegate: AnyObject {
@@ -27,7 +28,7 @@ class OrderViewController: UIViewController {
     
     var mainView: AllOrdersView?
     var isFirstLoad = true
-    var newOrderStatus: [(Order, String)] = []
+    var newOrderStatus: [(Order, OrderStatusResponse)] = []
 
     var isLoad = false
     let queue = DispatchQueue(label: "Timer")
@@ -248,40 +249,54 @@ extension OrderViewController { //для обновления чтобы таб�
     func regenerateTable() {
         isLoad = true
         self.refreshControl.beginRefreshing()
-                
-            
+        
         print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         newOrderStatus.removeAll()
 
+        // Загружаем данные из сети
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("application/json")
+        ]
+        var arrCount = 0
         
-            // Загружаем данные из сети
-            let headers: HTTPHeaders = [
-                HTTPHeader.authorization(bearerToken: authKey),
-                HTTPHeader.accept("application/json")
-            ]
+        if orderStatus.count == 0 {
+            arrCount = 10
+        } else {
+            arrCount = orderStatus.count
+        }
             
-            AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
-                switch response.result {
-                case .success(_):
-                    if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                        // Сохраняем загруженные данные в кэш
-                        UserDefaults.standard.set(data, forKey: "cachedOrders1")
-                        UserDefaults.standard.synchronize()
-                        
-                        DispatchQueue.global().async {
-                            self.getOrderNewDetail(orders: order.orders)
-                        }
-                    }
-                    
-                case .failure(_):
-                    self.isLoad = false
-                    print("ERRRRRRRRROR")
-                    //self.isLoad = true
-                    return
-                }
-            }
+           //ИДЕЯ - ГРУЗИТЬ В ФОНЕ ЗАКАЗЫ В ОТДЕЛЬНЫЙ АРХИВ И ПРИ ПРОКРУТКЕ ОТОБРАЖАТЬ ИХ
+            
+        let methods = ["page_size": 10, "page": 1]
         
+        AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, parameters: methods, headers: headers).responseJSON { response in
+            debugPrint(response)
+            switch response.result {
+            case .success(_):
+                if let data = response.data {
+                    do {
+                        let orderResponse = try JSONDecoder().decode(OrdersResponse.self, from: data)
+                        DispatchQueue.global().async {
+                            self.getOrderNewDetail(orders: orderResponse.orders)
+                        }
+                    } catch {
+                        print("Failed to decode JSON:", error)
+                    }
+                } else {
+                    print("Data is empty")
+                }
+                
+            case .failure(let error):
+                self.isLoad = false
+                print(error)
+                print("ERRRRRRRRROR")
+                print(response)
+                //self.isLoad = true
+            }
+        }
     }
+
 
     
 
@@ -304,12 +319,14 @@ extension OrderViewController { //для обновления чтобы таб�
                     case .success(_):
                         if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
                             DispatchQueue.global().sync {
-                                self.newOrderStatus.append((order, status.orderStatus))
+                                self.newOrderStatus.append((order, status))
                             }
                         }
+                        
                     case .failure(_):
                         DispatchQueue.global().sync {
-                            self.newOrderStatus.append((order, "Вызвать"))
+                            var stat = OrderStatusResponse(status: 1, orderStatus: "Вызвать", orderColor: "#5570F1")
+                            self.newOrderStatus.append((order, stat))
                         }
                     }
                     dispatchGroup.leave()
@@ -327,7 +344,7 @@ extension OrderViewController { //для обновления чтобы таб�
     func updateOrderStatus() {
         indexPathsToInsert.removeAll()
         indexPathsToUpdate.removeAll()
-        print("Индекс патч \(indexPathsToInsert)")
+        
         var count = 0
         
         
@@ -342,18 +359,25 @@ extension OrderViewController { //для обновления чтобы таб�
                     let (existingOrder, _) = orderStatus[index]
                     
                     
-                    if (existingOrderStatus != newOrderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                    if (existingOrderStatus.orderStatus != newOrderStatus.orderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                        print("укукцку \(count)")
                         indexPathsToUpdate.append(IndexPath(row: index, section: 0))
                         orderStatus[index] = (newOrderItem, newOrderStatus)
+                        
                     }
                     
                     
                     
                 } else {
-                    count += 1
-                    orderStatus.append(newOrder)
-                    // Добавляем новый индекс только если это новый элемент
-                    indexPathsToInsert.append(IndexPath(row: count - 1, section: 0))
+                    
+                    
+                        print("коунт \(count)")
+                        count += 1
+                        orderStatus.append(newOrder)
+                        indexPathsToInsert.append(IndexPath(row: count - 1, section: 0))
+                    
+                    
+                    
                 }
             }
         } else {
@@ -367,35 +391,41 @@ extension OrderViewController { //для обновления чтобы таб�
                     let (_, existingOrderStatus) = orderStatus[existingIndex]
                     let (existingOrder, _) = orderStatus[existingIndex]
                     
-                    if (existingOrderStatus != newOrderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                    if (existingOrderStatus.orderStatus != newOrderStatus.orderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
                         DispatchQueue.main.async {
                             indexPathsToUpdate.append(IndexPath(row: existingIndex, section: 0))
                             orderStatus[existingIndex] = (newOrderItem, newOrderStatus)
                         }
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        let count = orderStatus.count
-                        orderStatus.append(newOrder)
-                        indexPathsToInsert.append(IndexPath(row: count, section: 0))
-                    }
+                    
+                        DispatchQueue.main.async {
+                            let count = orderStatus.count
+                            orderStatus.append(newOrder)
+                            indexPathsToInsert.append(IndexPath(row: count, section: 0))
+                        }
+                    
+                    
+                    
                 }
             }
             
         }
         
-
-        orderStatus.sort { (item1, item2) -> Bool in
-            if (item1.1 == "Заказ отменен" && item2.1 != "Заказ отменен") || (item1.1 == "Отклонен" && item2.1 != "Отклонен") || (item1.1 == "Завершен" && item2.1 != "Завершен") {
-                return false // item1 должен быть после item2
-            } else if (item1.1 != "Заказ отменен" && item2.1 == "Заказ отменен") || (item1.1 != "Отклонен" && item2.1 == "Отклонен") || (item1.1 != "Завершен" && item2.1 == "Завершен") {
-                return true // item1 должен быть перед item2
-            } else {
-                let date1 = item1.0.createdDate ?? Date()
-                let date2 = item2.0.createdDate ?? Date()
-                return date1 > date2
+        DispatchQueue.main.async {
+            orderStatus.sort { (item1: (Order, OrderStatusResponse), item2: (Order, OrderStatusResponse)) -> Bool in
+                if (item1.1.orderStatus == "Заказ отменен" && item2.1.orderStatus != "Заказ отменен") || (item1.1.orderStatus == "Отклонен" && item2.1.orderStatus != "Отклонен") || (item1.1.orderStatus == "Завершен" && item2.1.orderStatus != "Завершен") || (item1.1.orderStatus == "Заказ выполнен" && item2.1.orderStatus != "Заказ выполнен") {
+                    return false // item1 должен быть после item2
+                } else if (item1.1.orderStatus != "Заказ отменен" && item2.1.orderStatus == "Заказ отменен") || (item1.1.orderStatus != "Отклонен" && item2.1.orderStatus == "Отклонен") || (item1.1.orderStatus != "Завершен" && item2.1.orderStatus == "Завершен") || (item1.1.orderStatus != "Заказ выполнен" && item2.1.orderStatus == "Заказ выполнен") {
+                    return true // item1 должен быть перед item2
+                } else {
+                    let date1 = item1.0.createdDate ?? Date()
+                    let date2 = item2.0.createdDate ?? Date()
+                    return date1 > date2
+                }
             }
         }
+        
         
 
 

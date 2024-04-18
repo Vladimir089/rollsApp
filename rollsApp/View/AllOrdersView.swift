@@ -7,14 +7,19 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class AllOrdersView: UIView {
     
     var addNewOrderButton: UIButton?
     var collectionView: UICollectionView?
     var delegate: OrderViewControllerDelegate?
+    var isScroll = false
+    var isLoad = false
+    var newOrderStatus: [(Order, OrderStatusResponse)] = []
+    var indexPathsToInsertt: [IndexPath] = []
+    var indexPathsToUpdatee: [IndexPath] = []
     
-
 
     override init(frame: CGRect) {
         super .init(frame: frame)
@@ -78,34 +83,176 @@ class AllOrdersView: UIView {
             make.top.equalTo(orderLabel.snp.bottom).inset(-10)
         })
 
-//        let shadowView = UIView()
-//        shadowView.backgroundColor = .white
-//        shadowView.layer.shadowColor = UIColor.black.cgColor
-//        shadowView.layer.shadowOpacity = 0.6
-//        shadowView.layer.shadowOffset = CGSize(width: 0, height: 10)
-//        shadowView.layer.shadowRadius = 8
-//        shadowView.layer.masksToBounds = false
-//        addSubview(shadowView)
-//        shadowView.snp.makeConstraints { make in
-//            make.left.right.equalToSuperview()
-//            make.top.equalTo(collectionView!.snp.top)
-//            make.height.equalTo(1)
-//        }
-        
-       
-
-        
+    }
+    
+    func autoincrement() {
+        page += 1
     }
     
     
+    func regenerateTable() {
+        isLoad = true
+
+        
+        print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
+        newOrderStatus.removeAll()
+
+        // Загружаем данные из сети
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("application/json")
+        ]
+        let methods = ["page_size": 10, "page": page]
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, parameters: methods, headers: headers).responseJSON { response in
+            debugPrint(response)
+            switch response.result {
+            case .success(_):
+                if let data = response.data {
+                    do {
+                        let orderResponse = try JSONDecoder().decode(OrdersResponse.self, from: data)
+                        DispatchQueue.global().async {
+                            self.getOrderNewDetail(orders: orderResponse.orders)
+                        }
+                    } catch {
+                        print("Failed to decode JSON:", error)
+                    }
+                } else {
+                    print("Data is empty")
+                }
+                
+            case .failure(let error):
+                self.isLoad = false
+                print(error)
+                print("ERRRRRRRRROR")
+                print(response)
+                //self.isLoad = true
+            }
+        }
+    }
+
+
     
-    
-    
+
+    func getOrderNewDetail(orders: [Order]) {
+
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 5
+  
+        for order in orders {
+            let operation = BlockOperation {
+                let dispatchGroup = DispatchGroup()
+                let headers: HTTPHeaders = [
+                    HTTPHeader.authorization(bearerToken: authKey),
+                    HTTPHeader.accept("*/*")
+                ]
+                
+                dispatchGroup.enter()
+                AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(order.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
+                    switch response.result {
+                    case .success(_):
+                        if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
+                            DispatchQueue.global().sync {
+                                self.newOrderStatus.append((order, status))
+                            }
+                        }
+                        
+                    case .failure(_):
+                        DispatchQueue.global().sync {
+                            var stat = OrderStatusResponse(status: 1, orderStatus: "Вызвать", orderColor: "#5570F1")
+                            self.newOrderStatus.append((order, stat))
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.wait()
+            }
+            operationQueue.addOperation(operation)
+        }
+        
+        operationQueue.waitUntilAllOperationsAreFinished()
+        print("-----------------------------------------")
+        updateOrderStatus()
+    }
+
+    func updateOrderStatus() {
+        indexPathsToInsertt.removeAll()
+        indexPathsToUpdatee.removeAll()
+        
+        var count = 0
+        
+        
+        print( newOrderStatus.count)
+        
+            print("НЕ ПЕРВАЯ ЗАГРУЗКА")
+            for newOrder in newOrderStatus {
+                
+                let (newOrderItem, newOrderStatus) = newOrder
+                if let index = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
+                    let (_, existingOrderStatus) = orderStatus[index]
+                    let (existingOrder, _) = orderStatus[index]
+                    
+                    
+                    if (existingOrderStatus.orderStatus != newOrderStatus.orderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
+                        print("укукцку \(count)")
+                        
+                        orderStatus[index] = (newOrderItem, newOrderStatus)
+                        
+                    }
+                    
+                    
+                    
+                } else {
+                    
+                    
+                        print("коунт \(count)")
+                        count += 1
+                        orderStatus.append(newOrder)
+                    indexPathsToInsertt.append(IndexPath(row: orderStatus.count - 1, section: 0))
+                    
+                    
+                    
+                }
+            }
+        
+        
+        
+        
+
+
+        DispatchQueue.main.async { [self] in
+            collectionView?.performBatchUpdates({
+                // Сначала обновляем элементы
+                print(" обновление \(indexPathsToUpdate)")
+                collectionView?.insertItems(at: indexPathsToInsertt)
+                print(" вставка \(indexPathsToInsert)")
+                
+            }, completion: { _ in
+                
+            })
+        }
+    }
     
 }
 
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    
+    
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            if indexPath.row == orderStatus.count - 2 {
+                page += 1
+                regenerateTable()
+            } else {
+                isScroll = false
+                print("]]]]]\(isScroll)")
+            }
+        
+        }
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return orderStatus.count
     }
@@ -125,7 +272,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             
             return imageView
         }()
-        let viewInImageView = UIView(frame: CGRect(x: 0, y: 0, width: 78, height: cell.bounds.height))
+        let viewInImageView = UIView(frame: CGRect(x: 0, y: 0, width: 65, height: cell.bounds.height))
         cell.addSubview(viewInImageView)
         viewInImageView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
@@ -133,6 +280,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalToSuperview()
             make.centerY.equalToSuperview().offset(-5)
         }
+        //viewInImageView.backgroundColor = .red
         
 
         let separatorView: UIView = {
@@ -152,7 +300,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let phoneLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(orderStatus[indexPath.row].0.phone)"  //меняем
+            label.text = "+7\(orderStatus[indexPath.row].0.phone)"  //меняем
             label.font = .systemFont(ofSize: 17, weight: .semibold)
             label.textColor = .black
             return label
@@ -165,9 +313,10 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
 
         let adressLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(orderStatus[indexPath.row].0.address)"     //меняем
+            label.text = "\(orderStatus[indexPath.row].0.address)"
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
+            label.numberOfLines = 2
             return label
         }()
         
@@ -180,7 +329,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let statusLabel: UILabel = {
             let label = UILabel()
-            label.text = "\(orderStatus[indexPath.row].0.status)"     //меняем
+            label.text = "\(orderStatus[indexPath.row].0.status)"
             label.font = .systemFont(ofSize: 13.5, weight: .light)
             label.textColor = .black
             return label
@@ -193,9 +342,11 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let inCellButton: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle(orderStatus[indexPath.row].1, for: .normal) //меняем
-            button.setTitleColor(UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1), for: .normal) //меняем
-            button.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+            button.setTitle(orderStatus[indexPath.row].1.orderStatus, for: .normal) //меняем
+            UIView.animate(withDuration: 0.5) {
+                button.setTitleColor(UIColor(hex: orderStatus[indexPath.row].1.orderColor), for: .normal) //меняем
+                button.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+            }
             button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
             button.isUserInteractionEnabled = false
             button.layer.cornerRadius = 10
@@ -209,7 +360,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         cell.addSubview(inCellButton)
         inCellButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview().offset(14)
-            make.right.equalToSuperview().inset(10)
+            make.right.equalToSuperview()
             make.height.equalTo(44)
             
         }
@@ -241,28 +392,19 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.centerY.equalTo(phoneLabel)
         }
         
-       
-        switch inCellButton.titleLabel?.text {
-        case "Вызвать":
+        if inCellButton.titleLabel?.text == "Вызвать" {
             inCellButton.isHidden = false
             inCellButton.isUserInteractionEnabled = true
-            inCellButton.setTitleColor(UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1), for: .normal)
-            
             inCellButton.tag = indexPath.row
             inCellButton.addTarget(self, action: #selector(goCourier(sender:)), for: .touchUpInside)
-        case "В пути":
-            inCellButton.isHidden = false
-            inCellButton.isUserInteractionEnabled = false
-            inCellButton.setTitleColor(UIColor(red: 165/255, green: 179/255, blue: 7/255, alpha: 1), for: .normal)
-        case "Подъехал":
-            inCellButton.isHidden = false
-            inCellButton.isUserInteractionEnabled = false
-            inCellButton.setTitleColor(UIColor(red: 250/255, green: 0/255, blue: 2/255, alpha: 1), for: .normal)
-        case .none:
-            break
-        case .some(_):
-            break
         }
+        
+        if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Заказ выполнен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" {
+            inCellButton.setTitleColor(.clear, for: .normal)
+            inCellButton.backgroundColor = UIColor.clear
+        }
+       
+        
        
        
         if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath) {
@@ -324,15 +466,20 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                 }
             }
         }
-        if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" {
+        if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" || inCellButton.titleLabel?.text == "Заказ выполнен" {
             UIView.animate(withDuration: 0.2) {
-                imageView.alpha = 0.5
-                phoneLabel.alpha = 0.5
-                adressLabel.alpha = 0.5
-                statusLabel.alpha = 0.5
-                arrowImageView.alpha = 0.5
-                timeLabel.alpha = 0.5
-                inCellButton.alpha = 0.5
+                let filter = CIFilter(name: "CIColorControls")
+                        filter?.setValue(CIImage(image: imageView.image!), forKey: kCIInputImageKey)
+                        filter?.setValue(0.0, forKey: kCIInputSaturationKey) // Установка насыщенности цвета в ноль
+                        let context = CIContext(options: nil)
+                        let cgImage = context.createCGImage((filter?.outputImage)!, from: (filter?.outputImage!.extent)!)
+                        imageView.image = UIImage(cgImage: cgImage!)
+                        phoneLabel.alpha = 0.5
+                        adressLabel.alpha = 0.5
+                        statusLabel.alpha = 0.5
+                        arrowImageView.alpha = 0.5
+                        timeLabel.alpha = 0.5
+                        inCellButton.alpha = 0.5
             }
         }
         
@@ -358,6 +505,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         let indexPath = IndexPath(row: sender.tag, section: 0)
         delegate?.createButtonGo(index: indexPath.row)
         
+        let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .heavy)
+        impactFeedbackgenerator.prepare()
+        impactFeedbackgenerator.impactOccurred()
         
         sender.isUserInteractionEnabled = false
         sender.setTitle("Заказ создан", for: .normal)
@@ -384,3 +534,25 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     
 }
+
+
+// Преобразование hex-кода в UIColor
+extension UIColor {
+    convenience init(hex: String) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+        
+        var rgb: UInt64 = 0
+        
+        Scanner(string: hexSanitized).scanHexInt64(&rgb)
+        
+        let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+        let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
+        let blue = CGFloat(rgb & 0x0000FF) / 255.0
+        
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+}
+
+
+

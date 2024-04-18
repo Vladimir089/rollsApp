@@ -164,12 +164,13 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         
         let countLabel: UIButton = {
             let button = UIButton()
-            if let count = menuItemsArr[dish.0.name]?.0 {
-                button.setTitle("\(count)", for: .normal)
-                button.isHidden = false
-            } else {
-                button.isHidden = true
-            }
+            if let itemIndex = menuItemsArr.firstIndex(where: { $0.0 == dish.0.name }) {
+                    let count = menuItemsArr[itemIndex].1.0
+                    button.setTitle("\(count)", for: .normal)
+                    button.isHidden = false
+                } else {
+                    button.isHidden = true
+                }
 
             button.backgroundColor = .systemRed
             button.tintColor = .black
@@ -216,36 +217,33 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         return CGSize(width: widthPerItem, height: 114)
     }
     
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // Создаем генератор тактильного отклика
         let feedbackGenerator = UISelectionFeedbackGenerator()
         feedbackGenerator.selectionChanged()
-        
+
         let categoryForSection = Array(categoryStorage)[indexPath.section]
         let filteredDishes = allDishes.filter { $0.0.category == categoryForSection }
         let dish = filteredDishes[indexPath.item].0
 
-        if let menuItem = menuItemsArr[dish.name] {
-            // Элемент уже существует в словаре, обновляем его значения
-            var updatedMenuItem = menuItem
-            updatedMenuItem.0 += 1
-            updatedMenuItem.1 += dish.price
-            menuItemsArr[dish.name] = updatedMenuItem
+        // Поиск индекса элемента в массиве menuItemsArr
+        if let itemIndex = menuItemsArr.firstIndex(where: { $0.0 == dish.name }) {
+            // Элемент уже существует в массиве, обновляем его значения
+            var updatedMenuItem = menuItemsArr[itemIndex]
+            updatedMenuItem.1.0 += 1
+            updatedMenuItem.1.1 += dish.price
+            menuItemsArr[itemIndex] = updatedMenuItem
         } else {
-            // Элемента нет в словаре, добавляем его
-            if let existingIndex = menuItemIndex.firstIndex(where: { $0.0 == dish.name }) {
-                // Если элемент уже существует, обновляем его индекс
-                menuItemIndex[existingIndex].1 = menuItemIndex.count
-            } else {
-                // Иначе добавляем новый элемент
-                menuItemIndex.append((dish.name, menuItemIndex.count))
-            }
-            menuItemsArr[dish.name] = (1, dish.price)
+            // Элемента нет в массиве, добавляем его
+            menuItemsArr.append((dish.name, (1, dish.price)))
         }
         
+        // Перезагрузка элементов коллекции
         collectionView.reloadItems(at: [indexPath])
         coast?.getCostAdress()
     }
+
 
 
     

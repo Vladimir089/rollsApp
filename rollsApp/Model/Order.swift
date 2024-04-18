@@ -1,6 +1,8 @@
 
 import Foundation
 
+
+
 struct OrderStatusResponse: Codable {
     let status: Int
     let orderStatus: String
@@ -20,14 +22,14 @@ struct Order: Codable {
     let menuItems: String
     let clientsNumber: Int
     let address: String
-    let totalCost: Int
+    let totalCost: Int?
     let paymentMethod: String
     let paymentStatus: String
     let status: String
     let cookingTime: String?
     let orderOnTime: String?
     let cafeID: Int
-    let createdDateString: String? // Строковое представление даты в формате ISO8601
+    let createdDateString: String?
 
     // Форматирование времени создания заказа
     var formattedCreatedTime: String? {
@@ -35,30 +37,26 @@ struct Order: Codable {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
-        dateFormatter.timeZone = TimeZone.current // Установка текущего часового пояса
+        dateFormatter.timeZone = TimeZone.current
         return dateFormatter.string(from: date)
     }
 
-    // Преобразование строки с датой в объект типа Date
+
     var createdDate: Date? {
-        // Проверяем, что createdDateString не nil и не пустая строка
         guard let dateString = createdDateString, !dateString.isEmpty else {
             print("ERRRROROROROROROOROROROORORORORRR!!!!")
             return nil
         }
 
-        // Создаем экземпляр форматтера для ISO8601
         let isoDateFormatter = ISO8601DateFormatter()
         isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-        // Пробуем разобрать дату из строки
         if let date = isoDateFormatter.date(from: dateString) {
-            return date // Возвращаем полученную дату
+            return date
         } else {
-            // Если не удалось разобрать дату из строки, используем другой форматтер
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Ваш текущий формат
-            return dateFormatter.date(from: dateString) // Возвращаем дату
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return dateFormatter.date(from: dateString)
         }
     }
 
@@ -71,7 +69,7 @@ struct Order: Codable {
         case paymentMethod = "payment_method"
         case paymentStatus = "payment_status"
         case createdDateString = "created_date"
-        case cafeID = "cafe"
+        case cafeID = "cafe_id"
     }
 }
 
@@ -81,5 +79,5 @@ struct OrdersResponse: Codable {
     let orders: [Order]
 }
 
-var orderStatus: [(Order, String)] = []
+var orderStatus: [(Order, OrderStatusResponse)] = []
 

@@ -62,14 +62,12 @@ class EditView: UIView {
         let items = inputString.components(separatedBy: ", ")
         for item in items {
             let components = item.components(separatedBy: " - ")
-            // Проверяем, что у нас есть два компонента после разделения
             if components.count == 2 {
-                let name = components[0] // Название блюда
+                let name = components[0]
                 if let quantity = Int(components[1]) {
-                    // Ищем название блюда в массиве allDishes
                     if let index = allDishes.firstIndex(where: { $0.0.name == name }) {
                         let price = allDishes[index].0.price // Цена блюда
-                        menuItemsArr[name] = (quantity, price)
+                        menuItemsArr.append((name, (quantity, price)))
                     } else {
                         print("Блюдо с названием '\(name)' не найдено в массиве allDishes.")
                     }
@@ -164,7 +162,20 @@ class EditView: UIView {
         
         phoneTextField = {
             let textField = UITextField()
-            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+            let leftPaddingView = UIView(frame: CGRect(x: 10, y: 0, width: 37, height: 40))
+
+            let view = UIView(frame: CGRect(x: 5, y: 5, width: 30, height: 30))
+            view.backgroundColor = UIColor(hex: "#F2F2F7")
+            view.layer.cornerRadius = 5
+            let label = UILabel(frame: CGRect(x: 5, y: 5, width: 20, height: 20))
+            label.text = "+7"
+            
+            view.addSubview(label)
+            leftPaddingView.addSubview(view)
+            
+            
+            textField.leftView = leftPaddingView
+            textField.leftViewMode = .always
             textField.leftViewMode = .always
             textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             textField.rightViewMode = .always
@@ -464,6 +475,14 @@ class EditView: UIView {
 
 extension EditView: UITextFieldDelegate {
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == phoneTextField {
+            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+            return newString.count <= 10
+        }
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.resignFirstResponder()
         if textField == adressTextField {
@@ -585,18 +604,25 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             }
             delButton.addTarget(self, action: #selector(delButtonTapped(_:)), for: .touchUpInside)
             let label = UILabel()
-            let key = Array(menuItemsArr.keys)[indexPath.row]
-            if let value = menuItemsArr[key] {
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let key = item.0
+                let value = item.1
                 label.text = "\(key) - "
+            } else {
+                label.text = ""
             }
             label.font = .systemFont(ofSize: 18, weight: .regular)
             label.textColor = .black
             cell.addSubview(label)
             
             let labelCount = UILabel()
-            if let value = menuItemsArr[key] {
-                let count = value.0
-                labelCount.text = "\(count)"
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let value = item.1.0
+                labelCount.text = "\(value)"
+            } else {
+                labelCount.text = ""
             }
             labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
             labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
@@ -616,9 +642,12 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             
             costLabel.font = .systemFont(ofSize: 18, weight: .bold)
             costLabel.textColor = .black
-            if let value = menuItemsArr[key] {
-                let count = value.1
-                costLabel.text = "\(count) ₽"
+            if indexPath.row < menuItemsArr.count {
+                let item = menuItemsArr[indexPath.row]
+                let value = item.1.1
+                costLabel.text = "\(value) ₽"
+            } else {
+                labelCount.text = ""
             }
             cell.addSubview(costLabel)
             costLabel.snp.makeConstraints { make in
@@ -651,22 +680,17 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
-        
-        
 
-        let key = Array(menuItemsArr.keys)[indexPath.row]
-        if var item = menuItemsArr[key] {
-            if item.0 > 1 {
-                var pricePerItem = item.1 / item.0
-                //var price = pricePerItem * item.0
-                
-                item.0 -= 1
-                item.1 -= pricePerItem
-                
-                menuItemsArr[key] = item
+        if indexPath.row < menuItemsArr.count {
+            var item = menuItemsArr[indexPath.row]
+            if item.1.0 > 1 {
+                var pricePerItem = item.1.1 / item.1.0
+                item.1.0 -= 1
+                item.1.1 -= pricePerItem
+                menuItemsArr[indexPath.row] = item
                 print(menuItemsArr)
             } else {
-                menuItemsArr.removeValue(forKey: key)
+                menuItemsArr.remove(at: indexPath.row)
                 tableView?.deleteRows(at: [indexPath], with: .automatic)
             }
         }
@@ -677,23 +701,14 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
 
 
         UIView.animate(withDuration: 0.5) {
-            // Восстановление состояния адреса перед обновлением таблицы
             let previousAdress = self.adressButton?.titleLabel?.text
             let previousAdressText = self.adressTextField?.text
-            
-            // Обновление данных в таблице
             self.tableView?.reloadData()
-            
-            // Восстановление состояния адреса после обновления таблицы
             self.adressButton?.setTitle(previousAdress, for: .normal)
             self.adressTextField?.text = previousAdressText
-            
-            // Пересчет высоты таблицы
             self.tableView?.snp.updateConstraints({ make in
                 make.height.equalTo((menuItemsArr.count + 1) * 44)
             })
-            
-            // Обновление размера и содержимого scrollView
             self.layoutIfNeeded()
             self.scrollView.layoutIfNeeded()
             self.updateContentSize()
