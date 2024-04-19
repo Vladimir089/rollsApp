@@ -153,6 +153,7 @@ class NewOrderView: UIView {
             view.backgroundColor = UIColor(hex: "#F2F2F7")
             view.layer.cornerRadius = 5
             let label = UILabel(frame: CGRect(x: 5, y: 5, width: 20, height: 20))
+            label.textColor = .black
             label.text = "+7"
             
             view.addSubview(label)

@@ -90,148 +90,12 @@ class AllOrdersView: UIView {
     }
     
     
-    func regenerateTable() {
-        isLoad = true
-
-        
-        print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
-        newOrderStatus.removeAll()
-
-        // Загружаем данные из сети
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("application/json")
-        ]
-        let methods = ["page_size": 10, "page": page]
-        
-        AF.request("http://arbamarket.ru/api/v1/main/get_orders_history/?cafe_id=\(cafeID)", method: .get, parameters: methods, headers: headers).responseJSON { response in
-            debugPrint(response)
-            switch response.result {
-            case .success(_):
-                if let data = response.data {
-                    do {
-                        let orderResponse = try JSONDecoder().decode(OrdersResponse.self, from: data)
-                        DispatchQueue.global().async {
-                            self.getOrderNewDetail(orders: orderResponse.orders)
-                        }
-                    } catch {
-                        print("Failed to decode JSON:", error)
-                    }
-                } else {
-                    print("Data is empty")
-                }
-                
-            case .failure(let error):
-                self.isLoad = false
-                print(error)
-                print("ERRRRRRRRROR")
-                print(response)
-                //self.isLoad = true
-            }
-        }
-    }
+    
 
 
     
 
-    func getOrderNewDetail(orders: [Order]) {
-
-        let operationQueue = OperationQueue()
-        operationQueue.maxConcurrentOperationCount = 5
-  
-        for order in orders {
-            let operation = BlockOperation {
-                let dispatchGroup = DispatchGroup()
-                let headers: HTTPHeaders = [
-                    HTTPHeader.authorization(bearerToken: authKey),
-                    HTTPHeader.accept("*/*")
-                ]
-                
-                dispatchGroup.enter()
-                AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(order.id)&cafe_id=\(order.cafeID)", method: .post, headers: headers).responseJSON { response in
-                    switch response.result {
-                    case .success(_):
-                        if let data = response.data, let status = try? JSONDecoder().decode(OrderStatusResponse.self, from: data) {
-                            DispatchQueue.global().sync {
-                                self.newOrderStatus.append((order, status))
-                            }
-                        }
-                        
-                    case .failure(_):
-                        DispatchQueue.global().sync {
-                            var stat = OrderStatusResponse(status: 1, orderStatus: "Вызвать", orderColor: "#5570F1")
-                            self.newOrderStatus.append((order, stat))
-                        }
-                    }
-                    dispatchGroup.leave()
-                }
-                dispatchGroup.wait()
-            }
-            operationQueue.addOperation(operation)
-        }
-        
-        operationQueue.waitUntilAllOperationsAreFinished()
-        print("-----------------------------------------")
-        updateOrderStatus()
-    }
-
-    func updateOrderStatus() {
-        indexPathsToInsertt.removeAll()
-        indexPathsToUpdatee.removeAll()
-        
-        var count = 0
-        
-        
-        print( newOrderStatus.count)
-        
-            print("НЕ ПЕРВАЯ ЗАГРУЗКА")
-            for newOrder in newOrderStatus {
-                
-                let (newOrderItem, newOrderStatus) = newOrder
-                if let index = orderStatus.firstIndex(where: { $0.0.id == newOrderItem.id }) {
-                    let (_, existingOrderStatus) = orderStatus[index]
-                    let (existingOrder, _) = orderStatus[index]
-                    
-                    
-                    if (existingOrderStatus.orderStatus != newOrderStatus.orderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
-                        print("укукцку \(count)")
-                        
-                        orderStatus[index] = (newOrderItem, newOrderStatus)
-                        
-                    }
-                    
-                    
-                    
-                } else {
-                    
-                    
-                        print("коунт \(count)")
-                        count += 1
-                        orderStatus.append(newOrder)
-                    indexPathsToInsertt.append(IndexPath(row: orderStatus.count - 1, section: 0))
-                    
-                    
-                    
-                }
-            }
-        
-        
-        
-        
-
-
-        DispatchQueue.main.async { [self] in
-            collectionView?.performBatchUpdates({
-                // Сначала обновляем элементы
-                print(" обновление \(indexPathsToUpdate)")
-                collectionView?.insertItems(at: indexPathsToInsertt)
-                print(" вставка \(indexPathsToInsert)")
-                
-            }, completion: { _ in
-                
-            })
-        }
-    }
+   
     
 }
 
@@ -239,18 +103,24 @@ class AllOrdersView: UIView {
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
-    
+   
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-            if indexPath.row == orderStatus.count - 2 {
-                page += 1
-                regenerateTable()
-            } else {
-                isScroll = false
-                print("]]]]]\(isScroll)")
-            }
+
         
+        if indexPath.row + 1 == orderStatus.count  {
+            page += 1
+            print("DKDJKDKDKKDKDDKDDDDD")
+            
+        } else if (indexPath.row % 12 == 0 && indexPath.row != 0) && (indexPath.row + 1 != orderStatus.count) {
+            page -= 1
+            print("IRIRIRRIIRIRIIRIRIRIIRIRI")
         }
+        
+       
+    }
+
+    
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
