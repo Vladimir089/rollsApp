@@ -13,6 +13,7 @@ var menuItemIndex = [(String, Int)]() //хранение ключей
 var adress = ""
 var totalCoast = 0
 var page = 1
+var countInPage = 10
 
 
 

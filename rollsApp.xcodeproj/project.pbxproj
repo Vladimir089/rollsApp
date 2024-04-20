@@ -92,7 +92,6 @@
 		15E908CB2BBC49950086E9F5 /* rollsApp */ = {
 			isa = PBXGroup;
 			children = (
-				15AB13D82BD2960C009BC4EB /* NetWorking.swift */,
 				15E908E52BBC50870086E9F5 /* Dops */,
 				15E908E22BBC4B0D0086E9F5 /* Model */,
 				15E908E12BBC4B080086E9F5 /* View */,
@@ -127,6 +126,7 @@
 		15E908E22BBC4B0D0086E9F5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				15AB13D82BD2960C009BC4EB /* NetWorking.swift */,
 				15B8FF4E2BC41138005E3562 /* LoginModel.swift */,
 				15B8FF502BC414B7005E3562 /* Order.swift */,
 				15B8FF522BC5702A005E3562 /* CreateOrder.swift */,

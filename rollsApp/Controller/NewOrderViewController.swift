@@ -138,6 +138,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            print(response)
             switch response.result {
             case .success(_):
                 completion(true)

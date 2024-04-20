@@ -404,6 +404,7 @@ class NewOrderView: UIView {
     
         
         delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
+            debugPrint(success)
             if success {
                 self.delegate?.succesCreate()
                 

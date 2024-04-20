@@ -74,6 +74,7 @@ class AllOrdersView: UIView {
             collection.dataSource = self
             collection.backgroundColor = .white
             collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "1")
+
             return collection
         }()
         addSubview(collectionView!)
@@ -85,9 +86,7 @@ class AllOrdersView: UIView {
 
     }
     
-    func autoincrement() {
-        page += 1
-    }
+  
     
     
     
@@ -95,32 +94,46 @@ class AllOrdersView: UIView {
 
     
 
-   
+    var previousIndexPath: IndexPath?
     
 }
 
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    
+   
    
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Получаем видимые индексы ячеек
+        guard let indexPath = collectionView?.indexPathsForVisibleItems.sorted().last else { return }
         
-        if indexPath.row + 1 == orderStatus.count  {
-            page += 1
-            print("DKDJKDKDKKDKDDKDDDDD")
-            
-        } else if (indexPath.row % 12 == 0 && indexPath.row != 0) && (indexPath.row + 1 != orderStatus.count) {
-            page -= 1
-            print("IRIRIRRIIRIRIIRIRIRIIRIRI")
+        // Проверяем, что у вас есть предыдущий IndexPath
+        guard let previousIndexPath = self.previousIndexPath else {
+            self.previousIndexPath = indexPath
+            return
         }
         
-       
+        // Сравниваем текущий IndexPath с предыдущим
+        if indexPath.row > previousIndexPath.row && (indexPath.row + 1) % 14 == 0 {
+            // Прокрутка вниз
+            
+            if page * 14 == indexPath.row + 1 {
+                page += 1
+                print("page увеличена: \(page)")
+            }
+        } else if indexPath.row < previousIndexPath.row && (indexPath.row + 1) % 14 == 0 && page > 1 {
+            print("Прокрутка вверх")
+            if page * 14 != indexPath.row + 1 {
+                page -= 1
+                print("page уменьшена: \(page)")
+                
+            }
+        }
+        
+        // Обновляем previousIndexPath для следующего сравнения
+        self.previousIndexPath = indexPath
     }
-
-    
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -132,8 +145,8 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         cell.subviews.forEach { $0.removeFromSuperview() }
         
         
-
-
+        
+        
         //MARK: -UI
         
         let imageView: UIImageView = {
@@ -152,7 +165,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         }
         //viewInImageView.backgroundColor = .red
         
-
+        
         let separatorView: UIView = {
             let view = UIView()
             view.backgroundColor = .separator
@@ -277,7 +290,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
        
        
-        if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath) {
+        if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath), page == 1 {
             print(isFirstLoadApp)
                 let greenDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
                 greenDot.backgroundColor = .systemGreen

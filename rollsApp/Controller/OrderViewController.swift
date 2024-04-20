@@ -17,7 +17,7 @@ var isFirstLoadApp = 0
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
 protocol OrderViewControllerDelegate: AnyObject {
-    func reloadCollection()
+    func reloadCollection(forPage pagee: Int)
     func createButtonGo(index: Int)
     func closeVC()
     func detailVC(index: Int)
@@ -77,7 +77,7 @@ class OrderViewController: UIViewController {
             } else {
                 print("ДА")
                 DispatchQueue.main.async { [self] in
-                    regenerateTable()
+                    regenerateTable(forPage: page)
                     isWorkCicle = false
                 }
                 break
@@ -115,7 +115,7 @@ class OrderViewController: UIViewController {
                 if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
                     authKey = login.authToken
                     
-                    self.reloadCollection()
+                    self.reloadCollection(forPage: page)
                     self.getDishes()
                     
                 }
@@ -228,10 +228,10 @@ extension OrderViewController: OrderViewControllerDelegate {
 
     }
     
-    func reloadCollection() {
+    func reloadCollection(forPage pagee: Int) {
         if isLoad == false && isOpen == false  {
             print("ЗАКРЫТО")
-            regenerateTable()
+            regenerateTable(forPage: pagee)
         } else {
            print("ОТКРЫТО")
             queue.async {
