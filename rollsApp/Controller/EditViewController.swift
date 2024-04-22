@@ -67,7 +67,8 @@ extension EditViewController: EditViewControllerDelegate {
     }
     
     func succesCreate() {
-        navController.popToRootViewController(animated: true)
+        navController.popViewController(animated: true)
+
     }
     
     

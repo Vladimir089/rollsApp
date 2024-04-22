@@ -69,7 +69,7 @@ struct Order: Codable {
         case paymentMethod = "payment_method"
         case paymentStatus = "payment_status"
         case createdDateString = "created_date"
-        case cafeID = "cafe_id"
+        case cafeID = "cafe"
     }
 }
 

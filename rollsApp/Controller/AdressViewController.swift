@@ -9,6 +9,7 @@ import UIKit
 
 protocol AdressViewControllerDelegate: AnyObject {
     func fillTextField(adress: String)
+    func dismiss()
 }
 
 class AdressViewController: UIViewController {
@@ -108,5 +109,9 @@ extension AdressViewController: UITextFieldDelegate {
 extension AdressViewController: AdressViewControllerDelegate {
     func fillTextField(adress: String) {
         adressTextField?.text = adress
+    }
+    func dismiss() {
+        adressTextField?.resignFirstResponder()
+        dismiss(animated: true, completion: nil)
     }
 }

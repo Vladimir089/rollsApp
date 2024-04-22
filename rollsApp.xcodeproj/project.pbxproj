@@ -18,6 +18,7 @@
 		159D8C172BCEA7FF0075DCB5 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C162BCEA7FF0075DCB5 /* EditView.swift */; };
 		15AB13D72BD29115009BC4EB /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 15AB13D62BD29115009BC4EB /* SocketIO */; };
 		15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13D82BD2960C009BC4EB /* NetWorking.swift */; };
+		15AB13DB2BD69E6A009BC4EB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */; };
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
@@ -39,6 +40,7 @@
 		159D8C142BCEA7E90075DCB5 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		159D8C162BCEA7FF0075DCB5 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		15AB13D82BD2960C009BC4EB /* NetWorking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorking.swift; sourceTree = "<group>"; };
+		15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
 				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
 				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
+				15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */,
 				15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */,
 				15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */,
+				15AB13DB2BD69E6A009BC4EB /* LoginViewController.swift in Sources */,
 				15B8FF552BC595DB005E3562 /* DishesMenuViewControllerController.swift in Sources */,
 				15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */,
 				15E908E42BBC4E4D0086E9F5 /* OrderViewController.swift in Sources */,

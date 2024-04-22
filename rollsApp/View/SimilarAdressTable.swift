@@ -91,14 +91,12 @@ class SimilarAdressTable: UIView {
                         DispatchQueue.main.async {
                             self.delelagate?.fillTextField(adress: adress, cost: "\(addressCost)")
                             self.delelagate?.fillButton(coast: "\(totalCost)")
-                            
                             self.secondDelegate?.fillTextField(adress: adress)
-                            
                             self.delelagate?.updateTable()
-                            
                             self.editDelegate?.fillButton(coast: "\(totalCost)")
                             self.editDelegate?.fillTextField(adress: adress, cost: "\(addressCost)")
                             self.editDelegate?.updateTable()
+                            self.secondDelegate?.dismiss()
                         }
                     }
                 } else {
@@ -191,11 +189,13 @@ extension SimilarAdressTable: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         adress = adressArr[indexPath.row]
         getCostAdress()
+        
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         adress = adressArr[indexPath.row]
         getCostAdress()
+        
         return indexPath
     }
 }

@@ -104,38 +104,38 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
    
    
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // Получаем видимые индексы ячеек
-        guard let indexPath = collectionView?.indexPathsForVisibleItems.sorted().last else { return }
-        
-        // Проверяем, что у вас есть предыдущий IndexPath
-        guard let previousIndexPath = self.previousIndexPath else {
-            self.previousIndexPath = indexPath
-            return
-        }
-        
-        // Сравниваем текущий IndexPath с предыдущим
-        if indexPath.row > previousIndexPath.row && (indexPath.row + 1) % 14 == 0 {
-            // Прокрутка вниз
-            
-            if page * 14 == indexPath.row + 1 {
-                page += 1
-                print("page увеличена: \(page)")
-            }
-        } else if indexPath.row < previousIndexPath.row && (indexPath.row + 1) % 14 == 0 && page > 1 {
-            print("Прокрутка вверх")
-            if page * 14 != indexPath.row + 1 {
-                page -= 1
-                print("page уменьшена: \(page)")
-                
-            }
-        }
-        
-        // Обновляем previousIndexPath для следующего сравнения
-        self.previousIndexPath = indexPath
-    }
-    
-    
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        // Получаем видимые индексы ячеек
+//        guard let indexPath = collectionView?.indexPathsForVisibleItems.sorted().last else { return }
+//        
+//        // Проверяем, что у вас есть предыдущий IndexPath
+//        guard let previousIndexPath = self.previousIndexPath else {
+//            self.previousIndexPath = indexPath
+//            return
+//        }
+//        
+//        // Сравниваем текущий IndexPath с предыдущим
+//        if indexPath.row > previousIndexPath.row && (indexPath.row + 1) % 14 == 0 {
+//            // Прокрутка вниз
+//            
+//            if page * 14 == indexPath.row + 1 {
+//                page += 1
+//                print("page увеличена: \(page)")
+//            }
+//        } else if indexPath.row < previousIndexPath.row && (indexPath.row + 1) % 14 == 0 && page > 1 {
+//            print("Прокрутка вверх")
+//            if page * 14 != indexPath.row + 1 {
+//                page -= 1
+//                print("page уменьшена: \(page)")
+//                
+//            }
+//        }
+//        
+//        // Обновляем previousIndexPath для следующего сравнения
+//        self.previousIndexPath = indexPath
+//    }
+//    
+//    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return orderStatus.count
     }

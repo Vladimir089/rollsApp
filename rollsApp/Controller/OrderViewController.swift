@@ -17,7 +17,7 @@ var isFirstLoadApp = 0
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
 protocol OrderViewControllerDelegate: AnyObject {
-    func reloadCollection(forPage pagee: Int)
+    func reloadCollection()
     func createButtonGo(index: Int)
     func closeVC()
     func detailVC(index: Int)
@@ -39,18 +39,20 @@ class OrderViewController: UIViewController {
 
     
     override func loadView() {
-        login(login: "Bairam", password: "1122")
+        reloadCollection()
+        getDishes()
 
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationController?.isNavigationBarHidden = true
         mainView = AllOrdersView()
         self.view = mainView
         mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
         mainView?.delegate = self
         setupRefreshControl()
+        
     }
     
     func setupRefreshControl() {
@@ -77,7 +79,7 @@ class OrderViewController: UIViewController {
             } else {
                 print("ДА")
                 DispatchQueue.main.async { [self] in
-                    regenerateTable(forPage: page)
+                    regenerateTable()
                     isWorkCicle = false
                 }
                 break
@@ -98,34 +100,7 @@ class OrderViewController: UIViewController {
 
 
     
-    func login(login: String, password: String) {
-        let headers: HTTPHeaders = [
-            "accept": "*/*",
-            "Content-Type": "application/json"
-        ]
-        
-        let parameters: [String: Any] = [
-            "username": login,
-            "password": password
-        ]
-        
-        AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            switch response.result {
-            case .success( _):
-                if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
-                    authKey = login.authToken
-                    
-                    self.reloadCollection(forPage: page)
-                    self.getDishes()
-                    
-                }
-                
-            case .failure(let error):
-                print("Произошла ошибка: \(error)")
-                
-            }
-        }
-    }
+    
     
     func getDishes() {
         
@@ -228,10 +203,10 @@ extension OrderViewController: OrderViewControllerDelegate {
 
     }
     
-    func reloadCollection(forPage pagee: Int) {
+    func reloadCollection() {
         if isLoad == false && isOpen == false  {
             print("ЗАКРЫТО")
-            regenerateTable(forPage: pagee)
+            regenerateTable()
         } else {
            print("ОТКРЫТО")
             queue.async {

@@ -7,7 +7,7 @@
 
 import UIKit
 
-let navController = UINavigationController(rootViewController: OrderViewController())
+let navController = UINavigationController(rootViewController: LoginViewController())
 
 @main
 
