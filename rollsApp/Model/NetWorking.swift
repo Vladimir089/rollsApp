@@ -26,9 +26,7 @@ extension OrderViewController { //для обновления чтобы таб�
             switch response.result {
             case .success(_):
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                    // Сохраняем загруженные данные в кэш
-                    UserDefaults.standard.set(data, forKey: "cachedOrders1")
-                    UserDefaults.standard.synchronize()
+
                     
                     DispatchQueue.global().async {
                         self.getOrderNewDetail(orders: order.orders)
@@ -192,3 +190,59 @@ extension OrderViewController { //для обновления чтобы таб�
         
     
 
+extension LoginViewController {
+    func login(login: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let headers: HTTPHeaders = [
+            "accept": "*/*",
+            "Content-Type": "application/json"
+        ]
+        
+        let parameters: [String: Any] = [
+            "username": login,
+            "password": password
+        ]
+        
+        AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            debugPrint(response)
+            switch response.result {
+            case .success( _):
+                if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
+                    authKey = login.authToken
+                    completion(.success(()))
+                } else {
+                    let error = NSError(domain: "http://arbamarket.ru/api/v1/accounts/login/", code: 500, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format"])
+                    completion(.failure(error))
+                }
+                
+            case .failure(let error):
+                completion(.failure(error))
+                print(232)
+            }
+        }
+    }
+}
+
+extension StatViewController {
+    func getStatisticAll(completion: @escaping () -> Void) {
+        stat = nil
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey)]
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_statistics/?cafe_id=\(cafeID)", method: .get, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            switch response.result {
+                
+            case .success( _):
+                
+                if let data = response.data, let statistic = try? JSONDecoder().decode(StatisticsResponse.self, from: data) {
+                    stat = statistic
+                    print(statistic.orderStatistics)
+                    completion()
+                 
+                }
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+}

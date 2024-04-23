@@ -19,6 +19,10 @@
 		15AB13D72BD29115009BC4EB /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 15AB13D62BD29115009BC4EB /* SocketIO */; };
 		15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13D82BD2960C009BC4EB /* NetWorking.swift */; };
 		15AB13DB2BD69E6A009BC4EB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */; };
+		15AB13DD2BD7E6B4009BC4EB /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */; };
+		15AB13DF2BD7F4F2009BC4EB /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13DE2BD7F4F2009BC4EB /* StatViewController.swift */; };
+		15AB13E12BD7F503009BC4EB /* StatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13E02BD7F503009BC4EB /* StatView.swift */; };
+		15AB13E32BD801B6009BC4EB /* StatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13E22BD801B6009BC4EB /* StatModel.swift */; };
 		15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */; };
 		15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */; };
 		15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF4E2BC41138005E3562 /* LoginModel.swift */; };
@@ -41,6 +45,10 @@
 		159D8C162BCEA7FF0075DCB5 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		15AB13D82BD2960C009BC4EB /* NetWorking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorking.swift; sourceTree = "<group>"; };
 		15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		15AB13DE2BD7F4F2009BC4EB /* StatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewController.swift; sourceTree = "<group>"; };
+		15AB13E02BD7F503009BC4EB /* StatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatView.swift; sourceTree = "<group>"; };
+		15AB13E22BD801B6009BC4EB /* StatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatModel.swift; sourceTree = "<group>"; };
 		15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderViewController.swift; sourceTree = "<group>"; };
 		15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrderView.swift; sourceTree = "<group>"; };
 		15B8FF4E2BC41138005E3562 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -111,6 +119,8 @@
 				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
 				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
 				15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */,
+				15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */,
+				15AB13DE2BD7F4F2009BC4EB /* StatViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -122,6 +132,7 @@
 				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
 				15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */,
 				159D8C162BCEA7FF0075DCB5 /* EditView.swift */,
+				15AB13E02BD7F503009BC4EB /* StatView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -133,6 +144,7 @@
 				15B8FF4E2BC41138005E3562 /* LoginModel.swift */,
 				15B8FF502BC414B7005E3562 /* Order.swift */,
 				15B8FF522BC5702A005E3562 /* CreateOrder.swift */,
+				15AB13E22BD801B6009BC4EB /* StatModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -245,6 +257,9 @@
 				15B8FF4B2BC03AAE005E3562 /* NewOrderViewController.swift in Sources */,
 				15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */,
 				15B8FF512BC414B7005E3562 /* Order.swift in Sources */,
+				15AB13DD2BD7E6B4009BC4EB /* TabBarViewController.swift in Sources */,
+				15AB13E12BD7F503009BC4EB /* StatView.swift in Sources */,
+				15AB13DF2BD7F4F2009BC4EB /* StatViewController.swift in Sources */,
 				15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */,
 				15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */,
 				15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */,
@@ -252,6 +267,7 @@
 				15B8FF552BC595DB005E3562 /* DishesMenuViewControllerController.swift in Sources */,
 				15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */,
 				15E908E42BBC4E4D0086E9F5 /* OrderViewController.swift in Sources */,
+				15AB13E32BD801B6009BC4EB /* StatModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +440,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -456,7 +472,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

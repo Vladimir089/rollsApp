@@ -21,6 +21,7 @@ protocol OrderViewControllerDelegate: AnyObject {
     func createButtonGo(index: Int)
     func closeVC()
     func detailVC(index: Int)
+    
 }
 
 
@@ -29,7 +30,7 @@ class OrderViewController: UIViewController {
     var mainView: AllOrdersView?
     var isFirstLoad = true
     var newOrderStatus: [(Order, OrderStatusResponse)] = []
-
+    var authCheckTimer: Timer?
     var isLoad = false
     let queue = DispatchQueue(label: "Timer")
     var isOpen = false
@@ -38,21 +39,17 @@ class OrderViewController: UIViewController {
     
 
     
-    override func loadView() {
-        reloadCollection()
-        getDishes()
-
-    }
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.isNavigationBarHidden = true
+       // navigationController?.isNavigationBarHidden = true
         mainView = AllOrdersView()
         self.view = mainView
         mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
         mainView?.delegate = self
         setupRefreshControl()
-        
+        startAuthCheckTimer()
     }
     
     func setupRefreshControl() {
@@ -97,9 +94,28 @@ class OrderViewController: UIViewController {
         self.present(vc, animated: true)
     }
     
-
-
+    func stopAuthCheckTimer() {
+        authCheckTimer?.invalidate()
+        authCheckTimer = nil
+    }
     
+    deinit {
+        stopAuthCheckTimer()
+    }
+    
+    func startAuthCheckTimer() {
+        authCheckTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(checkAuthKey), userInfo: nil, repeats: true)
+    }
+    
+    @objc func checkAuthKey() {
+        // Проверяем, есть ли значение у authKey
+        if !authKey.isEmpty {
+            stopAuthCheckTimer()
+            reloadCollection()
+            getDishes()
+           
+        }
+    }
     
     
     func getDishes() {
@@ -154,16 +170,16 @@ extension OrderViewController: OrderViewControllerDelegate {
         vc.indexOne = index
         let backItem = UIBarButtonItem()
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 17), // Устанавливаем жирный шрифт размером 17
-            .foregroundColor: UIColor.black // Устанавливаем цвет текста в черный
-        ]
-        self.navigationItem.backBarButtonItem = backItem
+            .font: UIFont.boldSystemFont(ofSize: 17),
+            .foregroundColor: UIColor.black ]
         backItem.title = "Заказ №\(orderStatus[index].0.id)"
         backItem.setTitleTextAttributes(attributes, for: .normal)
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
         
         self.refreshControl.endRefreshing()
 
-        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
+
     }
     
     func closeVC() {

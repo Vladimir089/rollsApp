@@ -15,8 +15,8 @@ class LoginViewController: UIViewController {
     var checkBoxButton: UIButton?
     var vhodButton: UIButton?
     var texSupportLabel: UILabel?
-    var allOrders = OrderViewController()
-
+    var tabBar = TabBarViewController()
+    var orderVC: OrderViewController?
     
  
 
@@ -24,8 +24,9 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
-            self.navigationController?.setViewControllers([allOrders], animated: false)
-            print("Значение authKey есть в UserDefaults")
+            
+            navigationController?.setViewControllers([tabBar], animated: false)
+            
         } else {
             createInterface()
             
@@ -44,35 +45,7 @@ class LoginViewController: UIViewController {
 
     
 
-    func login(login: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let headers: HTTPHeaders = [
-            "accept": "*/*",
-            "Content-Type": "application/json"
-        ]
-        
-        let parameters: [String: Any] = [
-            "username": login,
-            "password": password
-        ]
-        
-        AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            debugPrint(response)
-            switch response.result {
-            case .success( _):
-                if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
-                    authKey = login.authToken
-                    completion(.success(()))
-                } else {
-                    let error = NSError(domain: "http://arbamarket.ru/api/v1/accounts/login/", code: 500, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format"])
-                    completion(.failure(error))
-                }
-                
-            case .failure(let error):
-                completion(.failure(error))
-                print(232)
-            }
-        }
-    }
+    
     
     @objc func endEditing() {
         loginTextField?.endEditing(true)
@@ -256,7 +229,8 @@ class LoginViewController: UIViewController {
                     if self.isSave == true {
                         UserDefaults.standard.setValue(authKey, forKey: "authKey")
                     }
-                    self.navigationController?.pushViewController(self.allOrders, animated: true)
+                    self.navigationController?.setViewControllers([self.tabBar], animated: true)
+                    
                 }
                 
             case .failure(let error):
