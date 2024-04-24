@@ -30,6 +30,8 @@
 		15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF522BC5702A005E3562 /* CreateOrder.swift */; };
 		15B8FF552BC595DB005E3562 /* DishesMenuViewControllerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */; };
 		15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */; };
+		15D7E4A12BD926AE007100AB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7E4A02BD926AE007100AB /* SettingsViewController.swift */; };
+		15D7E4A42BD9521F007100AB /* RatingDishesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */; };
 		15E908CD2BBC49950086E9F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CC2BBC49950086E9F5 /* AppDelegate.swift */; };
 		15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */; };
 		15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15E908D22BBC49950086E9F5 /* Main.storyboard */; };
@@ -56,6 +58,8 @@
 		15B8FF522BC5702A005E3562 /* CreateOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrder.swift; sourceTree = "<group>"; };
 		15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishesMenuViewControllerController.swift; sourceTree = "<group>"; };
 		15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarAdressTable.swift; sourceTree = "<group>"; };
+		15D7E4A02BD926AE007100AB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingDishesViewController.swift; sourceTree = "<group>"; };
 		15E908C92BBC49950086E9F5 /* rollsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rollsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15D7E4A22BD9520A007100AB /* Rating */ = {
+			isa = PBXGroup;
+			children = (
+				15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */,
+			);
+			path = Rating;
+			sourceTree = "<group>";
+		};
 		15E908C02BBC49950086E9F5 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +125,7 @@
 		15E908E02BBC4B030086E9F5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				15D7E4A22BD9520A007100AB /* Rating */,
 				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
 				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
 				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
@@ -121,6 +134,7 @@
 				15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */,
 				15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */,
 				15AB13DE2BD7F4F2009BC4EB /* StatViewController.swift */,
+				15D7E4A02BD926AE007100AB /* SettingsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -250,6 +264,7 @@
 			files = (
 				159D8C152BCEA7E90075DCB5 /* EditViewController.swift in Sources */,
 				15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */,
+				15D7E4A12BD926AE007100AB /* SettingsViewController.swift in Sources */,
 				15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */,
 				15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */,
 				159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */,
@@ -263,6 +278,7 @@
 				15E908E72BBC51330086E9F5 /* AllOrdersView.swift in Sources */,
 				15B8FF4D2BC040FE005E3562 /* NewOrderView.swift in Sources */,
 				15B8FF4F2BC41138005E3562 /* LoginModel.swift in Sources */,
+				15D7E4A42BD9521F007100AB /* RatingDishesViewController.swift in Sources */,
 				15AB13DB2BD69E6A009BC4EB /* LoginViewController.swift in Sources */,
 				15B8FF552BC595DB005E3562 /* DishesMenuViewControllerController.swift in Sources */,
 				15E908CF2BBC49950086E9F5 /* SceneDelegate.swift in Sources */,

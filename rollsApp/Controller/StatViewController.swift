@@ -9,6 +9,10 @@ import UIKit
 
 import Charts
 
+protocol StatViewControllerDelegate: AnyObject {
+    func showDishesRating()
+}
+
 class StatViewController: UIViewController {
 
     var mainView: StatView?
@@ -18,8 +22,10 @@ class StatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView = StatView()
+        mainView?.delegate = self
         self.view = mainView
         startAuthCheckTimer()
+        mainView?.showDiagram()
     }
     
     deinit {
@@ -54,4 +60,13 @@ class StatViewController: UIViewController {
             self.mainView?.loadStat()
         }
     }
+}
+
+extension StatViewController: StatViewControllerDelegate {
+    func showDishesRating() {
+        let vc = RatingDishesViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
 }

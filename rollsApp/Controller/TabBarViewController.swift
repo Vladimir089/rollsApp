@@ -11,6 +11,7 @@ class TabBarViewController: UITabBarController {
     
     let orderVC = OrderViewController()
     let statVC = StatViewController()
+    let settingsVC = SettingsViewController()
     
     let separatorView: UIView = {
         let view = UIView()
@@ -27,7 +28,11 @@ class TabBarViewController: UITabBarController {
         statVC.title = "Статистика"
         statVC.tabBarItem.image = UIImage.stat.resize(targetSize: CGSize(width: 30, height: 30))
         
-        let controllers = [statVC, orderVC]
+        settingsVC.title = "Настройки"
+        settingsVC.tabBarItem.image = UIImage.settings.resize(targetSize: CGSize(width: 30, height: 30))
+        
+        
+        let controllers = [statVC, orderVC, settingsVC]
         
         
         self.viewControllers = controllers

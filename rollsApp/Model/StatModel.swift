@@ -12,8 +12,8 @@ struct StatisticsResponse: Codable {
 
 struct EarningsStatistics: Codable {
     let cash: Int
-    let toCourier: Double
-    let remittance: Double
+    let toCourier: Int
+    let remittance: Int
     let atCheckout: Int
     let total: Double
     
