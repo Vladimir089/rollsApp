@@ -14,13 +14,13 @@ protocol StatViewControllerDelegate: AnyObject {
 }
 
 class StatViewController: UIViewController {
-
     var mainView: StatView?
     var authCheckTimer: Timer?
     var loadTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mainView = StatView()
         mainView?.delegate = self
         self.view = mainView
@@ -60,13 +60,26 @@ class StatViewController: UIViewController {
             self.mainView?.loadStat()
         }
     }
+   
 }
 
 extension StatViewController: StatViewControllerDelegate {
     func showDishesRating() {
+        
+        let backItem = UIBarButtonItem()
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 26),
+            .foregroundColor: UIColor.black, .baselineOffset: -2]
+        backItem.title = "Рейтинг блюд"
+        backItem.setTitleTextAttributes(attributes, for: .normal)
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
+        
+        
         let vc = RatingDishesViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        vc.hidesBottomBarWhenPushed = false
+        navController.pushViewController(vc, animated: true)
+        print(1)
     }
-    
-    
 }
+
+
