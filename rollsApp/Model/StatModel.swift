@@ -33,3 +33,17 @@ struct OrderStatistics: Codable {
 
 
 var stat: StatisticsResponse?
+
+struct RatingCleintResponse: Codable {
+    let orders: [RatingClient]
+}
+
+struct RatingClient: Codable {
+    let phone: String
+    let orderCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case phone
+        case orderCount = "order_count"
+    }
+}

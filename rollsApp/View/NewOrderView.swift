@@ -381,14 +381,26 @@ class NewOrderView: UIView {
         
         let phone = phoneTextField?.text ?? ""
         var menuItems = ""
-        let clientNumber = 1
+        let clientNumber = Int(commentTextField?.text ?? "1") ?? 1
         let adress = adress
         let coast = totalCoast
         let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]
         let timeOrder = dateFormatter.string(from: currentDate)
         let idCafe = cafeID
-        print(timeOrder)
 
+
+        if phoneTextField?.text?.count ?? 0 < 10 {
+            UIView.animate(withDuration: 0.5) {
+                self.phoneTextField?.backgroundColor = .red
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIView.animate(withDuration: 0.5) {
+                    self.phoneTextField?.backgroundColor = .white // или ваш исходный цвет
+                }
+            }
+            return
+        }
+        
         
         for (index, (key, value)) in menuItemsArr.enumerated() {
             let count = value.0

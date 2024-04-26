@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     let orderVC = OrderViewController()
     let statVC = StatViewController()
@@ -19,20 +19,39 @@ class TabBarViewController: UITabBarController {
         return view
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+    }
+    
+//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+//        if let orderVC = viewController as? OrderViewController {
+//            orderVC.closeVC()
+//            orderVC.isOpen = false
+//        } else {
+//            orderVC.isLoad = true
+//            orderVC.isOpen = true
+//        }
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.delegate = self
         orderVC.title = "Заказы"
         orderVC.tabBarItem.image = UIImage.orders.resize(targetSize: CGSize(width: 30, height: 30))
         
-        statVC.title = "Статистика"
-        statVC.tabBarItem.image = UIImage.stat.resize(targetSize: CGSize(width: 30, height: 30))
+        
+        let statNavController = UINavigationController(rootViewController: statVC)
+        statNavController.title = "Статистика"
+        statNavController.tabBarItem.image = UIImage.stat.resize(targetSize: CGSize(width: 30, height: 30))
+        
         
         settingsVC.title = "Настройки"
         settingsVC.tabBarItem.image = UIImage.settings.resize(targetSize: CGSize(width: 30, height: 30))
         
         
-        let controllers = [statVC, orderVC, settingsVC]
+        let controllers = [statNavController, orderVC, settingsVC]
         
         
         self.viewControllers = controllers
@@ -46,6 +65,8 @@ class TabBarViewController: UITabBarController {
             make.left.right.equalToSuperview()
         }
         selectedIndex = 1
+        
+        
     }
     
 

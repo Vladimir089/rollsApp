@@ -36,12 +36,14 @@ class EditView: UIView {
     var oplataSegmentedControl: UISegmentedControl?
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
+    var numberPhoneLabel: UILabel?
     
 
     override init(frame: CGRect) {
         super .init(frame: frame)
-
     }
+    
+   
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -51,6 +53,7 @@ class EditView: UIView {
         super.layoutSubviews()
         layoutIfNeeded()
         updateContentSize()
+        print(menuItemsArr)
 
     }
     
@@ -66,7 +69,7 @@ class EditView: UIView {
                 let name = components[0]
                 if let quantity = Int(components[1]) {
                     if let index = allDishes.firstIndex(where: { $0.0.name == name }) {
-                        let price = allDishes[index].0.price // Цена блюда
+                        let price = allDishes[index].0.price * quantity // Цена блюда
                         menuItemsArr.append((name, (quantity, price)))
                     } else {
                         print("Блюдо с названием '\(name)' не найдено в массиве allDishes.")
@@ -121,6 +124,7 @@ class EditView: UIView {
         scrollView.addGestureRecognizer(tapInViewGesture)
         addGestureRecognizer(tapInViewGesture)
         scrollView.isUserInteractionEnabled = true
+        scrollView.showsVerticalScrollIndicator = false
         contentView.isUserInteractionEnabled = true
         
         addSubview(scrollView)
@@ -139,13 +143,13 @@ class EditView: UIView {
         }
         
         
-        let numberPhoneLabel = generateLabel(text: "НОМЕР ТЕЛЕФОНА",
+        numberPhoneLabel = generateLabel(text: "НОМЕР ТЕЛЕФОНА",
                                              font: UIFont.systemFont(ofSize: 15, weight: .regular),
                                              isUnderlining: false,
                                              textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         
-        contentView.addSubview(numberPhoneLabel)
-        numberPhoneLabel.snp.makeConstraints { make in
+        contentView.addSubview(numberPhoneLabel!)
+        numberPhoneLabel?.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(25)
             make.top.equalToSuperview().inset(20)
         }
@@ -157,7 +161,7 @@ class EditView: UIView {
         contentView.addSubview(guestLabel)
         guestLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(25)
-            make.top.equalTo(numberPhoneLabel.snp.top)
+            make.top.equalTo((numberPhoneLabel?.snp.top)!)
         }
         
         phoneTextField = {
@@ -191,7 +195,7 @@ class EditView: UIView {
         scrollView.addSubview(phoneTextField!)
         phoneTextField?.snp.makeConstraints({ make in
             make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(numberPhoneLabel.snp.bottom).inset(-10)
+            make.top.equalTo((numberPhoneLabel?.snp.bottom)!).inset(-10)
             make.height.equalTo(44)
         })
         
@@ -201,7 +205,7 @@ class EditView: UIView {
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         contentView.addSubview(orderLabel)
         orderLabel.snp.makeConstraints { make in
-            make.left.equalTo(numberPhoneLabel.snp.left)
+            make.left.equalTo((numberPhoneLabel?.snp.left)!)
             make.top.equalTo(phoneTextField!.snp.bottom).inset(-20)
         }
         
@@ -231,7 +235,7 @@ class EditView: UIView {
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         scrollView.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
-            make.left.equalTo(numberPhoneLabel.snp.left)
+            make.left.equalTo((numberPhoneLabel?.snp.left)!)
             make.top.equalTo(tableView!.snp.bottom).inset(-20)
         }
         
@@ -306,7 +310,7 @@ class EditView: UIView {
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
         contentView.addSubview(commentLabel)
         commentLabel.snp.makeConstraints { make in
-            make.left.equalTo(numberPhoneLabel.snp.left)
+            make.left.equalTo((numberPhoneLabel?.snp.left)!)
             make.top.equalTo(adressTextField!.snp.bottom).inset(-20)
         }
         
@@ -316,6 +320,7 @@ class EditView: UIView {
             textField.leftViewMode = .always
             textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             textField.rightViewMode = .always
+            textField.text = "\(orderStatus[index].0.clientsNumber)"
             textField.textColor = .black
             textField.backgroundColor = .white
             textField.layer.cornerRadius = 10
@@ -378,7 +383,7 @@ class EditView: UIView {
         }()
         contentView.addSubview(botView)
         botView.snp.makeConstraints { make in
-            make.height.equalTo(100) //мб тут сдеклать высоту таблицы
+            make.height.equalTo(200) //мб тут сдеклать высоту таблицы
             make.left.right.equalToSuperview()
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
@@ -414,15 +419,25 @@ class EditView: UIView {
         
         let phone = phoneTextField?.text ?? ""
         var menuItems = ""
-        let clientNumber = 1
+        let clientNumber = Int(commentTextField?.text ?? "1") ?? 1
         let adress = adress
         let coast = totalCoast
         let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]
         let timeOrder = dateFormatter.string(from: currentDate)
         let idCafe = cafeID
         let orderID = orderStatus[index].0.id
-        print(timeOrder)
 
+        if phoneTextField?.text?.count ?? 0 < 10 {
+            UIView.animate(withDuration: 0.5) {
+                self.phoneTextField?.backgroundColor = .red
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIView.animate(withDuration: 0.5) {
+                    self.phoneTextField?.backgroundColor = .white // или ваш исходный цвет
+                }
+            }
+            return
+        }
         
         for (index, (key, value)) in menuItemsArr.enumerated() {
             let count = value.0
@@ -484,6 +499,8 @@ extension EditView: UITextFieldDelegate {
         return true
     }
     
+  
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.resignFirstResponder()
         if textField == adressTextField {
@@ -498,10 +515,13 @@ extension EditView: UITextFieldDelegate {
             UIView.animate(withDuration: 0.5) { [self] in
                 self.frame.origin.y = 0
                 self.layoutIfNeeded()
+                textField.endEditing(true)
+                adressTextField?.isUserInteractionEnabled = true
             }
-            commentTextField?.endEditing(true)
-            adressTextField?.isUserInteractionEnabled = true
+            
         }
+        
+       
         return true
     }
     
@@ -517,20 +537,21 @@ extension EditView: UITextFieldDelegate {
                         self.layoutIfNeeded()
                     }
                 }
-                if adress == "" {
-                    
-                    self.adressButton?.setTitle(nil, for: .normal)
-                    UIView.animate(withDuration: 0.5) {
-                        self.adressButton?.snp.updateConstraints { make in
-                           // make.height.equalTo(0)
-                        }
-                        self.layoutIfNeeded()
-                    }
-                }
             }
         }
+        
+        
     }
     
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        if textField == commentTextField {
+//            UIView.animate(withDuration: 0.5) {
+//                self.frame.origin.y = 120
+//                self.layoutIfNeeded()
+//            }
+//        }
+//    }
+//    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == adressTextField {
             
@@ -539,14 +560,7 @@ extension EditView: UITextFieldDelegate {
             
            
         }
-        if textField == commentTextField {
-            UIView.animate(withDuration: 0.5) { [self] in
-                self.frame.origin.y -= 280
-                adressTextField?.isUserInteractionEnabled = false
-                self.layoutIfNeeded()
-            }
-        }
-       
+        
         return true
     }
     
@@ -689,7 +703,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 item.1.0 -= 1
                 item.1.1 -= pricePerItem
                 menuItemsArr[indexPath.row] = item
-                print(menuItemsArr)
             } else {
                 menuItemsArr.remove(at: indexPath.row)
                 tableView?.deleteRows(at: [indexPath], with: .automatic)

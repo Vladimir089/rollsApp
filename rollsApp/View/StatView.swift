@@ -242,6 +242,8 @@ class StatView: UIView {
         
         let rateClientView: UIView = {
             let view = UIView()
+            let gesture = UITapGestureRecognizer(target: self, action: #selector(showClientRating))
+            view.addGestureRecognizer(gesture)
             view.backgroundColor = .clear
             return view
         }()
@@ -288,6 +290,9 @@ class StatView: UIView {
     @objc func showRatingDishes() {
         delegate?.showDishesRating()
     }
+    @objc func showClientRating() {
+        delegate?.showClientRating()
+    }
     
     func generateLaels(text: String,fonc: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
@@ -305,13 +310,14 @@ class StatView: UIView {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
-            for (index, statistic) in orderStatistics.enumerated() {
-                if index != 0 { // Пропускаем первый элемент массива
+            for (index, statistic) in orderStatistics.enumerated().dropFirst() {
+                
                     if let date = dateFormatter.date(from: statistic.date) {
                         diagrammArr.append((statistic.count, date))
                     }
-                }
+                
             }
+            print(orderStatistics, 223232323232231)
             showDiagram()
         }
     }

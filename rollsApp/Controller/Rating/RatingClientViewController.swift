@@ -1,17 +1,17 @@
 //
-//  RatingDishesViewController.swift
+//  RatingClientViewController.swift
 //  rollsApp
 //
-//  Created by Владимир Кацап on 24.04.2024.
+//  Created by Владимир Кацап on 25.04.2024.
 //
 
 import UIKit
 import Alamofire
 
-class RatingDishesViewController: UIViewController {
-    
-    var dishArr: [(UIImage, String, Int)] = []
-    var arrRatingDishesResponse: [RatingDish] = []
+class RatingClientViewController: UIViewController {
+
+    var clientArr: [(UIImage, String, Int)] = []
+    var arrRatingClientResponse: [RatingClient] = []
     var page = 1
     var period = "per_month"
     
@@ -44,8 +44,8 @@ class RatingDishesViewController: UIViewController {
     }()
 
     @objc func segmentedControlValueChanged() {
-        dishArr.removeAll()
-        arrRatingDishesResponse.removeAll()
+        clientArr.removeAll()
+        arrRatingClientResponse.removeAll()
         page = 1
         if segmentedControl.selectedSegmentIndex == 1 {
             period = "all_time"
@@ -53,20 +53,17 @@ class RatingDishesViewController: UIViewController {
             period = "per_month"
         }
         getRate {
-            self.checkDishes()
+            self.checkCleints()
         }
     }
     
-    deinit {
-        print(487534785346354)
-    }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.backgroundColor = .red
         getRate {
-            self.checkDishes()
+            self.checkCleints()
         }
         hidesBottomBarWhenPushed = false
         view.backgroundColor = UIColor(hex: "#F2F2F7")
@@ -79,7 +76,7 @@ class RatingDishesViewController: UIViewController {
         let backButton: UIButton = {
             let button = UIButton(type: .system)
             button.backgroundColor = .clear
-            button.setTitle("  Рейтинг блюд", for: .normal)
+            button.setTitle("  Рейтинг клиентов", for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 30, weight: .semibold)
             button.setTitleColor(.black, for: .normal)
             let image: UIImage = .back
@@ -125,40 +122,42 @@ class RatingDishesViewController: UIViewController {
             HTTPHeader.accept("*/*")
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_rating_dishes/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_rating_clients/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
-                if let data = response.data, let dish = try? JSONDecoder().decode(RatingDishesResponse.self, from: data) {
-                    self.arrRatingDishesResponse = dish.dishes
+                do {
+                    if let data = response.data {
+                        let client = try JSONDecoder().decode(RatingCleintResponse.self, from: data)
+                        self.arrRatingClientResponse = client.orders
+                    }
+                } catch {
+                    print("Error decoding JSON:", error)
                 }
                 completion()
-            case .failure(_):
-                print(1)
+            case .failure(let error):
+                print("Request failed with error:", error)
             }
         }
     }
 
-    func checkDishes() {
+
+    func checkCleints() {
         guard !allDishes.isEmpty else {
             getRate {
-                self.checkDishes()
+                self.checkCleints()
             }
             return
         }
         
-        for ratingDish in arrRatingDishesResponse {
-            // Проверяем, есть ли уже элемент с таким именем в dishArr
-            if !dishArr.contains(where: { $0.1 == ratingDish.name }) {
-                // Если элемент с таким именем не найден, добавляем его в dishArr
-                if let foundDish = allDishes.first(where: { $0.0.name == ratingDish.name }) {
-                    let dishImage = foundDish.1
-                    dishArr.append((dishImage, ratingDish.name, ratingDish.quantity))
-                } else {
-                    print("нет картинки \(ratingDish.name)")
-                }
+        for ratingClient in arrRatingClientResponse {
+            if !clientArr.contains(where: { $0.1 == ratingClient.phone }) {
+                let dishImage: UIImage = .image
+                clientArr.append((dishImage, ratingClient.phone, ratingClient.orderCount))
+            } else {
+                print("Изображение для блюда '\(ratingClient.phone)' не найдено.")
             }
         }
-        print(allDishes)
         tableView.reloadData()
     }
 
@@ -173,21 +172,22 @@ class RatingDishesViewController: UIViewController {
     
 }
  
-extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource {
+extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dishArr.count
+        print(clientArr.count, 32423423)
+        return clientArr.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "1", for: indexPath)
         cell.subviews.forEach { $0.removeFromSuperview() }
         
-        guard indexPath.row < dishArr.count else {
+        guard indexPath.row < clientArr.count else {
                return cell // Возвращаем пустую ячейку, если индекс выходит за пределы массива
            }
         cell.separatorInset = .zero
         var image = UIImage()
-        image = dishArr[indexPath.row].0
+        image = clientArr[indexPath.row].0
         let imageView = UIImageView(image: image)
         cell.addSubview(imageView)
         imageView.clipsToBounds = true
@@ -199,7 +199,7 @@ extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource
         imageView.layer.cornerRadius = 5
         
         var labelName = UILabel()
-        labelName.text = dishArr[indexPath.row].1
+        labelName.text = "+7\(clientArr[indexPath.row].1)"
         labelName.textColor = .black
         labelName.font = .systemFont(ofSize: 18, weight: .regular)
         cell.addSubview(labelName)
@@ -209,7 +209,7 @@ extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource
         }
         
         var labelCount = UILabel()
-        labelCount.text = "\(dishArr[indexPath.row].2) шт"
+        labelCount.text = "\(clientArr[indexPath.row].2) шт"
         labelCount.textColor = .black
         labelCount.font = .systemFont(ofSize: 18, weight: .regular)
         cell.addSubview(labelCount)
@@ -221,12 +221,14 @@ extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == dishArr.count - 5 {
+        if indexPath.row == clientArr.count - 5 {
             page += 1
             getRate {
-                self.checkDishes()
+                self.checkCleints()
             }
         }
     }
     
+
+   
 }

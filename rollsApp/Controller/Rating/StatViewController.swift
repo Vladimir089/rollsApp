@@ -11,12 +11,20 @@ import Charts
 
 protocol StatViewControllerDelegate: AnyObject {
     func showDishesRating()
+    func showClientRating()
 }
 
 class StatViewController: UIViewController {
     var mainView: StatView?
     var authCheckTimer: Timer?
     var loadTimer: Timer?
+    
+   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,20 +73,15 @@ class StatViewController: UIViewController {
 
 extension StatViewController: StatViewControllerDelegate {
     func showDishesRating() {
-        
-        let backItem = UIBarButtonItem()
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 26),
-            .foregroundColor: UIColor.black, .baselineOffset: -2]
-        backItem.title = "Рейтинг блюд"
-        backItem.setTitleTextAttributes(attributes, for: .normal)
-        navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
-        
-        
         let vc = RatingDishesViewController()
         vc.hidesBottomBarWhenPushed = false
-        navController.pushViewController(vc, animated: true)
-        print(1)
+        self.navigationController?.pushViewController(vc, animated: true)
+
+    }
+    func showClientRating() {
+        let vc = RatingClientViewController()
+        vc.hidesBottomBarWhenPushed = false
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

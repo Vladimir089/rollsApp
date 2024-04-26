@@ -67,7 +67,7 @@ class OrderViewController: UIViewController {
     func backgroundTask() {
         isWorkCicle = true
         while true {
-            if (isLoad == true && isOpen == true) || (isLoad == false && isOpen == true) || (isLoad == true && isOpen == false) {
+            if ((isLoad == true && isOpen == true) || (isLoad == false && isOpen == true) || (isLoad == true && isOpen == false))  {
                 sleep(1)
                 print("НЕТ")
                 DispatchQueue.main.sync { [self] in
