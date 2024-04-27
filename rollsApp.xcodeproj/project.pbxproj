@@ -64,7 +64,7 @@
 		15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingDishesViewController.swift; sourceTree = "<group>"; };
 		15D7E4A62BDA9DA1007100AB /* DishRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRate.swift; sourceTree = "<group>"; };
 		15D7E4A82BDAD08C007100AB /* RatingClientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingClientViewController.swift; sourceTree = "<group>"; };
-		15E908C92BBC49950086E9F5 /* rollsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rollsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		15E908C92BBC49950086E9F5 /* Кафе Байрам.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Кафе Байрам.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		15E908D32BBC49950086E9F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -101,6 +101,47 @@
 			path = Rating;
 			sourceTree = "<group>";
 		};
+		15D7E4AA2BDD500E007100AB /* Orders */ = {
+			isa = PBXGroup;
+			children = (
+				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
+				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
+				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
+				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
+				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
+			);
+			path = Orders;
+			sourceTree = "<group>";
+		};
+		15D7E4AB2BDD502F007100AB /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				15D7E4A02BD926AE007100AB /* SettingsViewController.swift */,
+				15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */,
+				15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		15D7E4AC2BDD5056007100AB /* Order */ = {
+			isa = PBXGroup;
+			children = (
+				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
+				15E908E62BBC51330086E9F5 /* AllOrdersView.swift */,
+				15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */,
+				159D8C162BCEA7FF0075DCB5 /* EditView.swift */,
+			);
+			path = Order;
+			sourceTree = "<group>";
+		};
+		15D7E4AD2BDD5076007100AB /* Rating */ = {
+			isa = PBXGroup;
+			children = (
+				15AB13E02BD7F503009BC4EB /* StatView.swift */,
+			);
+			path = Rating;
+			sourceTree = "<group>";
+		};
 		15E908C02BBC49950086E9F5 = {
 			isa = PBXGroup;
 			children = (
@@ -112,7 +153,7 @@
 		15E908CA2BBC49950086E9F5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				15E908C92BBC49950086E9F5 /* rollsApp.app */,
+				15E908C92BBC49950086E9F5 /* Кафе Байрам.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,15 +172,9 @@
 		15E908E02BBC4B030086E9F5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				15D7E4AB2BDD502F007100AB /* Other */,
+				15D7E4AA2BDD500E007100AB /* Orders */,
 				15D7E4A22BD9520A007100AB /* Rating */,
-				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
-				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
-				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
-				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
-				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
-				15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */,
-				15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */,
-				15D7E4A02BD926AE007100AB /* SettingsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -147,11 +182,8 @@
 		15E908E12BBC4B080086E9F5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				15E908E62BBC51330086E9F5 /* AllOrdersView.swift */,
-				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
-				15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */,
-				159D8C162BCEA7FF0075DCB5 /* EditView.swift */,
-				15AB13E02BD7F503009BC4EB /* StatView.swift */,
+				15D7E4AD2BDD5076007100AB /* Rating */,
+				15D7E4AC2BDD5056007100AB /* Order */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -207,7 +239,7 @@
 				15AB13D62BD29115009BC4EB /* SocketIO */,
 			);
 			productName = rollsApp;
-			productReference = 15E908C92BBC49950086E9F5 /* rollsApp.app */;
+			productReference = 15E908C92BBC49950086E9F5 /* Кафе Байрам.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -457,7 +489,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = k4.rollsApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Кафе Байрам";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -489,7 +521,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = k4.rollsApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Кафе Байрам";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

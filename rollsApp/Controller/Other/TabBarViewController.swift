@@ -25,15 +25,15 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
     }
     
-//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        if let orderVC = viewController as? OrderViewController {
-//            orderVC.closeVC()
-//            orderVC.isOpen = false
-//        } else {
-//            orderVC.isLoad = true
-//            orderVC.isOpen = true
-//        }
-//    }
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if let orderVC = viewController as? OrderViewController {
+            orderVC.closeVC()
+            orderVC.isOpen = false
+        } else {
+            orderVC.isLoad = true
+            orderVC.isOpen = true
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

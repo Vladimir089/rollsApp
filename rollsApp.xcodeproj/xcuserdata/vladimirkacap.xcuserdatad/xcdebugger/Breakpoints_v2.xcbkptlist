@@ -18,6 +18,38 @@
             endingLineNumber = "113"
             landmarkName = "didReceiveResponse(_:completionHandler:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6007C317-FFE9-49B2-9AFB-B1C7502C9072 - 286028e48405541f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.Request.ResponseDisposition) -&gt; () in closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.DataRequest.DataMutableState) -&gt; () in Alamofire.DataRequest.didReceiveResponse(_: __C.NSHTTPURLResponse, completionHandler: (__C.NSURLSessionResponseDisposition) -&gt; ()) -&gt; ()"
+                  moduleName = "rollsApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Library/Developer/Xcode/DerivedData/rollsApp-bmvfomhmsrmuugasslpxmirsjncn/SourcePackages/checkouts/Alamofire/Source/Core/DataRequest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "113"
+                  endingLineNumber = "113"
+                  offsetFromSymbolStart = "68">
+               </Location>
+               <Location
+                  uuid = "6007C317-FFE9-49B2-9AFB-B1C7502C9072 - 61772c4a3cb70c50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.Request.ResponseDisposition) -&gt; () in closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.DataRequest.DataMutableState) -&gt; () in Alamofire.DataRequest.didReceiveResponse(_: __C.NSHTTPURLResponse, completionHandler: (__C.NSURLSessionResponseDisposition) -&gt; ()) -&gt; ()"
+                  moduleName = "&#x41a;&#x430;&#x444;&#x435; &#x411;&#x430;&#x438;&#x306;&#x440;&#x430;&#x43c;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Library/Developer/Xcode/DerivedData/rollsApp-bmvfomhmsrmuugasslpxmirsjncn/SourcePackages/checkouts/Alamofire/Source/Core/DataRequest.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "113"
+                  endingLineNumber = "113"
+                  offsetFromSymbolStart = "68">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

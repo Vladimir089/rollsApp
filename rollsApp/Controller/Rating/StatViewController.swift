@@ -29,6 +29,7 @@ class StatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         mainView = StatView()
         mainView?.delegate = self
         self.view = mainView

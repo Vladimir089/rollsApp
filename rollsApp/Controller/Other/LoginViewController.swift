@@ -161,6 +161,9 @@ class LoginViewController: UIViewController {
             let label = UILabel()
             label.text = "Запомнить меня"
             label.textColor = .white
+            label.isUserInteractionEnabled = true
+            let gesture = UITapGestureRecognizer(target: self, action: #selector(checkBoxTapped(_:)))
+            label.addGestureRecognizer(gesture)
             label.font = .systemFont(ofSize: 17, weight: .regular)
             return label
         }()
@@ -276,9 +279,9 @@ class LoginViewController: UIViewController {
     
     func updateCheckBoxState() {
         if isSave {
-            checkBoxButton?.setImage(UIImage(named: "checked"), for: .normal) // Устанавливаем изображение галочки
+            checkBoxButton?.setImage(UIImage(named: "checked"), for: .normal)
         } else {
-            checkBoxButton?.setImage(UIImage(named: "unchecked"), for: .normal) // Устанавливаем изображение пустого квадрата
+            checkBoxButton?.setImage(UIImage(named: "unchecked"), for: .normal)
         }
     }
 }

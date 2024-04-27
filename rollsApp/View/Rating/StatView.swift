@@ -317,7 +317,6 @@ class StatView: UIView {
                     }
                 
             }
-            print(orderStatistics, 223232323232231)
             showDiagram()
         }
     }
