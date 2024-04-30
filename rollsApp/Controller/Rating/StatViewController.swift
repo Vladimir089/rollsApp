@@ -19,17 +19,13 @@ class StatViewController: UIViewController {
     var authCheckTimer: Timer?
     var loadTimer: Timer?
     
-   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         mainView = StatView()
         mainView?.delegate = self
         self.view = mainView
@@ -37,17 +33,15 @@ class StatViewController: UIViewController {
         mainView?.showDiagram()
     }
     
-    deinit {
-        stopAuthCheckTimer()
-    }
     func startAuthCheckTimer() {
         authCheckTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(checkAuthKey), userInfo: nil, repeats: true)
     }
+    
     func stopAuthCheckTimer() {
-        
         authCheckTimer?.invalidate()
         authCheckTimer = nil
     }
+    
     @objc func checkAuthKey() {
         if !authKey.isEmpty {
             stopAuthCheckTimer()
@@ -69,7 +63,10 @@ class StatViewController: UIViewController {
             self.mainView?.loadStat()
         }
     }
-   
+    
+    deinit {
+        stopAuthCheckTimer()
+    }
 }
 
 extension StatViewController: StatViewControllerDelegate {

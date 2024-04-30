@@ -13,22 +13,21 @@ class SettingsViewController: UIViewController {
     var tapOnEasterEgg = 0
     var emojiEmitter: CAEmitterLayer!
     
-    
     let nameView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 14
         view.backgroundColor = .white
         return view
     }()
+    
+    //MARK: -viewDidLoad()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: "#F2F2F7")
         settingsAlert()
         settingsView()
-        
     }
-    
     
     let exitButton: UIButton = {
         let button = UIButton(type: .system)
@@ -41,6 +40,8 @@ class SettingsViewController: UIViewController {
         return button
     }()
 
+    //MARK: -create interface
+    
     func settingsView() {
         let orderLabel: UILabel = {
             let label = UILabel()
@@ -122,7 +123,8 @@ class SettingsViewController: UIViewController {
         alertContoller.addAction(cancelAction)
     }
     
-
+    //MARK: -create emoji shower
+    
     func createEmojiShower() {
           emojiEmitter = CAEmitterLayer()
         emojiEmitter.emitterPosition = CGPoint(x: 10, y: 0)

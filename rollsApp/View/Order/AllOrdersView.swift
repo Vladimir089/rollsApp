@@ -19,8 +19,10 @@ class AllOrdersView: UIView {
     var newOrderStatus: [(Order, OrderStatusResponse)] = []
     var indexPathsToInsertt: [IndexPath] = []
     var indexPathsToUpdatee: [IndexPath] = []
+    var previousIndexPath: IndexPath?
     
-
+    //MARK: -init
+    
     override init(frame: CGRect) {
         super .init(frame: frame)
         createInterface()
@@ -30,16 +32,12 @@ class AllOrdersView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: -func create interface
+    
     func createInterface() {
         backgroundColor = .white
        
-        let orderLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Заказы"
-            label.font = .systemFont(ofSize: 41, weight: .bold)
-            label.textColor = .black
-            return label
-        }()
+        let orderLabel = generateLaels(text: "Заказы", fonc: .systemFont(ofSize: 41, weight: .bold), textColor: .black)
         addSubview(orderLabel)
         orderLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(15)
@@ -61,9 +59,6 @@ class AllOrdersView: UIView {
             make.right.equalToSuperview().inset(15)
         })
         
-    
-
-        
         collectionView = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -83,26 +78,19 @@ class AllOrdersView: UIView {
             make.bottom.equalToSuperview()
             make.top.equalTo(orderLabel.snp.bottom).inset(-10)
         })
-
     }
     
-  
-    
-    
-    
-
-
-    
-
-    var previousIndexPath: IndexPath?
-    
+    func generateLaels(text: String,fonc: UIFont, textColor: UIColor) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = fonc
+        label.textColor = textColor
+        return label
+    }
 }
 
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-   
-   
 
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        // Получаем видимые индексы ячеек
@@ -144,9 +132,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "1", for: indexPath)
         cell.subviews.forEach { $0.removeFromSuperview() }
         
-        
-        
-        
         //MARK: -UI
         
         let imageView: UIImageView = {
@@ -163,8 +148,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalToSuperview()
             make.centerY.equalToSuperview().offset(-5)
         }
-        //viewInImageView.backgroundColor = .red
-        
         
         let separatorView: UIView = {
             let view = UIView()
@@ -179,29 +162,17 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalTo(viewInImageView.snp.right)
         }
         
-        //labels
+        //MARK: -Labels
         
-        let phoneLabel: UILabel = {
-            let label = UILabel()
-            label.text = "+7\(orderStatus[indexPath.row].0.phone)"  //меняем
-            label.font = .systemFont(ofSize: 17, weight: .semibold)
-            label.textColor = .black
-            return label
-        }()
+        let phoneLabel = generateLaels(text: "+7\(orderStatus[indexPath.row].0.phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .black)
         cell.addSubview(phoneLabel)
         phoneLabel.snp.makeConstraints { make in
             make.left.equalTo(viewInImageView.snp.right)
             make.top.equalTo(imageView.snp.top)
         }
 
-        let adressLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(orderStatus[indexPath.row].0.address)"
-            label.font = .systemFont(ofSize: 13.5, weight: .light)
-            label.textColor = .black
-            label.numberOfLines = 2
-            return label
-        }()
+        let adressLabel = generateLaels(text: "\(orderStatus[indexPath.row].0.address)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .black)
+        adressLabel.numberOfLines = 2
         
         cell.addSubview(adressLabel)
         adressLabel.snp.makeConstraints { make in
@@ -210,18 +181,14 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.top.equalTo(phoneLabel.snp.bottom)
         }
         
-        let statusLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(orderStatus[indexPath.row].0.status)"
-            label.font = .systemFont(ofSize: 13.5, weight: .light)
-            label.textColor = .black
-            return label
-        }()
+        let statusLabel = generateLaels(text: "\(orderStatus[indexPath.row].0.status)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .black)
         cell.addSubview(statusLabel)
         statusLabel.snp.makeConstraints { make in
             make.left.right.equalTo(phoneLabel)
             make.top.equalTo(adressLabel.snp.bottom)
         }
+        
+        //MARK: -Other elements
         
         let inCellButton: UIButton = {
             let button = UIButton(type: .system)
@@ -236,10 +203,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
             return button
         }()
-        
-        
-        
-       
+
         cell.addSubview(inCellButton)
         inCellButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview().offset(14)
@@ -260,15 +224,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.right.equalTo(inCellButton.snp.right)
             make.centerY.equalTo(phoneLabel)
         }
+        let time = orderStatus[indexPath.row].0.formattedCreatedTime ?? "0:00"
+        let timeLabel = generateLaels(text: "\(time)", fonc: .systemFont(ofSize: 15, weight: .regular), textColor: UIColor(red: 60/255, green: 60/255, blue: 67/255, alpha: 0.6))
         
-        let timeLabel: UILabel = {
-            let label = UILabel()
-            let time = orderStatus[indexPath.row].0.formattedCreatedTime ?? "0:00"
-            label.text = "\(time)"
-            label.font = .systemFont(ofSize: 15, weight: .regular)
-            label.textColor = UIColor(red: 60/255, green: 60/255, blue: 67/255, alpha: 0.6)
-            return label
-        }()
         cell.addSubview(timeLabel)
         timeLabel.snp.makeConstraints { make in
             make.right.equalTo(arrowImageView.snp.left).inset(-8)
@@ -287,9 +245,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             inCellButton.backgroundColor = UIColor.clear
         }
        
-        
-       
-       
         if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath), page == 1 {
             print(isFirstLoadApp)
                 let greenDot = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
@@ -306,8 +261,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                     make.centerY.equalToSuperview()
                     make.centerX.equalToSuperview()
                 }
-
-
                 DispatchQueue.main.asyncAfter(deadline: .now()) {
                     UIView.animate(withDuration: 0.5) {
                             greenDot.alpha = 1
@@ -336,8 +289,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                 make.centerY.equalToSuperview()
                 make.centerX.equalToSuperview()
             }
-            
-            
             DispatchQueue.main.asyncAfter(deadline: .now()) {
                 UIView.animate(withDuration: 0.5) {
                     orangeDot.alpha = 1
@@ -352,21 +303,19 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" || inCellButton.titleLabel?.text == "Заказ выполнен" {
             UIView.animate(withDuration: 0.2) {
                 let filter = CIFilter(name: "CIColorControls")
-                        filter?.setValue(CIImage(image: imageView.image!), forKey: kCIInputImageKey)
-                        filter?.setValue(0.0, forKey: kCIInputSaturationKey) // Установка насыщенности цвета в ноль
-                        let context = CIContext(options: nil)
-                        let cgImage = context.createCGImage((filter?.outputImage)!, from: (filter?.outputImage!.extent)!)
-                        imageView.image = UIImage(cgImage: cgImage!)
-                        phoneLabel.alpha = 0.5
-                        adressLabel.alpha = 0.5
-                        statusLabel.alpha = 0.5
-                        arrowImageView.alpha = 0.5
-                        timeLabel.alpha = 0.5
-                        inCellButton.alpha = 0.5
+                filter?.setValue(CIImage(image: imageView.image!), forKey: kCIInputImageKey)
+                filter?.setValue(0.0, forKey: kCIInputSaturationKey) // Установка насыщенности цвета в ноль
+                let context = CIContext(options: nil)
+                let cgImage = context.createCGImage((filter?.outputImage)!, from: (filter?.outputImage!.extent)!)
+                imageView.image = UIImage(cgImage: cgImage!)
+                phoneLabel.alpha = 0.5
+                adressLabel.alpha = 0.5
+                statusLabel.alpha = 0.5
+                arrowImageView.alpha = 0.5
+                timeLabel.alpha = 0.5
+                inCellButton.alpha = 0.5
             }
         }
-        
-
         
         return cell
     }
@@ -379,10 +328,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         return CGSize(width: collectionView.bounds.width, height: 85)
     }
     
-    
-
-    
-
+    //MARK: -change ststus
     
     @objc func goCourier(sender: UIButton) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
@@ -418,8 +364,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
 }
 
-
-// Преобразование hex-кода в UIColor
 extension UIColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -16,6 +16,7 @@ var isFirstLoadApp = 0
 
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
+
 protocol OrderViewControllerDelegate: AnyObject {
     func reloadCollection()
     func createButtonGo(index: Int)
@@ -23,7 +24,6 @@ protocol OrderViewControllerDelegate: AnyObject {
     func detailVC(index: Int)
     
 }
-
 
 class OrderViewController: UIViewController {
     
@@ -37,13 +37,10 @@ class OrderViewController: UIViewController {
     var isWorkCicle = false
     var refreshControl = UIRefreshControl()
     
-
-    
-  
+  //MARK: -viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       // navigationController?.isNavigationBarHidden = true
         mainView = AllOrdersView()
         self.view = mainView
         mainView?.addNewOrderButton?.addTarget(self, action: #selector(newOrder), for: .touchUpInside)
@@ -53,7 +50,6 @@ class OrderViewController: UIViewController {
     }
     
     func setupRefreshControl() {
-        //refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         mainView?.collectionView?.refreshControl = refreshControl
     }
     
@@ -84,8 +80,6 @@ class OrderViewController: UIViewController {
         }
     }
     
-   
-    
     @objc private func newOrder() {
         let vc = NewOrderViewController()
         vc.delegate = self
@@ -97,10 +91,6 @@ class OrderViewController: UIViewController {
     func stopAuthCheckTimer() {
         authCheckTimer?.invalidate()
         authCheckTimer = nil
-    }
-    
-    deinit {
-        stopAuthCheckTimer()
     }
     
     func startAuthCheckTimer() {
@@ -117,10 +107,7 @@ class OrderViewController: UIViewController {
         }
     }
     
-   
-    
     func getDishes() {
-        
         allDishes.removeAll()
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
@@ -142,7 +129,6 @@ class OrderViewController: UIViewController {
         
     }
     
-    
     func getImage(d: Dish) {
         //http://arbamarket.ru/media/main/dishes/image_27.png
         if let url = d.img {
@@ -158,8 +144,9 @@ class OrderViewController: UIViewController {
         }
     }
     
-    
-    
+    deinit {
+        stopAuthCheckTimer()
+    }
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
@@ -176,11 +163,8 @@ extension OrderViewController: OrderViewControllerDelegate {
         backItem.title = "Заказ №\(orderStatus[index].0.id)"
         backItem.setTitleTextAttributes(attributes, for: .normal)
         navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
-        
         self.refreshControl.endRefreshing()
-
         navigationController?.pushViewController(vc, animated: true)
-
     }
     
     func closeVC() {
@@ -190,15 +174,9 @@ extension OrderViewController: OrderViewControllerDelegate {
             print("ЗАПУСК")
             backgroundTask()
         }
-
     }
     
-
-    
-    
-    
     func createButtonGo(index: Int) {
-        
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
@@ -216,8 +194,6 @@ extension OrderViewController: OrderViewControllerDelegate {
                 print(1)
             }
         }
-        
-
     }
     
     func reloadCollection() {
@@ -231,9 +207,15 @@ extension OrderViewController: OrderViewControllerDelegate {
             }
         }
     }
-    
-   
-    
-    
 }
 
+extension OrderViewController: UIApplicationDelegate {
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        isOpen = true
+        isLoad = true
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        closeVC()
+    }
+}

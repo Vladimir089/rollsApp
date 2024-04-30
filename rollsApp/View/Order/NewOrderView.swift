@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 
+//MARK: -Protocol
+
 protocol NewOrderViewProtocol: AnyObject {
     func fillTextField(adress: String, cost: String)
     func fillButton(coast: String)
@@ -18,22 +20,20 @@ class NewOrderView: UIView {
     
     let scrollView = UIScrollView()
     let contentView = UIView()
-    var phoneTextField: UITextField?
-    var tableView: UITableView?
-    var addButton: UIButton?
+    weak var phoneTextField: UITextField?
+    weak var tableView: UITableView?
+    weak var addButton: UIButton?
     weak var delegate: NewOrderViewControllerShowWCDelegate?
-    var adressButton: UIButton?
-    var adressTextField: UITextField?
+    weak var adressButton: UIButton?
+    weak var adressTextField: UITextField?
     let similadAdressView = SimilarAdressTable()
-    var similarLabel: UILabel?
-    var commentTextField: UITextField?
-    var oplataSegmentedControl: UISegmentedControl?
-    var createOrderButton: UIButton?
+    weak var similarLabel: UILabel?
+    weak var commentTextField: UITextField?
+    weak var oplataSegmentedControl: UISegmentedControl?
+    weak var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     
-
-    
-    
+    //MARK: -init
     
     override init(frame: CGRect) {
         super .init(frame: frame)
@@ -45,7 +45,6 @@ class NewOrderView: UIView {
         layoutIfNeeded()
         updateContentSize()
         updateCreateOrderButtonState()
-        print(222222)
     }
     
     func updateContentSize() {
@@ -53,12 +52,9 @@ class NewOrderView: UIView {
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: contentHeight)
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-
     
     private func updateCreateOrderButtonState() {
         if phoneTextField?.text != "" && adressTextField?.text != "" && menuItemsArr.count != 0 {
@@ -69,14 +65,10 @@ class NewOrderView: UIView {
             print(2)
         }
     }
-
     
-    @objc func hideKeyboard() {
-        phoneTextField?.endEditing(true)
-        updateCreateOrderButtonState()
-    }
+    //MARK: -Func create interface
     
-    func settingsView() {
+    private func settingsView() {
         backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
         
         let tapInViewGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -84,6 +76,7 @@ class NewOrderView: UIView {
         addGestureRecognizer(tapInViewGesture)
         scrollView.isUserInteractionEnabled = true
         contentView.isUserInteractionEnabled = true
+        
         let hideView: UIView = {
             let view = UIView()
             view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 1)
@@ -99,20 +92,14 @@ class NewOrderView: UIView {
             make.top.equalToSuperview().inset(20)
         }
         
-        let newOrderLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Новый Заказ"
-            label.font = .systemFont(ofSize: 41, weight: .bold)
-            label.textColor = .black
-            return label
-        }()
-        
+        let newOrderLabel = generateLabel(text: "Новый Заказ", font: .systemFont(ofSize: 41, weight: .bold), isUnderlining: false, textColor: .black)
         addSubview(newOrderLabel)
         newOrderLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(15)
             make.top.equalToSuperview().inset(50)
         }
         
+        scrollView.showsVerticalScrollIndicator = false
         addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
             make.left.right.bottom.equalToSuperview()
@@ -155,11 +142,8 @@ class NewOrderView: UIView {
             let label = UILabel(frame: CGRect(x: 5, y: 5, width: 20, height: 20))
             label.textColor = .black
             label.text = "+7"
-            
             view.addSubview(label)
             leftPaddingView.addSubview(view)
-            
-            
             textField.leftView = leftPaddingView
             textField.leftViewMode = .always
             textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
@@ -355,7 +339,7 @@ class NewOrderView: UIView {
         }()
         contentView.addSubview(botView)
         botView.snp.makeConstraints { make in
-            make.height.equalTo(100) //мб тут сдеклать высоту таблицы
+            make.height.equalTo(200) //мб тут сдеклать высоту таблицы
             make.left.right.equalToSuperview()
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
@@ -367,6 +351,20 @@ class NewOrderView: UIView {
         
     }
     
+    func generateLabel(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UILabel {
+        let label = UILabel()
+        label.font = font
+        label.text = text
+        label.textColor = textColor
+        if isUnderlining == true {
+            let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue]
+            let underlineAttributedString = NSAttributedString(string: text, attributes: underlineAttribute)
+            label.attributedText = underlineAttributedString
+        }
+        return label
+    }
+    
+    //MARK: -objc func
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         let feedbackGenerator = UISelectionFeedbackGenerator()
         feedbackGenerator.selectionChanged()
@@ -468,23 +466,11 @@ class NewOrderView: UIView {
         }
     }
     
-    func generateLabel(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UILabel {
-        let label = UILabel()
-        label.font = font
-        label.text = text
-        label.textColor = textColor
-        if isUnderlining == true {
-            let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue]
-            let underlineAttributedString = NSAttributedString(string: text, attributes: underlineAttribute)
-            label.attributedText = underlineAttributedString
-        }
-        return label
+    @objc func hideKeyboard() {
+        phoneTextField?.endEditing(true)
+        updateCreateOrderButtonState()
     }
-    
-    
-    
-    
-    
+      
 }
 
 
@@ -520,8 +506,8 @@ extension NewOrderView: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if var a = phoneTextField?.text {
-            let adress: ()? = delegate?.getLastAdress(phoneNumber: a, cafeID: "\(cafeID)") { adress in
+        if let textPhoneTextField = phoneTextField?.text {
+            let _: ()? = delegate?.getLastAdress(phoneNumber: textPhoneTextField, cafeID: "\(cafeID)") { adress in
                 if adress != "" && self.adressTextField?.text == "" {
                     self.adressButton?.setTitle(adress, for: .normal)
                     UIView.animate(withDuration: 0.5) {
@@ -534,12 +520,7 @@ extension NewOrderView: UITextFieldDelegate {
                 if adress == "" {
                     
                     self.adressButton?.setTitle(nil, for: .normal)
-                    UIView.animate(withDuration: 0.5) {
-                        self.adressButton?.snp.updateConstraints { make in
-                            //make.height.equalTo(0)
-                        }
-                        self.layoutIfNeeded()
-                    }
+                    
                 }
             }
         }
@@ -547,22 +528,18 @@ extension NewOrderView: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == adressTextField {
-            
             delegate?.showAdressVC()
             adressTextField?.endEditing(true)
-            
-           
         }
         if textField == commentTextField {
             UIView.animate(withDuration: 0.5) { [self] in
-                self.frame.origin.y -= 280
                 adressTextField?.isUserInteractionEnabled = false
                 self.layoutIfNeeded()
             }
         }
-       
         return true
     }
+    
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == adressTextField {
@@ -572,8 +549,6 @@ extension NewOrderView: UITextFieldDelegate {
         }
         updateCreateOrderButtonState()
     }
-    
-    
 }
 
 
@@ -601,9 +576,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
                 make.centerY.equalToSuperview()
             }
             cell.accessoryView = addButton
-            
         } else {
-            
             let delButton: UIButton = {
                 var button = UIButton(type: .system)
                 let image = UIImage(systemName: "minus.circle.fill")
@@ -642,9 +615,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
             labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
             cell.addSubview(labelCount)
-            
-            
-            
+
             label.snp.makeConstraints { make in
                 make.left.equalTo(delButton.snp.right).inset(-10)
                 make.centerY.equalToSuperview()
@@ -665,15 +636,12 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             } else {
                 labelCount.text = ""
             }
-            
-            
-           
+
             cell.addSubview(costLabel)
             costLabel.snp.makeConstraints { make in
                 make.right.equalToSuperview().inset(15)
                 make.centerY.equalToSuperview()
             }
-            
             let separatorView = UIView()
             separatorView.backgroundColor = UIColor(red: 185/255, green: 185/255, blue: 187/255, alpha: 1)
             cell.addSubview(separatorView)
@@ -685,7 +653,6 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             }
             cell.accessoryView = delButton
         }
-        
         return cell
     }
     
@@ -699,7 +666,6 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
-        
         if indexPath.row < menuItemsArr.count {
             var item = menuItemsArr[indexPath.row]
             if item.1.0 > 1 {
@@ -713,8 +679,6 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
                 tableView?.deleteRows(at: [indexPath], with: .automatic)
             }
         }
-
-
         similadAdressView.getCostAdress()
         tableView?.beginUpdates()
         tableView?.endUpdates()
@@ -734,9 +698,6 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             self.updateContentSize()
         }
     }
-
-    
-
 }
 
 extension NewOrderView: NewOrderViewProtocol {
@@ -776,10 +737,6 @@ extension NewOrderView: NewOrderViewProtocol {
                 self.layoutIfNeeded()
             }
         }
-    }
-    
-    
-    
-    
+    }   
 }
 

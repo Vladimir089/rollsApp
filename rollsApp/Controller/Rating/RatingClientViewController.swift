@@ -20,6 +20,17 @@ class RatingClientViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.navigationBar.backgroundColor = .red
+        getRate {
+            self.checkCleints()
+        }
+        hidesBottomBarWhenPushed = false
+        view.backgroundColor = UIColor(hex: "#F2F2F7")
+        createInterface()
+    }
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .white
@@ -55,20 +66,6 @@ class RatingClientViewController: UIViewController {
         getRate {
             self.checkCleints()
         }
-    }
-    
-
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = .red
-        getRate {
-            self.checkCleints()
-        }
-        hidesBottomBarWhenPushed = false
-        view.backgroundColor = UIColor(hex: "#F2F2F7")
-        createInterface()
-        
     }
     
     func createInterface() {
@@ -107,7 +104,6 @@ class RatingClientViewController: UIViewController {
             make.height.equalTo(50)
         }
         
-        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
@@ -115,7 +111,8 @@ class RatingClientViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
-    //allDishes
+
+    
     func getRate(completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
@@ -149,7 +146,6 @@ class RatingClientViewController: UIViewController {
             }
             return
         }
-        
         for ratingClient in arrRatingClientResponse {
             if !clientArr.contains(where: { $0.1 == ratingClient.phone }) {
                 let dishImage: UIImage = .image
@@ -161,8 +157,6 @@ class RatingClientViewController: UIViewController {
         tableView.reloadData()
     }
 
-
-    
     @objc func goBack() {
         print(1)
         navigationController?.popViewController(animated: true)
@@ -228,7 +222,4 @@ extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource
             }
         }
     }
-    
-
-   
 }

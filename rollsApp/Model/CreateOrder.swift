@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-var menuItemsArr = [(String, (Int, Int))]() //тут сам заказ, надо перевести в массив строк при создании заказа
+var menuItemsArr = [(String, (Int, Int))]()
 var menuItemIndex = [(String, Int)]() //хранение ключей
 var adress = ""
 var totalCoast = 0

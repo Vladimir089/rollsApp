@@ -18,6 +18,8 @@ class AdressViewController: UIViewController {
     var adressTextField: UITextField?
     var adress = ""
     
+    //MARK: -viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
@@ -36,9 +38,10 @@ class AdressViewController: UIViewController {
         
     }
     
+    //MARK: -create interface func
+    
     func createInterface() {
-        
-        var closeButton: UIButton = {
+        let closeButton: UIButton = {
             let button = UIButton(type: .system)
             button.setTitle("Готово", for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
@@ -81,15 +84,13 @@ class AdressViewController: UIViewController {
             make.left.equalTo((adressTextField?.snp.right)!).inset(-5)
             make.top.equalTo((adressTextField?.snp.top)!)
         }
-       
     }
+    
     deinit {
         print("ЗАКРЫЛИ")
     }
-
-    
-
 }
+
 extension AdressViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == adressTextField {
@@ -110,6 +111,7 @@ extension AdressViewController: AdressViewControllerDelegate {
     func fillTextField(adress: String) {
         adressTextField?.text = adress
     }
+    
     func dismiss() {
         adressTextField?.resignFirstResponder()
         dismiss(animated: true, completion: nil)

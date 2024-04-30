@@ -18,41 +18,20 @@ class LoginViewController: UIViewController {
     var tabBar = TabBarViewController()
     var orderVC: OrderViewController?
     
- 
-
+    //MARK: -viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
-            
             navigationController?.setViewControllers([tabBar], animated: false)
-            
         } else {
             createInterface()
-            
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-            
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         }
     }
-    @objc func keyboardWillShow(notification: Notification) {
-        self.view.frame.origin.y = -100
-    }
     
-    @objc func keyboardWillHide(notification: Notification) {
-        self.view.frame.origin.y = 0
-    }
-
-    
-
-    
-    
-    @objc func endEditing() {
-        loginTextField?.endEditing(true)
-        passwordTextField?.endEditing(true)
-    }
-    
-  
     func createInterface() {
         view.backgroundColor = UIColor(hex: "#5350E5")
         let gesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
@@ -63,6 +42,7 @@ class LoginViewController: UIViewController {
             let imageView = UIImageView(image: image)
             return imageView
         }()
+        
         view.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.height.equalTo(135)
@@ -109,7 +89,6 @@ class LoginViewController: UIViewController {
             make.left.right.equalToSuperview().inset(20)
             make.top.equalTo(labelOrder.snp.bottom).inset(-20)
         })
-        
         
         passwordTextField = {
             let textField = UITextField()
@@ -189,8 +168,8 @@ class LoginViewController: UIViewController {
             label.addGestureRecognizer(tapGesture)
             return label
         }()
-
-
+        
+        
         view.addSubview(texSupportLabel ?? UILabel())
         texSupportLabel?.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(50)
@@ -215,7 +194,28 @@ class LoginViewController: UIViewController {
         }
     }
     
-
+    func updateCheckBoxState() {
+        if isSave {
+            checkBoxButton?.setImage(UIImage(named: "checked"), for: .normal)
+        } else {
+            checkBoxButton?.setImage(UIImage(named: "unchecked"), for: .normal)
+        }
+    }
+    
+    //MARK: -objc func
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        self.view.frame.origin.y = -100
+    }
+    
+    @objc func keyboardWillHide(notification: Notification) {
+        self.view.frame.origin.y = 0
+    }
+    
+    @objc func endEditing() {
+        loginTextField?.endEditing(true)
+        passwordTextField?.endEditing(true)
+    }
     
     @objc func goLogin() {
         self.vhodButton?.isEnabled = false
@@ -226,16 +226,14 @@ class LoginViewController: UIViewController {
             switch result {
             case .success:
                 UIView.animate(withDuration: 0.3) {
-                       self.vhodButton?.backgroundColor = .systemGreen
+                    self.vhodButton?.backgroundColor = .systemGreen
                 } completion: { _ in
                     self.vhodButton?.isEnabled = false
                     if self.isSave == true {
                         UserDefaults.standard.setValue(authKey, forKey: "authKey")
                     }
                     self.navigationController?.setViewControllers([self.tabBar], animated: true)
-                    
                 }
-                
             case .failure(let error):
                 UserDefaults.standard.removeObject(forKey: "authKey")
                 self.vhodButton?.isEnabled = false
@@ -263,7 +261,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
+    
     
     @objc func handlePhoneTap(_ sender: UITapGestureRecognizer) {
         if let phone = texSupportLabel?.text?.replacingOccurrences(of: "Техподдержка ", with: ""), let phoneURL = URL(string: "tel://\(phone)") {
@@ -276,16 +274,8 @@ class LoginViewController: UIViewController {
         updateCheckBoxState()
         print(1)
     }
-    
-    func updateCheckBoxState() {
-        if isSave {
-            checkBoxButton?.setImage(UIImage(named: "checked"), for: .normal)
-        } else {
-            checkBoxButton?.setImage(UIImage(named: "unchecked"), for: .normal)
-        }
-    }
 }
- 
+
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

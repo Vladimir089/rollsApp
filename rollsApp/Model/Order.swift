@@ -31,7 +31,6 @@ struct Order: Codable {
     let cafeID: Int
     let createdDateString: String?
 
-    // Форматирование времени создания заказа
     var formattedCreatedTime: String? {
         guard let date = createdDate else { return nil }
         
@@ -44,7 +43,6 @@ struct Order: Codable {
 
     var createdDate: Date? {
         guard let dateString = createdDateString, !dateString.isEmpty else {
-            print("ERRRROROROROROROOROROROORORORORRR!!!!")
             return nil
         }
 

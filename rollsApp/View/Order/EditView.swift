@@ -38,12 +38,10 @@ class EditView: UIView {
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     var numberPhoneLabel: UILabel?
     
-
+    //MARK: -init
     override init(frame: CGRect) {
         super .init(frame: frame)
     }
-    
-   
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -81,18 +79,7 @@ class EditView: UIView {
                 print("Ошибка разделения элемента: \(item)")
             }
         }
-        
-        
-        
         similadAdressView.getCostAdress()
-        
-        print(menuItemsArr)
-    }
-
-    
-    
-    @objc func hideKeyboard() {
-        phoneTextField?.endEditing(true)
     }
     
     func updateContentSize() {
@@ -126,8 +113,8 @@ class EditView: UIView {
         scrollView.isUserInteractionEnabled = true
         scrollView.showsVerticalScrollIndicator = false
         contentView.isUserInteractionEnabled = true
-        
         addSubview(scrollView)
+        
         scrollView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
         contentView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
         scrollView.snp.makeConstraints { make in
@@ -141,7 +128,6 @@ class EditView: UIView {
             make.width.equalToSuperview()
             
         }
-        
         
         numberPhoneLabel = generateLabel(text: "НОМЕР ТЕЛЕФОНА",
                                              font: UIFont.systemFont(ofSize: 15, weight: .regular),
@@ -167,18 +153,14 @@ class EditView: UIView {
         phoneTextField = {
             let textField = UITextField()
             let leftPaddingView = UIView(frame: CGRect(x: 10, y: 0, width: 37, height: 40))
-
             let view = UIView(frame: CGRect(x: 5, y: 5, width: 30, height: 30))
             view.backgroundColor = UIColor(hex: "#F2F2F7")
             view.layer.cornerRadius = 5
             let label = UILabel(frame: CGRect(x: 5, y: 5, width: 20, height: 20))
             label.textColor = .black
             label.text = "+7"
-            
             view.addSubview(label)
             leftPaddingView.addSubview(view)
-            
-            
             textField.leftView = leftPaddingView
             textField.leftViewMode = .always
             textField.leftViewMode = .always
@@ -279,10 +261,7 @@ class EditView: UIView {
             make.height.equalTo(44)
         })
         
-
         similadAdressView.editDelegate = self
-        
-        
         let sSoboiLabel = generateLabel(text: "С собой",
                                        font: UIFont.systemFont(ofSize: 15, weight: .bold),
                                        isUnderlining: true,
@@ -298,6 +277,7 @@ class EditView: UIView {
             make.right.equalToSuperview().inset(25)
             make.centerY.equalTo(adressLabel.snp.centerY)
         }
+        
         contentView.addSubview(sSoboiLabel)
         sSoboiLabel.snp.makeConstraints { make in
             make.right.equalTo(stoleLabel.snp.left).inset(-10)
@@ -390,12 +370,6 @@ class EditView: UIView {
         
     }
     
-    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        let feedbackGenerator = UISelectionFeedbackGenerator()
-        feedbackGenerator.selectionChanged()
-    }
-    
-    
     func generateLabel(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.font = font
@@ -409,7 +383,16 @@ class EditView: UIView {
         return label
     }
     
+    //MARK: -Objc func
     
+    @objc func hideKeyboard() {
+        phoneTextField?.endEditing(true)
+    }
+    
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        let feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator.selectionChanged()
+    }
     
     @objc func saveOrder() {
         let dateFormatter = DateFormatter()
@@ -479,15 +462,11 @@ class EditView: UIView {
                         self.createOrderButton?.backgroundColor = .systemBlue
                     }, completion: nil)
                 }
-                
-                
             }
         })
         
     }
 }
-
-
 
 extension EditView: UITextFieldDelegate {
     
@@ -498,8 +477,6 @@ extension EditView: UITextFieldDelegate {
         }
         return true
     }
-    
-  
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.resignFirstResponder()
@@ -518,16 +495,13 @@ extension EditView: UITextFieldDelegate {
                 textField.endEditing(true)
                 adressTextField?.isUserInteractionEnabled = true
             }
-            
         }
-        
-       
         return true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if var a = phoneTextField?.text {
-            let adress: ()? = delegate?.getLastAdress(phoneNumber: a, cafeID: "\(cafeID)") { adress in
+        if let textPhoneTextField = phoneTextField?.text {
+            let _: ()? = delegate?.getLastAdress(phoneNumber: textPhoneTextField, cafeID: "\(cafeID)") { adress in
                 if adress != "" && self.adressTextField?.text == "" {
                     self.adressButton?.setTitle(adress, for: .normal)
                     UIView.animate(withDuration: 0.5) {
@@ -539,28 +513,13 @@ extension EditView: UITextFieldDelegate {
                 }
             }
         }
-        
-        
     }
     
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        if textField == commentTextField {
-//            UIView.animate(withDuration: 0.5) {
-//                self.frame.origin.y = 120
-//                self.layoutIfNeeded()
-//            }
-//        }
-//    }
-//    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == adressTextField {
-            
             delegate?.showAdressVC()
             adressTextField?.endEditing(true)
-            
-           
         }
-        
         return true
     }
     
@@ -570,10 +529,7 @@ extension EditView: UITextFieldDelegate {
                 similadAdressView.reload(address: a)
             }
         }
-
     }
-    
-    
 }
 
 
@@ -601,9 +557,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 make.centerY.equalToSuperview()
             }
             cell.accessoryView = addButton
-            
         } else {
-            
             let delButton: UIButton = {
                 var button = UIButton(type: .system)
                 let image = UIImage(systemName: "minus.circle.fill")
@@ -630,7 +584,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             label.font = .systemFont(ofSize: 18, weight: .regular)
             label.textColor = .black
             cell.addSubview(label)
-            
             let labelCount = UILabel()
             if indexPath.row < menuItemsArr.count {
                 let item = menuItemsArr[indexPath.row]
@@ -642,8 +595,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
             labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
             cell.addSubview(labelCount)
-            
-            
             
             label.snp.makeConstraints { make in
                 make.left.equalTo(delButton.snp.right).inset(-10)
@@ -713,7 +664,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
         tableView?.beginUpdates()
         tableView?.endUpdates()
 
-
         UIView.animate(withDuration: 0.5) {
             let previousAdress = self.adressButton?.titleLabel?.text
             let previousAdressText = self.adressTextField?.text
@@ -728,9 +678,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             self.updateContentSize()
         }
     }
-
-    
-
 }
 
 extension EditView: EditViewProtocol {
@@ -770,10 +717,6 @@ extension EditView: EditViewProtocol {
                 self.layoutIfNeeded()
             }
         }
-    }
-    
-    
-    
-    
+    }  
 }
 

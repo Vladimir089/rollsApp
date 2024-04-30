@@ -20,6 +20,17 @@ class RatingDishesViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.navigationBar.backgroundColor = .red
+        getRate {
+            self.checkDishes()
+        }
+        hidesBottomBarWhenPushed = false
+        view.backgroundColor = UIColor(hex: "#F2F2F7")
+        createInterface()
+    }
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .white
@@ -57,25 +68,7 @@ class RatingDishesViewController: UIViewController {
         }
     }
     
-    deinit {
-        print(487534785346354)
-    }
-
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = .red
-        getRate {
-            self.checkDishes()
-        }
-        hidesBottomBarWhenPushed = false
-        view.backgroundColor = UIColor(hex: "#F2F2F7")
-        createInterface()
-        
-    }
-    
     func createInterface() {
-        
         let backButton: UIButton = {
             let button = UIButton(type: .system)
             button.backgroundColor = .clear
@@ -118,7 +111,8 @@ class RatingDishesViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
-    //allDishes
+    
+    
     func getRate(completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
@@ -145,11 +139,8 @@ class RatingDishesViewController: UIViewController {
             }
             return
         }
-        
         for ratingDish in arrRatingDishesResponse {
-            // Проверяем, есть ли уже элемент с таким именем в dishArr
             if !dishArr.contains(where: { $0.1 == ratingDish.name }) {
-                // Если элемент с таким именем не найден, добавляем его в dishArr
                 if let foundDish = allDishes.first(where: { $0.0.name == ratingDish.name }) {
                     let dishImage = foundDish.1
                     dishArr.append((dishImage, ratingDish.name, ratingDish.quantity))
@@ -161,16 +152,11 @@ class RatingDishesViewController: UIViewController {
         print(allDishes)
         tableView.reloadData()
     }
-
-
     
     @objc func goBack() {
         print(1)
         navigationController?.popViewController(animated: true)
     }
-    
-
-    
 }
  
 extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource {
@@ -183,8 +169,9 @@ extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource
         cell.subviews.forEach { $0.removeFromSuperview() }
         
         guard indexPath.row < dishArr.count else {
-               return cell // Возвращаем пустую ячейку, если индекс выходит за пределы массива
+               return cell
            }
+        
         cell.separatorInset = .zero
         var image = UIImage()
         image = dishArr[indexPath.row].0
@@ -228,5 +215,4 @@ extension RatingDishesViewController: UITableViewDelegate, UITableViewDataSource
             }
         }
     }
-    
 }

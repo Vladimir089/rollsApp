@@ -51,7 +51,6 @@ class EditViewController: UIViewController {
         
 
     }
-    
 
     deinit {
         menuItemsArr.removeAll()
@@ -60,9 +59,7 @@ class EditViewController: UIViewController {
         totalCoast = 0
         delegate?.closeVC()
     }
-
 }
-
 
 extension EditViewController: EditViewControllerDelegate {
     func showAdressVC() {
@@ -73,40 +70,37 @@ extension EditViewController: EditViewControllerDelegate {
     }
     
     func succesCreate() {
-        navController.popToRootViewController(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
-        var a = ""
+        var lastAdress = ""
         
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
-        
         AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(phoneNumber)&cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any],
                    let address = json["address"] as? [String: Any],
                    let addressValue = address["address"] as? String {
-                    a = addressValue
+                    lastAdress = addressValue
                 }
             case .failure(_):
-                a = ""
+                lastAdress = ""
             }
-            completion(a)
+            completion(lastAdress)
         }
     }
 
     
     func showVC() {
-        print(1)
         let vc = DishesMenuViewControllerController()
         vc.coast = mainView?.similadAdressView
         vc.delegateEdit = self.mainView
-        print(12)
         self.present(vc, animated: true)
     }
     
@@ -128,7 +122,6 @@ extension EditViewController: EditViewControllerDelegate {
             //"order_on_time": timeOrder,  // к определенному времени
             "cafe_id": cafeID
         ]
-        
         AF.request("http://arbamarket.ru/api/v1/main/edit_order/\(orderId)/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             debugPrint(response)
             switch response.result {

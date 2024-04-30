@@ -10,28 +10,25 @@ import UIKit
 
 class StatView: UIView {
     
-    var winnerLabel: UILabel?
+    weak var winnerLabel: UILabel?
     var diagramView = UIView()
     weak var delegate: StatViewControllerDelegate?
-    var labelCashh, labelPerevod, labelCourier, labelSumm: UILabel?
-
-    
+    weak var labelCashh, labelPerevod, labelCourier, labelSumm: UILabel?
     var diagrammArr: [(Int, Date)] = []
+    
     
     override init(frame: CGRect) {
         super .init(frame: frame)
-        
         createInterface()
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: -Func
     
-    
-    func createInterface() {
+    private func createInterface() {
         backgroundColor = .white
         let imageView: UIImageView = {
             let image: UIImage = .imageDishes
@@ -68,12 +65,8 @@ class StatView: UIView {
         }
         showDiagram()
         
-        let centerView: UIView = {
-            let view = UIView()
-            view.backgroundColor = UIColor(hex: "#F2F2F7")
-            view.layer.cornerRadius = 10
-            return view
-        }()
+
+        let centerView = createView(color: UIColor(hex: "#F2F2F7"), cornerRadius: 10)
         addSubview(centerView)
         centerView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
@@ -109,62 +102,34 @@ class StatView: UIView {
             make.top.equalTo(courerCash.snp.bottom).inset(-23)
         }
         
-        labelCashh = {
-            let label = UILabel()
-            label.text = "0 ₽"
-            label.font = .systemFont(ofSize: 18, weight: .regular)
-            label.textColor = .black
-            return label
-        }()
+        labelCashh = generateLaels(text: "0 ₽", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .black)
         centerView.addSubview(labelCashh ?? UILabel())
         labelCashh?.snp.makeConstraints({ make in
             make.centerY.equalTo(labelCash.snp.centerY)
             make.right.equalToSuperview().inset(10)
         })
         
-        
-        labelPerevod = {
-            let label = UILabel()
-            label.text = "0 ₽"
-            label.font = .systemFont(ofSize: 18, weight: .regular)
-            label.textColor = .black
-            return label
-        }()
+        labelPerevod = generateLaels(text: "0 ₽", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .black)
         centerView.addSubview(labelPerevod ?? UILabel())
         labelPerevod?.snp.makeConstraints({ make in
             make.centerY.equalTo(perevodlCash.snp.centerY)
             make.right.equalToSuperview().inset(10)
         })
         
-        
-        labelCourier = {
-            let label = UILabel()
-            label.text = "0 ₽"
-            label.font = .systemFont(ofSize: 18, weight: .regular)
-            label.textColor = .black
-            return label
-        }()
+        labelCourier = generateLaels(text: "0 ₽", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .black)
         centerView.addSubview(labelCourier ?? UILabel())
         labelCourier?.snp.makeConstraints({ make in
             make.centerY.equalTo(courerCash.snp.centerY)
             make.right.equalToSuperview().inset(10)
         })
 
-        labelSumm = {
-            let label = UILabel()
-            label.text = "0 ₽"
-            label.font = .systemFont(ofSize: 18, weight: .semibold)
-            label.textColor = .black
-            return label
-        }()
+        labelSumm = generateLaels(text: "0 ₽", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .black)
         centerView.addSubview(labelSumm ?? UILabel())
         labelSumm?.snp.makeConstraints({ make in
             make.centerY.equalTo(summCash.snp.centerY)
             make.right.equalToSuperview().inset(10)
         })
-        
-        let separatorView = UIView()
-        separatorView.backgroundColor = .separator
+        let separatorView = createView(color: .separator, cornerRadius: 0)
         centerView.addSubview(separatorView)
         separatorView.snp.makeConstraints { make in
             make.left.equalTo(courerCash.snp.left)
@@ -173,9 +138,7 @@ class StatView: UIView {
             make.top.equalTo(courerCash.snp.bottom).inset(-10)
         }
         
-        let secondView = UIView()
-        secondView.backgroundColor = UIColor(hex: "#F2F2F7")
-        secondView.layer.cornerRadius = 10
+        let secondView = createView(color: UIColor(hex: "#F2F2F7"), cornerRadius: 10)
         addSubview(secondView)
         secondView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
@@ -287,6 +250,7 @@ class StatView: UIView {
         
     }
     
+    //MARK: -ShowVC Func
     @objc func showRatingDishes() {
         delegate?.showDishesRating()
     }
@@ -294,7 +258,8 @@ class StatView: UIView {
         delegate?.showClientRating()
     }
     
-    func generateLaels(text: String,fonc: UIFont, textColor: UIColor) -> UILabel {
+    //MARK: -GenerateLabel Func
+    private func generateLaels(text: String,fonc: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.text = text
         label.font = fonc
@@ -303,7 +268,7 @@ class StatView: UIView {
     }
     
     
-    
+    //MARK: -Settings diagram
     func loadStat() {
         diagrammArr.removeAll()
         if let orderStatistics = stat?.orderStatistics {
@@ -311,20 +276,18 @@ class StatView: UIView {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             for (index, statistic) in orderStatistics.enumerated().dropFirst() {
-                
-                    if let date = dateFormatter.date(from: statistic.date) {
-                        diagrammArr.append((statistic.count, date))
-                    }
-                
+                if let date = dateFormatter.date(from: statistic.date) {
+                    diagrammArr.append((statistic.count, date))
+                }
             }
             showDiagram()
         }
     }
-
+    
     
     func showDiagram() {
         print(stat)
-        if stat != nil, let a = stat?.earningsStatistics.cash, let b = stat?.earningsStatistics.remittance, let c = stat?.earningsStatistics.toCourier, let d = stat?.earningsStatistics.total{
+        if stat != nil, let a = stat?.earningsStatistics.atCheckout, let b = stat?.earningsStatistics.remittance, let c = stat?.earningsStatistics.toCourier, let d = stat?.earningsStatistics.total{
             labelCashh?.text = "\((a) ) ₽"
             labelPerevod?.text = "\(b) ₽"
             labelCourier?.text = "\(c) ₽"
@@ -348,11 +311,9 @@ class StatView: UIView {
             let columnHeight = CGFloat(data.0) / CGFloat(maxCount) * maxHeight // Нормализация высоты столбца
             let clampedHeight = max(columnHeight, minColumnHeight) // Установка минимальной высоты
             
-            let columnView = UIView()
-            columnView.backgroundColor = .blue // Цвет столбца
+            let columnView = createView(color: .blue, cornerRadius: 0)
             
-            let topView = UIView()
-            topView.backgroundColor = UIColor(hex: "#5350E5")
+            let topView = createView(color: UIColor(hex: "#5350E5"), cornerRadius: 0)
             columnView.addSubview(topView)
             topView.snp.makeConstraints { make in
                 make.left.right.top.equalToSuperview()
@@ -370,22 +331,18 @@ class StatView: UIView {
             }
             
             // Добавляем подпись к столбцу с числовым значением
-            let label = UILabel()
-            label.text = "\(data.0)"
+            let label = generateLaels(text: "\(data.0)", fonc: .systemFont(ofSize: 16, weight: .regular), textColor: UIColor(hex: "#9E9C9B"))
             label.numberOfLines = 2
-            label.font = .systemFont(ofSize: 16, weight: .regular)
-            label.textColor = UIColor(hex: "#9E9C9B")
             diagramView.addSubview(label)
             label.snp.makeConstraints { make in
                 make.centerX.equalTo(columnView)
                 make.bottom.equalTo(columnView.snp.top).offset(-2)
             }
             
-            let labelBoat = UILabel()
+            
+            let labelBoat = generateLaels(text: "", fonc: .systemFont(ofSize: 16, weight: .regular), textColor: UIColor(hex: "#9E9C9B"))
             labelBoat.numberOfLines = 2
             diagramView.addSubview(labelBoat)
-            labelBoat.font = .systemFont(ofSize: 20, weight: .semibold)
-            labelBoat.textColor = UIColor(hex: "#9E9C9B")
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd"
             
@@ -402,13 +359,8 @@ class StatView: UIView {
                 make.top.equalTo(columnView.snp.bottom).inset(2)
             }
             
-            let labelDate: UILabel = {
-                let label = UILabel()
-                label.text = dateFormatter.string(from: currentDate)
-                label.textColor = UIColor(hex: "#9E9C9B")
-                label.font = .systemFont(ofSize: 22, weight: .regular)
-                return label
-            }()
+            let labelDate = generateLaels(text: dateFormatter.string(from: currentDate), fonc: .systemFont(ofSize: 22, weight: .regular), textColor: UIColor(hex: "#9E9C9B"))
+            
             diagramView.addSubview(labelDate)
             labelDate.snp.makeConstraints { make in
                 make.top.equalTo(labelBoat.snp.bottom).inset(2)
@@ -419,6 +371,8 @@ class StatView: UIView {
         }
     }
 
+    //MARK: -Support
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         showDiagram()
@@ -426,11 +380,15 @@ class StatView: UIView {
 
     
     
-    func createView() -> UIView {
+    func createView(color: UIColor, cornerRadius: Int) -> UIView {
         let view = UIView()
-        view.backgroundColor = UIColor(hex: "#CECDFF")
+        view.backgroundColor = color
+        view.layer.cornerRadius = CGFloat(cornerRadius)
         return view
     }
+    
+    
+    
 }
 
 

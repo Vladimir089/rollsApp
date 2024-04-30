@@ -7,8 +7,8 @@
 
 import UIKit
 import Alamofire
+
 protocol NewOrderViewControllerDelegate: AnyObject {
-//    func updateCollection()
     func removeDelegates()
 }
 
@@ -44,8 +44,6 @@ class NewOrderViewController: UIViewController {
         print("dsdfsdfsdfsdfee232323")
         delegate?.closeVC()
     }
-
-    
     
     override func viewDidLayoutSubviews() {
         mainView?.tableView?.reloadData()
@@ -57,13 +55,6 @@ class NewOrderViewController: UIViewController {
         mainView?.tableView?.layoutIfNeeded()
         mainView?.updateContentSize()
     }
-    
-   
-    
-   
-    
-
-   
 }
 
 
@@ -109,7 +100,6 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         }
     }
 
-    
     func showVC() {
         print(1)
         let vc = DishesMenuViewControllerController()
@@ -117,7 +107,6 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         vc.delegate = self.mainView
         self.present(vc, animated: true)
     }
-    
     
     func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
         let headers: HTTPHeaders = [
@@ -146,9 +135,5 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
                 completion(false)
             }
         }
-    }
-
-    
-    
-    
+    } 
 }

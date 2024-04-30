@@ -9,6 +9,7 @@ import UIKit
 
 
 class DishesMenuViewControllerController: UIViewController {
+    
     var timer: Timer?
     var closeButton: UIButton?
     var collectionView: UICollectionView?
@@ -17,13 +18,15 @@ class DishesMenuViewControllerController: UIViewController {
     var delegate: NewOrderViewProtocol?
     var delegateEdit: EditViewProtocol?
     
+    //MARK: -viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         createMenu()
         startTimerToUpdateMenu()
-        
     }
     
+    //MARK: -create interface func
     
     func createMenu() {
         view.backgroundColor = .white
@@ -42,8 +45,6 @@ class DishesMenuViewControllerController: UIViewController {
             make.top.equalToSuperview().inset(20)
         }
         
-        
-        
         collectionView = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -61,9 +62,9 @@ class DishesMenuViewControllerController: UIViewController {
             make.left.right.bottom.equalToSuperview().inset(10)
             make.top.equalTo(hideView.snp.bottom).inset(-5)
         })
-        
-        
     }
+    
+    //MARK: -start Timer
     
     func startTimerToUpdateMenu() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
@@ -85,31 +86,23 @@ class DishesMenuViewControllerController: UIViewController {
     
     @objc func closeVC() {
         stopTimer()
-
     }
     
     deinit {
         closeVC()
-        
     }
-
 }
-
-
-
 
 extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         for i in allDishes {
             let category = i.0.category
-                // Проверяем, нет ли уже такой категории в массиве categoryStorage
-                if !categoryStorage.contains(category) {
-                    // Если категории еще нет в массиве, добавляем ее
-                    categoryStorage.append(category)
-                }
+            // Проверяем, нет ли уже такой категории в массиве categoryStorage
+            if !categoryStorage.contains(category) {
+                // Если категории еще нет в массиве, добавляем ее
+                categoryStorage.append(category)
+            }
         }
-
-        
         return categoryStorage.count
     }
     
@@ -144,6 +137,7 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(10)
         }
+        
         let nameLabel: UILabel = {
             let label = UILabel()
             label.text = dish.0.name
@@ -159,19 +153,15 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             make.top.equalTo(imageView.snp.bottom).inset(-2)
         }
         
-        
-        
-        
         let countLabel: UIButton = {
             let button = UIButton()
             if let itemIndex = menuItemsArr.firstIndex(where: { $0.0 == dish.0.name }) {
-                    let count = menuItemsArr[itemIndex].1.0
-                    button.setTitle("\(count)", for: .normal)
-                    button.isHidden = false
-                } else {
-                    button.isHidden = true
-                }
-
+                let count = menuItemsArr[itemIndex].1.0
+                button.setTitle("\(count)", for: .normal)
+                button.isHidden = false
+            } else {
+                button.isHidden = true
+            }
             button.backgroundColor = .systemRed
             button.tintColor = .black
             button.titleLabel?.font = .systemFont(ofSize: 12, weight: .regular)
@@ -179,16 +169,15 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             button.layer.cornerRadius = 11
             return button
         }()
+        
         cell.addSubview(countLabel)
         countLabel.snp.makeConstraints { make in
             make.right.top.equalToSuperview()
             make.height.equalTo(22)
             make.width.equalTo(22)
         }
-        
         return cell
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
@@ -200,14 +189,13 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         }
         return UICollectionReusableView()
     }
-
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 30 //вертикальный отступ
+        return 30
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -217,39 +205,25 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
         return CGSize(width: widthPerItem, height: 114)
     }
     
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Создаем генератор тактильного отклика
         let feedbackGenerator = UISelectionFeedbackGenerator()
         feedbackGenerator.selectionChanged()
-
         let categoryForSection = Array(categoryStorage)[indexPath.section]
         let filteredDishes = allDishes.filter { $0.0.category == categoryForSection }
         let dish = filteredDishes[indexPath.item].0
-
-        // Поиск индекса элемента в массиве menuItemsArr
+        
         if let itemIndex = menuItemsArr.firstIndex(where: { $0.0 == dish.name }) {
-            // Элемент уже существует в массиве, обновляем его значения
             var updatedMenuItem = menuItemsArr[itemIndex]
             updatedMenuItem.1.0 += 1
             updatedMenuItem.1.1 += dish.price
             menuItemsArr[itemIndex] = updatedMenuItem
         } else {
-            // Элемента нет в массиве, добавляем его
             menuItemsArr.append((dish.name, (1, dish.price)))
         }
-        
-        // Перезагрузка элементов коллекции
         collectionView.reloadItems(at: [indexPath])
         coast?.getCostAdress()
     }
-
-
-
-    
 }
-
-
 
 class SectionHeaderView: UICollectionReusableView {
     let titleLabel: UILabel = {

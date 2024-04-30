@@ -40,20 +40,12 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
         orderVC.title = "Заказы"
         orderVC.tabBarItem.image = UIImage.orders.resize(targetSize: CGSize(width: 30, height: 30))
-        
-        
         let statNavController = UINavigationController(rootViewController: statVC)
         statNavController.title = "Статистика"
         statNavController.tabBarItem.image = UIImage.stat.resize(targetSize: CGSize(width: 30, height: 30))
-        
-        
         settingsVC.title = "Настройки"
         settingsVC.tabBarItem.image = UIImage.settings.resize(targetSize: CGSize(width: 30, height: 30))
-        
-        
         let controllers = [statNavController, orderVC, settingsVC]
-        
-        
         self.viewControllers = controllers
         tabBar.backgroundColor = UIColor(hex: "#F2F2F7")
         tabBar.unselectedItemTintColor = UIColor(hex: "#AFAFAF")
@@ -65,32 +57,21 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             make.left.right.equalToSuperview()
         }
         selectedIndex = 1
-        
-        
     }
-    
-
-   
-
 }
 
 
 extension UIImage {
     func resize(targetSize: CGSize) -> UIImage {
         let size = self.size
-
         let widthRatio  = targetSize.width  / size.width
         let heightRatio = targetSize.height / size.height
-
-        // Определяем новый размер изображения в соответствии с коэффициентом масштабирования
         let newSize: CGSize
         if widthRatio > heightRatio {
             newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
         } else {
             newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         }
-
-        // Создаем контекст с новыми размерами изображения
         UIGraphicsBeginImageContextWithOptions(newSize, false, UIScreen.main.scale)
         self.draw(in: CGRect(origin: .zero, size: newSize))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
