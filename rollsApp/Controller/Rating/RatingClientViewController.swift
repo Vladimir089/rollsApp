@@ -50,7 +50,6 @@ class RatingClientViewController: UIViewController {
         segmentedControl.selectedSegmentTintColor = .white
         segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
         return segmentedControl
     }()
 
@@ -69,6 +68,7 @@ class RatingClientViewController: UIViewController {
     }
     
     func createInterface() {
+        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
         
         let backButton: UIButton = {
             let button = UIButton(type: .system)
@@ -119,7 +119,7 @@ class RatingClientViewController: UIViewController {
             HTTPHeader.accept("*/*")
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_rating_clients/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_rating_clients/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).response { response in
             debugPrint(response)
             switch response.result {
             case .success(_):
@@ -192,7 +192,7 @@ extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource
         }
         imageView.layer.cornerRadius = 5
         
-        var labelName = UILabel()
+        let labelName = UILabel()
         labelName.text = "+7\(clientArr[indexPath.row].1)"
         labelName.textColor = .black
         labelName.font = .systemFont(ofSize: 18, weight: .regular)
@@ -202,7 +202,7 @@ extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource
             make.centerY.equalToSuperview()
         }
         
-        var labelCount = UILabel()
+        let labelCount = UILabel()
         labelCount.text = "\(clientArr[indexPath.row].2) шт"
         labelCount.textColor = .black
         labelCount.font = .systemFont(ofSize: 18, weight: .regular)

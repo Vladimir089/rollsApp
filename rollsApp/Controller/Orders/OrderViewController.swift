@@ -136,7 +136,7 @@ class OrderViewController: UIViewController {
                 switch response.result {
                 case .success(let image):
                     allDishes.append((d, image))
-                case .failure(let error):
+                case .failure(_):
                     allDishes.append((d, .imageDishes))
                 }
                 
@@ -209,13 +209,14 @@ extension OrderViewController: OrderViewControllerDelegate {
     }
 }
 
-extension OrderViewController: UIApplicationDelegate {
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        isOpen = true
-        isLoad = true
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        closeVC()
-    }
-}
+//extension OrderViewController: UIApplicationDelegate {
+//    func applicationDidEnterBackground(_ application: UIApplication) {
+//        isOpen = true
+//        isLoad = true
+//        print(123)
+//    }
+//    
+//    func applicationWillEnterForeground(_ application: UIApplication) {
+//        closeVC()
+//    }
+//}

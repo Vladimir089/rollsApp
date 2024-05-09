@@ -37,6 +37,7 @@ class EditView: UIView {
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     var numberPhoneLabel: UILabel?
+    var callButton: UIButton?
     
     //MARK: -init
     override init(frame: CGRect) {
@@ -119,7 +120,6 @@ class EditView: UIView {
         contentView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
         scrollView.snp.makeConstraints { make in
             make.left.right.bottom.equalToSuperview()
-            //make.top.equalToSuperview().inset(100)
             make.top.equalToSuperview()
         }
         scrollView.addSubview(contentView)
@@ -148,6 +148,7 @@ class EditView: UIView {
         guestLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(25)
             make.top.equalTo((numberPhoneLabel?.snp.top)!)
+            make.width.equalTo(45)
         }
         
         phoneTextField = {
@@ -176,9 +177,25 @@ class EditView: UIView {
         }()
         scrollView.addSubview(phoneTextField!)
         phoneTextField?.snp.makeConstraints({ make in
-            make.left.right.equalToSuperview().inset(15)
+            make.left.equalToSuperview().inset(15)
+            make.right.equalTo(guestLabel.snp.left).inset(-15)
             make.top.equalTo((numberPhoneLabel?.snp.bottom)!).inset(-10)
             make.height.equalTo(44)
+        })
+        
+        callButton = {
+            let button = UIButton(type: .system)
+            button.backgroundColor = .white
+            button.setImage(.phone, for: .normal)
+            button.layer.cornerRadius = 10
+            button.addTarget(self, action: #selector(call), for: .touchUpInside)
+            return button
+        }()
+        scrollView.addSubview(callButton ?? UIButton())
+        callButton?.snp.makeConstraints({ make in
+            make.left.right.equalTo(guestLabel)
+            make.top.equalTo((phoneTextField ?? UITextField()).snp.top)
+            make.bottom.equalTo((phoneTextField ?? UITextField()).snp.bottom)
         })
         
         let orderLabel = generateLabel(text: "ЗАКАЗ",
@@ -370,6 +387,10 @@ class EditView: UIView {
         
     }
     
+    @objc func call() {
+        delegate?.cell()
+    }
+    
     func generateLabel(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UILabel {
         let label = UILabel()
         label.font = font
@@ -525,8 +546,8 @@ extension EditView: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == adressTextField {
-            if var a = adressTextField?.text  {
-                similadAdressView.reload(address: a)
+            if let text = adressTextField?.text  {
+                similadAdressView.reload(address: text)
             }
         }
     }
@@ -559,7 +580,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             cell.accessoryView = addButton
         } else {
             let delButton: UIButton = {
-                var button = UIButton(type: .system)
+                let button = UIButton(type: .system)
                 let image = UIImage(systemName: "minus.circle.fill")
                 button.setImage(image, for: .normal)
                 button.tintColor = .systemRed
@@ -576,7 +597,6 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row < menuItemsArr.count {
                 let item = menuItemsArr[indexPath.row]
                 let key = item.0
-                let value = item.1
                 label.text = "\(key) - "
             } else {
                 label.text = ""
@@ -650,7 +670,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row < menuItemsArr.count {
             var item = menuItemsArr[indexPath.row]
             if item.1.0 > 1 {
-                var pricePerItem = item.1.1 / item.1.0
+                let pricePerItem = item.1.1 / item.1.0
                 item.1.0 -= 1
                 item.1.1 -= pricePerItem
                 menuItemsArr[indexPath.row] = item

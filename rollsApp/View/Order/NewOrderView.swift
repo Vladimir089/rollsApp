@@ -20,17 +20,17 @@ class NewOrderView: UIView {
     
     let scrollView = UIScrollView()
     let contentView = UIView()
-    weak var phoneTextField: UITextField?
-    weak var tableView: UITableView?
-    weak var addButton: UIButton?
+    var phoneTextField: UITextField?
+    var tableView: UITableView?
+    var addButton: UIButton?
     weak var delegate: NewOrderViewControllerShowWCDelegate?
-    weak var adressButton: UIButton?
-    weak var adressTextField: UITextField?
+    var adressButton: UIButton?
+    var adressTextField: UITextField?
     let similadAdressView = SimilarAdressTable()
-    weak var similarLabel: UILabel?
-    weak var commentTextField: UITextField?
-    weak var oplataSegmentedControl: UISegmentedControl?
-    weak var createOrderButton: UIButton?
+    var similarLabel: UILabel?
+    var commentTextField: UITextField?
+    var oplataSegmentedControl: UISegmentedControl?
+    var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     
     //MARK: -init
@@ -409,9 +409,7 @@ class NewOrderView: UIView {
             }
         }
         
-       
 
-    
         
         delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
             debugPrint(success)
@@ -543,8 +541,8 @@ extension NewOrderView: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == adressTextField {
-            if var a = adressTextField?.text  {
-                similadAdressView.reload(address: a)
+            if let text = adressTextField?.text  {
+                similadAdressView.reload(address: text)
             }
         }
         updateCreateOrderButtonState()
@@ -578,7 +576,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             cell.accessoryView = addButton
         } else {
             let delButton: UIButton = {
-                var button = UIButton(type: .system)
+                let button = UIButton(type: .system)
                 let image = UIImage(systemName: "minus.circle.fill")
                 button.setImage(image, for: .normal)
                 button.tintColor = .systemRed
@@ -669,7 +667,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row < menuItemsArr.count {
             var item = menuItemsArr[indexPath.row]
             if item.1.0 > 1 {
-                var pricePerItem = item.1.1 / item.1.0
+                let pricePerItem = item.1.1 / item.1.0
                 item.1.0 -= 1
                 item.1.1 -= pricePerItem
                 menuItemsArr[indexPath.row] = item

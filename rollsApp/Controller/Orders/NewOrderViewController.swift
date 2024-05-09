@@ -23,7 +23,7 @@ protocol NewOrderViewControllerShowWCDelegate: AnyObject {
 class NewOrderViewController: UIViewController {
     
     var mainView: NewOrderView?
-    var delegate: OrderViewControllerDelegate?
+    weak var delegate: OrderViewControllerDelegate?
     
 
     override func viewDidLoad() {
@@ -126,7 +126,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
             "cafe_id": cafeID
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
             print(response)
             switch response.result {
             case .success(_):

@@ -36,13 +36,13 @@ class SettingsViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         button.backgroundColor = .white
-        button.addTarget(self, action: #selector(closeApp), for: .touchUpInside)
         return button
     }()
 
     //MARK: -create interface
     
     func settingsView() {
+        exitButton.addTarget(self, action: #selector(closeApp), for: .touchUpInside)
         let orderLabel: UILabel = {
             let label = UILabel()
             label.text = "Настройки"

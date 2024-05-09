@@ -55,6 +55,14 @@ class AdressViewController: UIViewController {
             textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             textField.leftViewMode = .always
             textField.text = adress
+            
+            let buttonClear = UIButton(type: .system)
+            buttonClear.backgroundColor = .white
+            buttonClear.setImage(UIImage(systemName: "xmark"), for: .normal)
+            
+            buttonClear.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 7)
+            buttonClear.addTarget(self, action: #selector(clearAdres), for: .touchUpInside)
+            textField.rightView = buttonClear
             textField.rightViewMode = .whileEditing
             textField.textColor = .black
             textField.backgroundColor = .white
@@ -63,6 +71,7 @@ class AdressViewController: UIViewController {
             textField.delegate = self
             return textField
         }()
+
         
         view.addSubview(adressTextField!)
         adressTextField?.snp.makeConstraints({ make in
@@ -88,6 +97,11 @@ class AdressViewController: UIViewController {
     
     deinit {
         print("ЗАКРЫЛИ")
+    }
+    
+    @objc func clearAdres() {
+        adressTextField?.text = nil
+        adress = ""
     }
 }
 

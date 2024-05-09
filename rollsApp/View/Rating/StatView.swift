@@ -10,10 +10,10 @@ import UIKit
 
 class StatView: UIView {
     
-    weak var winnerLabel: UILabel?
+    var winnerLabel: UILabel?
     var diagramView = UIView()
     weak var delegate: StatViewControllerDelegate?
-    weak var labelCashh, labelPerevod, labelCourier, labelSumm: UILabel?
+    var labelCashh, labelPerevod, labelCourier, labelSumm: UILabel?
     var diagrammArr: [(Int, Date)] = []
     
     
@@ -275,7 +275,7 @@ class StatView: UIView {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
-            for (index, statistic) in orderStatistics.enumerated().dropFirst() {
+            for (_, statistic) in orderStatistics.enumerated().dropFirst() {
                 if let date = dateFormatter.date(from: statistic.date) {
                     diagrammArr.append((statistic.count, date))
                 }
@@ -286,7 +286,6 @@ class StatView: UIView {
     
     
     func showDiagram() {
-        print(stat)
         if stat != nil, let a = stat?.earningsStatistics.atCheckout, let b = stat?.earningsStatistics.remittance, let c = stat?.earningsStatistics.toCourier, let d = stat?.earningsStatistics.total{
             labelCashh?.text = "\((a) ) ₽"
             labelPerevod?.text = "\(b) ₽"
@@ -307,7 +306,7 @@ class StatView: UIView {
         
         var xPosition: CGFloat = sidePadding // Инициализируем xPosition с учетом отступа
         
-        for (index, data) in diagrammArr.enumerated() {
+        for (_, data) in diagrammArr.enumerated() {
             let columnHeight = CGFloat(data.0) / CGFloat(maxCount) * maxHeight // Нормализация высоты столбца
             let clampedHeight = max(columnHeight, minColumnHeight) // Установка минимальной высоты
             

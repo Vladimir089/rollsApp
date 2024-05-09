@@ -8,6 +8,9 @@ import Alamofire
 
 extension OrderViewController { //для обновления чтобы таблица не моргала
     
+ 
+    
+    
     func regenerateTable() {
         isLoad = true
         self.refreshControl.beginRefreshing()
@@ -66,7 +69,7 @@ extension OrderViewController { //для обновления чтобы таб�
                         }
                     case .failure(_):
                         DispatchQueue.global().sync {
-                            var stat = OrderStatusResponse(status: 1, orderStatus: "Вызвать", orderColor: "#5570F1")
+                            let stat = OrderStatusResponse(status: 1, orderStatus: "Вызвать", orderColor: "#5570F1")
                             self.newOrderStatus.append((order, stat))
                             
                         }
@@ -101,10 +104,8 @@ extension OrderViewController { //для обновления чтобы таб�
                     let (existingOrder, _) = orderStatus[index]
                     print(1)
                     if (existingOrderStatus.orderStatus != newOrderStatus.orderStatus) || (existingOrder.phone != newOrderItem.phone ) || (existingOrder.address != newOrderItem.address) || (existingOrder.menuItems != newOrderItem.menuItems) || (existingOrder.paymentStatus != newOrderItem.paymentStatus) ||  (existingOrder.status != newOrderItem.status) ||  (existingOrder.paymentMethod != newOrderItem.paymentMethod) {
-                        print("укукцку \(count)")
                         indexPathsToUpdate.append(IndexPath(row: index, section: 0))
                         orderStatus[index] = (newOrderItem, newOrderStatus)
-                        
                     }
                 } else {
                     count += 1
@@ -191,6 +192,7 @@ extension LoginViewController {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success( _):
                 if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {

@@ -25,6 +25,7 @@ class LoginViewController: UIViewController {
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
             navigationController?.setViewControllers([tabBar], animated: false)
+            //print(authKey, "93284234")
         } else {
             createInterface()
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -234,7 +235,7 @@ class LoginViewController: UIViewController {
                     }
                     self.navigationController?.setViewControllers([self.tabBar], animated: true)
                 }
-            case .failure(let error):
+            case .failure(_):
                 UserDefaults.standard.removeObject(forKey: "authKey")
                 self.vhodButton?.isEnabled = false
                 UIView.transition(with: self.vhodButton!, duration: 0.3, options: .transitionCrossDissolve, animations: {

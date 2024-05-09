@@ -14,6 +14,7 @@ protocol EditViewControllerDelegate: AnyObject {
     func updateOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
     func showAdressVC()
+    func cell()
 }
 
 class EditViewController: UIViewController {
@@ -62,6 +63,17 @@ class EditViewController: UIViewController {
 }
 
 extension EditViewController: EditViewControllerDelegate {
+    func cell() {
+        let phoneNumber: String = mainView?.phoneTextField?.text ?? ""
+
+        if let url = URL(string: "tel://+7\(phoneNumber)") {
+            print(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            print("Не удалось сформировать url")
+        }
+    }
+    
     func showAdressVC() {
         let vc = AdressViewController()
         vc.similadAdressView = mainView?.similadAdressView
@@ -122,7 +134,7 @@ extension EditViewController: EditViewControllerDelegate {
             //"order_on_time": timeOrder,  // к определенному времени
             "cafe_id": cafeID
         ]
-        AF.request("http://arbamarket.ru/api/v1/main/edit_order/\(orderId)/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/edit_order/\(orderId)/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
             debugPrint(response)
             switch response.result {
             case .success(_):

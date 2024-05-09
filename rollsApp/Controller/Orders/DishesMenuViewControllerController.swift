@@ -17,6 +17,11 @@ class DishesMenuViewControllerController: UIViewController {
     var coast: SimilarAdressTable?
     var delegate: NewOrderViewProtocol?
     var delegateEdit: EditViewProtocol?
+    var botView: UIView?
+    var arrBot: [UIImage]?
+    var oneViewForBot, twoViewForBot, threeViewForBot: UIImageView?
+    var labelSumm: UILabel?
+
     
     //MARK: -viewDidLoad()
     
@@ -62,7 +67,149 @@ class DishesMenuViewControllerController: UIViewController {
             make.left.right.bottom.equalToSuperview().inset(10)
             make.top.equalTo(hideView.snp.bottom).inset(-5)
         })
+        
+        botView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(hex: "#C6C6C8")
+            view.alpha = 0.9
+            view.layer.cornerRadius = 25
+            view.clipsToBounds = true
+            return view
+        }()
+        view.addSubview(botView ?? UIView())
+        botView?.snp.makeConstraints({ make in
+            make.height.equalTo(50)
+            make.width.equalTo(180)
+            make.bottom.equalToSuperview().inset(30)
+            make.centerX.equalToSuperview()
+        })
+        
+        oneViewForBot = generateImageView()
+        botView?.addSubview(oneViewForBot ?? UIView())
+        oneViewForBot?.snp.makeConstraints({ make in
+            make.height.width.equalTo(45)
+            make.right.equalToSuperview().inset(2.5)
+            make.centerY.equalToSuperview()
+        })
+        
+        twoViewForBot = generateImageView()
+        botView?.addSubview(twoViewForBot ?? UIView())
+        twoViewForBot?.snp.makeConstraints({ make in
+            make.height.width.equalTo(45)
+            make.right.equalTo((oneViewForBot?.snp.left)!).inset(25)
+            make.centerY.equalToSuperview()
+        })
+        
+        threeViewForBot = generateImageView()
+        botView?.addSubview(threeViewForBot ?? UIView())
+        threeViewForBot?.snp.makeConstraints({ make in
+            make.height.width.equalTo(45)
+            make.right.equalTo((twoViewForBot?.snp.left)!).inset(25)
+            make.centerY.equalToSuperview()
+        })
+        
+        labelSumm = {
+            let label = UILabel()
+            var summ = 0
+            for i in menuItemsArr {
+                summ += i.1.1
+                label.text = "\(summ) ₽"
+            }
+            label.font = .systemFont(ofSize: 20, weight: .regular)
+            label.textColor = .black
+            return label
+        }()
+        
+        botView?.addSubview(labelSumm ?? UILabel())
+        labelSumm?.snp.makeConstraints({ make in
+            make.left.equalToSuperview().inset(10)
+            make.centerY.equalToSuperview()
+        })
+        
+        settingsView()
     }
+    
+    func generateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(hex: "#C6C6C8")
+        imageView.layer.cornerRadius = 22.5
+        imageView.clipsToBounds = true
+        return imageView
+    }
+    
+    func settingsView() {
+        var summ = 0
+        for i in menuItemsArr {
+            summ += i.1.1
+            labelSumm?.text = "\(summ) ₽"
+        }
+        if !menuItemsArr.isEmpty {
+            let index = menuItemsArr.count
+            
+            for i in 0..<allDishes.count {
+                UIView.animate(withDuration: 0.5) { [self] in
+                    
+                    if menuItemsArr.count == 3  {
+                        self.oneViewForBot?.alpha = 100
+                        self.twoViewForBot?.alpha = 100
+                        self.threeViewForBot?.alpha = 100
+                        if allDishes[i].0.name == menuItemsArr[index - 3].0 {
+                            self.oneViewForBot?.image = allDishes[i].1
+                        }
+                        if allDishes[i].0.name == menuItemsArr[index - 2].0 {
+                            self.twoViewForBot?.image = allDishes[i].1
+                        }
+                        if allDishes[i].0.name == menuItemsArr[index - 1].0 {
+                            self.threeViewForBot?.image = allDishes[i].1
+                        }
+                        return
+                    }
+                    
+                    if menuItemsArr.count == 2  {
+                        self.threeViewForBot?.alpha = 0
+                        self.twoViewForBot?.alpha = 100
+                        if allDishes[i].0.name == menuItemsArr[index - 2].0 {
+                            self.oneViewForBot?.image = allDishes[i].1
+                        }
+                        if allDishes[i].0.name == menuItemsArr[menuItemsArr.count - 1].0 {
+                            self.twoViewForBot?.image = allDishes[i].1
+                        }
+                        return
+                    }
+                    
+                    if menuItemsArr.count == 1  {
+                        self.twoViewForBot?.alpha = 0
+                        self.threeViewForBot?.alpha = 0
+                        if allDishes[i].0.name == menuItemsArr[index - 1].0 {
+                            self.oneViewForBot?.image = allDishes[i].1
+                        }
+                        return
+                    }
+                    
+                    if menuItemsArr.count > 0 {
+                        if allDishes[i].0.name == menuItemsArr[menuItemsArr.count - 1].0 {
+                            UIView.transition(with: threeViewForBot!, duration: 0.2, options: .transitionFlipFromRight, animations: {
+                                self.threeViewForBot?.image = allDishes[i].1
+                            }, completion: nil)
+                        }
+                        if allDishes[i].0.name == menuItemsArr[index - 2].0 {
+                            UIView.transition(with: twoViewForBot!, duration: 0.2, options: .transitionFlipFromRight, animations: {
+                                self.twoViewForBot?.image = allDishes[i].1
+                            }, completion: nil)
+                        }
+                        if allDishes[i].0.name == menuItemsArr[index - 3].0 {
+                            UIView.transition(with: oneViewForBot!, duration: 0.2, options: .transitionFlipFromRight, animations: {
+                                self.oneViewForBot?.image = allDishes[i].1
+                            }, completion: nil)
+                        }
+                    }
+                }
+               
+            }
+        }
+    }
+  
+   
     
     //MARK: -start Timer
     
@@ -221,6 +368,7 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             menuItemsArr.append((dish.name, (1, dish.price)))
         }
         collectionView.reloadItems(at: [indexPath])
+        settingsView()
         coast?.getCostAdress()
     }
 }
