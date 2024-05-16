@@ -187,6 +187,7 @@ extension OrderViewController: OrderViewControllerDelegate {
         
         let currentOrder = orderStatus[index]
         AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.0.id)&cafe_id=\(currentOrder.0.cafeID)", method: .post, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 print(response)

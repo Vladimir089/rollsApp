@@ -219,6 +219,7 @@ extension StatViewController {
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey)]
         AF.request("http://arbamarket.ru/api/v1/main/get_statistics/?cafe_id=\(cafeID)", method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success( _):
                 if let data = response.data, let statistic = try? JSONDecoder().decode(StatisticsResponse.self, from: data) {

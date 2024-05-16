@@ -148,8 +148,23 @@ class EditView: UIView {
         guestLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(25)
             make.top.equalTo((numberPhoneLabel?.snp.top)!)
-            make.width.equalTo(45)
+ 
         }
+        
+        callButton = {
+            let button = UIButton(type: .system)
+            button.backgroundColor = .white
+            button.setImage(.phone, for: .normal)
+            button.layer.cornerRadius = 10
+            button.addTarget(self, action: #selector(call), for: .touchUpInside)
+            return button
+        }()
+        scrollView.addSubview(callButton ?? UIButton())
+        callButton?.snp.makeConstraints({ make in
+            make.right.equalToSuperview().inset(15)
+            make.top.equalTo(guestLabel.snp.bottom).inset(-10)
+            make.height.width.equalTo(44)
+        })
         
         phoneTextField = {
             let textField = UITextField()
@@ -178,25 +193,11 @@ class EditView: UIView {
         scrollView.addSubview(phoneTextField!)
         phoneTextField?.snp.makeConstraints({ make in
             make.left.equalToSuperview().inset(15)
-            make.right.equalTo(guestLabel.snp.left).inset(-15)
+            make.right.equalTo((callButton ?? UIView()).snp.left).inset(-15)
             make.top.equalTo((numberPhoneLabel?.snp.bottom)!).inset(-10)
             make.height.equalTo(44)
         })
         
-        callButton = {
-            let button = UIButton(type: .system)
-            button.backgroundColor = .white
-            button.setImage(.phone, for: .normal)
-            button.layer.cornerRadius = 10
-            button.addTarget(self, action: #selector(call), for: .touchUpInside)
-            return button
-        }()
-        scrollView.addSubview(callButton ?? UIButton())
-        callButton?.snp.makeConstraints({ make in
-            make.left.right.equalTo(guestLabel)
-            make.top.equalTo((phoneTextField ?? UITextField()).snp.top)
-            make.bottom.equalTo((phoneTextField ?? UITextField()).snp.bottom)
-        })
         
         let orderLabel = generateLabel(text: "ЗАКАЗ",
                                        font: UIFont.systemFont(ofSize: 15, weight: .regular),
