@@ -280,7 +280,7 @@ extension SimilarAdressTable {
             }
         }
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {
