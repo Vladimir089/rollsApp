@@ -366,10 +366,14 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             menuItemsArr[itemIndex] = updatedMenuItem
         } else {
             menuItemsArr.append((dish.name, (1, dish.price)))
+            
         }
+        
         collectionView.reloadItems(at: [indexPath])
         settingsView()
         coast?.getCostAdress()
+        delegate?.updateTable()
+        delegateEdit?.updateTable()
     }
 }
 

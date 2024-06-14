@@ -27,6 +27,7 @@ extension OrderViewController { //для обновления чтобы таб�
         AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
             switch response.result {
             case .success(_):
+                print(1112)
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
                     DispatchQueue.global().async {
                         self.getOrderNewDetail(orders: order.orders)
@@ -46,7 +47,6 @@ extension OrderViewController { //для обновления чтобы таб�
     
     
     func getOrderNewDetail(orders: [Order]) {
-        
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 5
         
@@ -238,7 +238,7 @@ extension StatViewController {
 extension SimilarAdressTable {
     func reload(address: String) {
         let headers: HTTPHeaders = [.accept("application/json")]
-        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?value=\(address)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?cafe_id=\(cafeID)&value=\(address)", method: .get, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let value):
                 guard let json = value as? [String: Any] else {
@@ -300,6 +300,8 @@ extension SimilarAdressTable {
                             self.editDelegate?.updateTable()
                             self.secondDelegate?.dismiss()
                         }
+                        
+                        
                     }
                 } else {
                     print("Invalid JSON format")
@@ -307,6 +309,7 @@ extension SimilarAdressTable {
                 
             case .failure(let error):
                 print("Request failed with error:", error)
+                
             }
         }
     

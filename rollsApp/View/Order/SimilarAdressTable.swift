@@ -34,7 +34,9 @@ class SimilarAdressTable: UIView {
         }
         let indexPath = IndexPath(row: cell.tag, section: 0)
         adress = adressArr[indexPath.row]
-        getCostAdress()
+        delelagate?.fillTextField(adress: adress, cost: "0")                   //УБРАТЬ
+        editDelegate?.fillTextField(adress: adress, cost: "0")     //УБРАТЬ
+        secondDelegate?.dismiss()                               //УБРАТЬ
     }
     
     required init?(coder: NSCoder) {

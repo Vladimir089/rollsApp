@@ -20,7 +20,7 @@ struct Order: Codable {
     let id: Int
     let phone: String
     let menuItems: String
-    let clientsNumber: Int
+    let clientsNumber: String
     let address: String
     let totalCost: Int?
     let paymentMethod: String
@@ -30,6 +30,7 @@ struct Order: Codable {
     let orderOnTime: String?
     let cafeID: Int
     let createdDateString: String?
+    let step: Int?
 
     var formattedCreatedTime: String? {
         guard let date = createdDate else { return nil }
@@ -68,6 +69,7 @@ struct Order: Codable {
         case paymentStatus = "payment_status"
         case createdDateString = "created_date"
         case cafeID = "cafe"
+        case step = "step"
     }
 }
 
