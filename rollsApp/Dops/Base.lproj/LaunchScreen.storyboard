@@ -17,15 +17,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" image="ImageDishes" translatesAutoresizingMaskIntoConstraints="NO" id="Epa-S6-oTp">
-                                <rect key="frame" x="136.66666666666666" y="366" width="119.99999999999997" height="120"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="startImage" translatesAutoresizingMaskIntoConstraints="NO" id="fH2-4t-2WJ">
+                                <rect key="frame" x="133" y="362" width="128" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="FuQ-9D-n3K"/>
+                                    <constraint firstAttribute="width" constant="128" id="pW1-ey-f6t"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Epa-S6-oTp" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="XxM-DF-H4P"/>
-                            <constraint firstItem="Epa-S6-oTp" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="YTi-n8-fS8"/>
+                            <constraint firstItem="fH2-4t-2WJ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="8zc-JU-erk"/>
+                            <constraint firstItem="fH2-4t-2WJ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="UdI-38-nn7"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -35,7 +39,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ImageDishes" width="120" height="120"/>
+        <image name="startImage" width="512" height="512"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

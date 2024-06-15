@@ -148,10 +148,10 @@ class RatingClientViewController: UIViewController {
         }
         for ratingClient in arrRatingClientResponse {
             if !clientArr.contains(where: { $0.1 == ratingClient.phone }) {
-                let dishImage: UIImage = .image
+                let dishImage: UIImage = imageSatandart ?? UIImage()
                 clientArr.append((dishImage, ratingClient.phone, ratingClient.orderCount))
             } else {
-                print("Изображение для блюда '\(ratingClient.phone)' не найдено.")
+                print("Изображение для  '\(ratingClient.phone)' не найдено.")
             }
         }
         tableView.reloadData()
@@ -186,7 +186,8 @@ extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource
         cell.addSubview(imageView)
         imageView.clipsToBounds = true
         imageView.snp.makeConstraints { make in
-            make.height.width.equalTo(25)
+            make.height.equalTo(25)
+            make.width.equalTo(23)
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().inset(10)
         }

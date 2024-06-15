@@ -31,8 +31,7 @@ class StatView: UIView {
     private func createInterface() {
         backgroundColor = .white
         let imageView: UIImageView = {
-            let image: UIImage = .imageDishes
-            let imageView = UIImageView(image: image)
+            let imageView = UIImageView(image: imageSatandart)
             return imageView
         }()
         addSubview(imageView)
@@ -42,7 +41,7 @@ class StatView: UIView {
             make.top.equalToSuperview().inset(75)
         }
         
-        let nameLabel = generateLaels(text: "Суши Байрам", fonc: .systemFont(ofSize: 28, weight: .semibold), textColor: .black)
+        let nameLabel = generateLaels(text: "\(nameCafe)", fonc: .systemFont(ofSize: 28, weight: .semibold), textColor: .black)
         addSubview(nameLabel)
         nameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

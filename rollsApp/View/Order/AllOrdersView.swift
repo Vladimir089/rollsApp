@@ -135,14 +135,17 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         //MARK: -UI
         
         let imageView: UIImageView = {
-            let image: UIImage = .image //тут меняем картинку
-            let imageView = UIImageView(image: image)
+
+            let imageView = UIImageView(image: imageSatandart)
             
             return imageView
         }()
         let viewInImageView = UIView(frame: CGRect(x: 0, y: 0, width: 65, height: cell.bounds.height))
         cell.addSubview(viewInImageView)
         viewInImageView.addSubview(imageView)
+        imageView.layer.cornerRadius = 25
+        imageView.clipsToBounds = true
+        
         imageView.snp.makeConstraints { make in
             make.height.width.equalTo(50)
             make.left.equalToSuperview()

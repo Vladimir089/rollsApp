@@ -52,5 +52,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7A13C7F0-4AB2-4E8A-9882-FB4EED8444B6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/Model/NetWorking.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "getCafeInfo()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7A13C7F0-4AB2-4E8A-9882-FB4EED8444B6 - 2de59b73c1ee5c52"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in &#x41a;&#x430;&#x444;&#x435;_&#x411;&#x430;&#x439;&#x440;&#x430;&#x43c;.StatViewController.getStatisticAll(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "&#x41a;&#x430;&#x444;&#x435; &#x411;&#x430;&#x438;&#x306;&#x440;&#x430;&#x43c;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/Model/NetWorking.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "223"
+                  endingLineNumber = "223"
+                  offsetFromSymbolStart = "464">
+               </Location>
+               <Location
+                  uuid = "7A13C7F0-4AB2-4E8A-9882-FB4EED8444B6 - 9c96ecc889f0658"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in &#x41a;&#x430;&#x444;&#x435;_&#x411;&#x430;&#x439;&#x440;&#x430;&#x43c;.LoginViewController.getCafeInfo() -&gt; ()"
+                  moduleName = "&#x41a;&#x430;&#x444;&#x435; &#x411;&#x430;&#x438;&#x306;&#x440;&#x430;&#x43c;"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/Model/NetWorking.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "223"
+                  endingLineNumber = "223"
+                  offsetFromSymbolStart = "68">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

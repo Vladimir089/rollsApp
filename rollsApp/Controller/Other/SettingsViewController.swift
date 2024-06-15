@@ -65,8 +65,10 @@ class SettingsViewController: UIViewController {
             make.top.equalTo(orderLabel.snp.bottom).inset(-20)
         }
         let cafeImageView: UIImageView = {
-            let image:UIImage = .image
+            let image:UIImage = imageSatandart ?? UIImage()
             let imageView = UIImageView(image: image)
+            imageView.layer.cornerRadius = 30
+            imageView.clipsToBounds = true
             return imageView
         }()
         nameView.addSubview(cafeImageView)
@@ -78,7 +80,7 @@ class SettingsViewController: UIViewController {
         
         let cafeNameLabel: UILabel = {
             let label = UILabel()
-            label.text = "Байрам"
+            label.text = "\(nameCafe)"
             label.font = .systemFont(ofSize: 23, weight: .bold)
             label.textColor = .black
             return label
@@ -91,7 +93,7 @@ class SettingsViewController: UIViewController {
         
         let cafeAdressLabel: UILabel = {
             let label = UILabel()
-            label.text = "Ленина, 49, Учкекен"
+            label.text = "\(adresCafe)"
             label.font = .systemFont(ofSize: 15, weight: .regular)
             label.textColor = .black
             return label

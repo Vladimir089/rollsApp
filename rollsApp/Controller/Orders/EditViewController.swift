@@ -40,7 +40,7 @@ class EditViewController: UIViewController {
         super.viewDidLoad()
         mainView?.index = indexOne
         navigationController?.navigationBar.barTintColor = .white
-        let image: UIImage = .image
+        let image: UIImage = imageSatandart ?? UIImage()
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         let customView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30)) // Установите нужные размеры

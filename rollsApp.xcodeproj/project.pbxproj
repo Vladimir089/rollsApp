@@ -478,7 +478,7 @@
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = rollsApp/Dops/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Кафе Байрам работа";
+				INFOPLIST_KEY_CFBundleDisplayName = "Кафе";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
@@ -490,7 +490,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = k4.rollsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = k5.rollsApp;
 				PRODUCT_NAME = "Кафе Байрам";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -512,7 +512,7 @@
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = rollsApp/Dops/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Кафе Байрам работа";
+				INFOPLIST_KEY_CFBundleDisplayName = "Кафе";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
@@ -524,7 +524,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = k4.rollsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = k5.rollsApp;
 				PRODUCT_NAME = "Кафе Байрам";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

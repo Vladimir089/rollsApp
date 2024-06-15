@@ -34,7 +34,7 @@ class SimilarAdressTable: UIView {
         }
         let indexPath = IndexPath(row: cell.tag, section: 0)
         adress = adressArr[indexPath.row]
-        getCostAdress()                              //УБРАТЬ
+        getCostAdress()                             
     }
     
     required init?(coder: NSCoder) {

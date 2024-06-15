@@ -6,6 +6,10 @@
 //
 
 import UIKit
+import AlamofireImage
+import Alamofire
+
+var imageSatandart: UIImage?
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,8 +22,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = navController
         window.makeKeyAndVisible()
+        loadCafeInfo()
         self.window = window
     }
+    
+    func loadCafeInfo() {
+        if let savedData = UserDefaults.standard.data(forKey: "info") {
+            let decoder = JSONDecoder()
+            if let cafe = try? decoder.decode(Cafe.self, from: savedData) {
+                cafeID = cafe.id
+                nameCafe = cafe.title
+                adresCafe = cafe.address
+                loadStandartImage(url: cafe.img)
+            }
+        }
+    }
+    
+    func loadStandartImage(url: String) {
+        
+        AF.request("http://arbamarket.ru\(url)").responseImage { response in
+            switch response.result {
+            case .success(let image):
+                imageSatandart = image
+            case .failure(_):
+                imageSatandart = UIImage(named: "standart")
+            }
+            
+        }
+        
+    }
+    
+   
+    
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

@@ -10,7 +10,7 @@ import Alamofire
 import AlamofireImage
 
 
-let cafeID = 2
+
 var isFirstLoadApp = 0
 
 
@@ -132,12 +132,13 @@ class OrderViewController: UIViewController {
     func getImage(d: Dish) {
         //http://arbamarket.ru/media/main/dishes/image_27.png
         if let url = d.img {
+            print(url, "sdfsdfsd")
             AF.request("http://arbamarket.ru\(url)").responseImage { response in
                 switch response.result {
                 case .success(let image):
                     allDishes.append((d, image))
                 case .failure(_):
-                    allDishes.append((d, .imageDishes))
+                    allDishes.append((d, imageSatandart ?? UIImage()))
                 }
                 
             }

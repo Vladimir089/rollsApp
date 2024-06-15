@@ -197,6 +197,14 @@ extension LoginViewController {
             case .success( _):
                 if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
                     authKey = login.authToken
+                    self.getCafeInfo()
+                    
+                    indexPathsToInsert.removeAll()
+                    indexPathsToUpdate.removeAll()
+                    orderStatus.removeAll()
+                   
+                    
+                    
                     completion(.success(()))
                 } else {
                     let error = NSError(domain: "http://arbamarket.ru/api/v1/accounts/login/", code: 500, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format"])
@@ -209,6 +217,51 @@ extension LoginViewController {
             }
         }
     }
+    
+    
+    func getCafeInfo() {
+        
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("application/json")
+        ]
+        
+        AF.request("http://arbamarket.ru/api/v1/accounts/get_cafe_info/?auth_token=\(authKey)", method: .post, headers: headers).response { response in
+            switch response.result {
+            case .success( _):
+                if let data = response.data, let cafe = try? JSONDecoder().decode(Cafe.self, from: data) {
+                    let encoder = JSONEncoder()
+                    if let encoded = try? encoder.encode(cafe) {
+                        UserDefaults.standard.set(encoded, forKey: "info")
+                    }
+                    cafeID = cafe.id
+                    nameCafe = cafe.title
+                    adresCafe = cafe.address
+                    self.loadStandartImage(url: cafe.img)
+                }
+            case .failure(let error):
+                print(232)
+            }
+            
+        }
+        
+    }
+   
+    
+    func loadStandartImage(url: String) {
+        
+        AF.request("http://arbamarket.ru\(url)").responseImage { response in
+            switch response.result {
+            case .success(let image):
+                imageSatandart = image
+            case .failure(_):
+                imageSatandart = UIImage(named: "standart")
+            }
+            
+        }
+        
+    }
+    
 }
 
 //MARK: -Stat

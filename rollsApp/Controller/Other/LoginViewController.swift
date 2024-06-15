@@ -15,7 +15,6 @@ class LoginViewController: UIViewController {
     var checkBoxButton: UIButton?
     var vhodButton: UIButton?
     var texSupportLabel: UILabel?
-    var tabBar = TabBarViewController()
     var orderVC: OrderViewController?
     
     //MARK: -viewDidLoad()
@@ -24,7 +23,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
-            navigationController?.setViewControllers([tabBar], animated: false)
+            navigationController?.setViewControllers([TabBarViewController()], animated: false)
             //print(authKey, "93284234")
         } else {
             createInterface()
@@ -233,7 +232,8 @@ class LoginViewController: UIViewController {
                     if self.isSave == true {
                         UserDefaults.standard.setValue(authKey, forKey: "authKey")
                     }
-                    self.navigationController?.setViewControllers([self.tabBar], animated: true)
+                    let tabBarVC = TabBarViewController() // Ваш TabBarController
+                    self.navigationController?.setViewControllers([tabBarVC], animated: true)
                 }
             case .failure(_):
                 UserDefaults.standard.removeObject(forKey: "authKey")
