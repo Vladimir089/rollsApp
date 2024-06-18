@@ -285,7 +285,7 @@ class StatView: UIView {
     
     
     func showDiagram() {
-        if stat != nil, let a = stat?.earningsStatistics.atCheckout, let b = stat?.earningsStatistics.remittance, let c = stat?.earningsStatistics.toCourier, let d = stat?.earningsStatistics.total{
+        if stat != nil, let a = stat?.earningsStatistics.atCheckout, let b = stat?.earningsStatistics.remittance, let c = stat?.earningsStatistics.cash, let d = stat?.earningsStatistics.total{
             labelCashh?.text = "\((a) ) ₽"
             labelPerevod?.text = "\(b) ₽"
             labelCourier?.text = "\(c) ₽"

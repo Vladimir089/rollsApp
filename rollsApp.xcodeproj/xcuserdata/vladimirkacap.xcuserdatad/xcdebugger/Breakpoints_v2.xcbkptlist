@@ -8,7 +8,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "6007C317-FFE9-49B2-9AFB-B1C7502C9072"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../Library/Developer/Xcode/DerivedData/rollsApp-bmvfomhmsrmuugasslpxmirsjncn/SourcePackages/checkouts/Alamofire/Source/Core/DataRequest.swift"
@@ -21,7 +21,7 @@
             <Locations>
                <Location
                   uuid = "6007C317-FFE9-49B2-9AFB-B1C7502C9072 - 286028e48405541f"
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.Request.ResponseDisposition) -&gt; () in closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.DataRequest.DataMutableState) -&gt; () in Alamofire.DataRequest.didReceiveResponse(_: __C.NSHTTPURLResponse, completionHandler: (__C.NSURLSessionResponseDisposition) -&gt; ()) -&gt; ()"
@@ -36,7 +36,7 @@
                </Location>
                <Location
                   uuid = "6007C317-FFE9-49B2-9AFB-B1C7502C9072 - 61772c4a3cb70c50"
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.Request.ResponseDisposition) -&gt; () in closure #2 @Sendable () -&gt; () in closure #1 (Alamofire.DataRequest.DataMutableState) -&gt; () in Alamofire.DataRequest.didReceiveResponse(_: __C.NSHTTPURLResponse, completionHandler: (__C.NSURLSessionResponseDisposition) -&gt; ()) -&gt; ()"
@@ -69,7 +69,7 @@
             <Locations>
                <Location
                   uuid = "7A13C7F0-4AB2-4E8A-9882-FB4EED8444B6 - 2de59b73c1ee5c52"
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in &#x41a;&#x430;&#x444;&#x435;_&#x411;&#x430;&#x439;&#x440;&#x430;&#x43c;.StatViewController.getStatisticAll(completion: () -&gt; ()) -&gt; ()"
@@ -84,7 +84,7 @@
                </Location>
                <Location
                   uuid = "7A13C7F0-4AB2-4E8A-9882-FB4EED8444B6 - 9c96ecc889f0658"
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in &#x41a;&#x430;&#x444;&#x435;_&#x411;&#x430;&#x439;&#x440;&#x430;&#x43c;.LoginViewController.getCafeInfo() -&gt; ()"
