@@ -244,30 +244,19 @@ class DishesMenuViewControllerController: UIViewController {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             if allDishes.isEmpty {
-                self.updateCategoryStorage()
                 self.collectionView?.reloadData()
             } else {
                 self.stopTimer()
-                self.updateCategoryStorage()
-                self.collectionView?.reloadData()
             }
         }
         RunLoop.current.add(timer!, forMode: .common)
     }
-
-    private func updateCategoryStorage() {
-        categoryStorage.removeAll()
-        for i in allDishes {
-            let category = i.0.category
-            if !categoryStorage.contains(category) {
-                categoryStorage.append(category)
-            }
-        }
-    }
     
     func stopTimer() {
+        print(234234235345)
         timer?.invalidate()
         timer = nil
+        self.collectionView?.reloadData()
     }
     
     @objc func closeVC() {
