@@ -85,6 +85,9 @@ class DishesMenuViewControllerController: UIViewController {
             make.centerX.equalToSuperview()
         })
         
+        let gestureHideVC = UITapGestureRecognizer(target: self, action: #selector(hideVC))
+        botView?.addGestureRecognizer(gestureHideVC)
+        
         oneViewForBot = generateImageView()
         botView?.addSubview(oneViewForBot ?? UIView())
         oneViewForBot?.snp.makeConstraints({ make in
@@ -234,6 +237,10 @@ class DishesMenuViewControllerController: UIViewController {
                
             }
         }
+    }
+    
+    @objc func hideVC() {
+        self.dismiss(animated: true)
     }
   
    
