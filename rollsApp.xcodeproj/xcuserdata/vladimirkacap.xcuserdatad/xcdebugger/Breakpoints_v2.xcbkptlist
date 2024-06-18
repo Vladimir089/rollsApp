@@ -100,5 +100,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/View/Order/NewOrderView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "397"
+            endingLineNumber = "397"
+            landmarkName = "guestTapped()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21 - 748413a0cc83704d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.guestTapped() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/View/Order/NewOrderView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "398"
+                  endingLineNumber = "398"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21 - 748413a0cc83706a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.guestTapped() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/View/Order/NewOrderView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "397"
+                  endingLineNumber = "397"
+                  offsetFromSymbolStart = "248">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

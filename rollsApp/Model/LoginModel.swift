@@ -12,6 +12,8 @@ var authKey = ""
 var cafeID = 0
 var nameCafe = "Cafe"
 var adresCafe = "Adres"
+var phoneCafe = "Phone"
+
 
 
 struct Login: Codable {

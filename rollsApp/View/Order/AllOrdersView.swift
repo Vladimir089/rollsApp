@@ -247,6 +247,13 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             inCellButton.setTitleColor(.clear, for: .normal)
             inCellButton.backgroundColor = UIColor.clear
         }
+        
+        if orderStatus[indexPath.row].0.address == "С собой, 0, Самовывоз" {
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.isHidden = true
+        } 
+        
+        
        
         if isFirstLoadApp > 1 , indexPathsToInsert.contains(indexPath), page == 1 {
             print(isFirstLoadApp)

@@ -33,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 cafeID = cafe.id
                 nameCafe = cafe.title
                 adresCafe = cafe.address
+                phoneCafe = cafe.number
                 loadStandartImage(url: cafe.img)
             }
         }

@@ -237,6 +237,7 @@ extension LoginViewController {
                     cafeID = cafe.id
                     nameCafe = cafe.title
                     adresCafe = cafe.address
+                    phoneCafe = cafe.number
                     self.loadStandartImage(url: cafe.img)
                 }
             case .failure(let error):

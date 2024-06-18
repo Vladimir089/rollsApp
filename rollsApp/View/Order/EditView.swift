@@ -140,16 +140,16 @@ class EditView: UIView {
             make.top.equalToSuperview().inset(20)
         }
         
-        let guestLabel = generateLabel(text: "Гость",
+        let guestLabel = generateButton(text: "Гость",
                                        font: UIFont.systemFont(ofSize: 15, weight: .bold),
                                        isUnderlining: true,
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
-        contentView.addSubview(guestLabel)
+        scrollView.addSubview(guestLabel)
         guestLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(25)
-            make.top.equalTo((numberPhoneLabel?.snp.top)!)
- 
+            make.centerY.equalTo(numberPhoneLabel ?? UIView())
         }
+        guestLabel.addTarget(self, action: #selector(guestTapped), for: .touchUpInside)
         
         callButton = {
             let button = UIButton(type: .system)
@@ -280,10 +280,11 @@ class EditView: UIView {
         })
         
         similadAdressView.editDelegate = self
-        let sSoboiLabel = generateLabel(text: "С собой",
+        let sSoboiLabel = generateButton(text: "С собой",
                                        font: UIFont.systemFont(ofSize: 15, weight: .bold),
                                        isUnderlining: true,
                                        textColor: UIColor(red: 133/255, green: 133/255, blue: 133/255, alpha: 1))
+        sSoboiLabel.addTarget(self, action: #selector(sSoboiTapped), for: .touchUpInside)
         
         let stoleLabel = generateLabel(text: "Стол",
                                        font: UIFont.systemFont(ofSize: 15, weight: .bold),
@@ -296,7 +297,7 @@ class EditView: UIView {
             make.centerY.equalTo(adressLabel.snp.centerY)
         }
         
-        contentView.addSubview(sSoboiLabel)
+        scrollView.addSubview(sSoboiLabel)
         sSoboiLabel.snp.makeConstraints { make in
             make.right.equalTo(stoleLabel.snp.left).inset(-10)
             make.centerY.equalTo(adressLabel.snp.centerY)
@@ -405,7 +406,33 @@ class EditView: UIView {
         return label
     }
     
+    func generateButton(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UIButton {
+        let button = UIButton()
+        button.titleLabel?.font = font
+        button.setTitle(text, for: .normal)
+        button.setTitleColor(textColor, for: .normal)
+        if isUnderlining == true {
+            let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue]
+            let underlineAttributedString = NSAttributedString(string: text, attributes: underlineAttribute)
+            button.titleLabel?.attributedText = underlineAttributedString
+        }
+        return button
+    }
+    
     //MARK: -Objc func
+    
+    @objc func guestTapped() {
+        phoneTextField?.text = phoneCafe
+        adressTextField?.text = "С собой, 0, Самовывоз"
+        adress = "С собой, 0, Самовывоз"
+        similadAdressView.getCostAdress()
+    }
+    
+    @objc func sSoboiTapped() {
+        adressTextField?.text = "С собой, 0, Самовывоз"
+        adress = "С собой, 0, Самовывоз"
+        similadAdressView.getCostAdress()
+    }
     
     @objc func hideKeyboard() {
         phoneTextField?.endEditing(true)
