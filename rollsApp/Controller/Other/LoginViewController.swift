@@ -21,10 +21,11 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dishLoad = false
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
             navigationController?.setViewControllers([TabBarViewController()], animated: false)
-            //print(authKey, "93284234")
+            
         } else {
             createInterface()
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)

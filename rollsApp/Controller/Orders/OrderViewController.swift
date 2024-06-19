@@ -12,6 +12,8 @@ import AlamofireImage
 
 
 var isFirstLoadApp = 0
+var dishLoad = false 
+
 
 
 var indexPathsToInsert: [IndexPath] = []
@@ -102,35 +104,46 @@ class OrderViewController: UIViewController {
         if !authKey.isEmpty {
             stopAuthCheckTimer()
             reloadCollection()
-            getDishes()
+            getDishes() {
+                NotificationCenter.default.post(name: Notification.Name("dishLoadNotification"), object: nil)
+                dishLoad = true
+            }
            
         }
     }
     
-    func getDishes() {
+    func getDishes(completion: @escaping () -> Void) {
         allDishes.removeAll()
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("application/json")
         ]
-        AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).responseData{ response in
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).responseData { response in
             switch response.result {
             case .success(_):
                 if let data = response.data, let dishes = try? JSONDecoder().decode(DishesResponse.self, from: data) {
+                    let dispatchGroup = DispatchGroup()
                     
                     for i in dishes.dishes {
-                        self.getImage(d: i)
+                        dispatchGroup.enter()
+                        self.getImage(d: i) {
+                            dispatchGroup.leave()
+                        }
+                    }
+                    
+                    dispatchGroup.notify(queue: .main) {
+                        completion()
                     }
                 }
             case .failure(let error):
                 print(error)
+                completion()
             }
         }
-        
     }
-    
-    func getImage(d: Dish) {
-        //http://arbamarket.ru/media/main/dishes/image_27.png
+
+    func getImage(d: Dish, completion: @escaping () -> Void) {
         if let url = d.img {
             print(url, "sdfsdfsd")
             AF.request("http://arbamarket.ru\(url)").responseImage { response in
@@ -140,8 +153,10 @@ class OrderViewController: UIViewController {
                 case .failure(_):
                     allDishes.append((d, imageSatandart ?? UIImage()))
                 }
-                
+                completion()
             }
+        } else {
+            completion()
         }
     }
     

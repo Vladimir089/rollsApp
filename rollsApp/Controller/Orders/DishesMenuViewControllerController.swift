@@ -21,6 +21,16 @@ class DishesMenuViewControllerController: UIViewController {
     var arrBot: [UIImage]?
     var oneViewForBot, twoViewForBot, threeViewForBot: UIImageView?
     var labelSumm: UILabel?
+    
+    var loadView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    var prorgessActivityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        return view
+    }()
 
     
     //MARK: -viewDidLoad()
@@ -28,14 +38,48 @@ class DishesMenuViewControllerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createMenu()
-        startTimerToUpdateMenu()
         settingsView()
+        if dishLoad == false {
+            NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("dishLoadNotification"), object: nil)
+        } else {
+            updateTable()
+        }
+        setBlurredBackground()
+        
+    }
+    
+    @objc func updateTable() {
+        
+        self.collectionView?.reloadData()
+        self.prorgessActivityIndicator.stopAnimating()
+        self.loadView.alpha = 0
+        
     }
     
     //MARK: -create interface func
     
+    
+    func setBlurredBackground() {
+        // Создание эффекта размытия
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        // Устанавливаем размеры эффекта размытия на весь экран
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        // Добавляем эффект размытия на основной view
+        view.addSubview(blurEffectView)
+        view.sendSubviewToBack(blurEffectView)
+        
+        // Устанавливаем белый фон с прозрачностью для основного view
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+    }
+    
     func createMenu() {
-        view.backgroundColor = .white
+
+       
+        
         let hideView: UIView = {
             let view = UIView()
             view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 1)
@@ -55,14 +99,16 @@ class DishesMenuViewControllerController: UIViewController {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
             let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            collection.backgroundColor = .white
+            collection.backgroundColor = .clear
             collection.showsVerticalScrollIndicator = false
             collection.delegate = self
             collection.dataSource = self
             collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "1")
             collection.register(SectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SectionHeader")
+            collection.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 70, right: 0) // Добавляем пространство снизу
             return collection
         }()
+        
         view.addSubview(collectionView!)
         collectionView?.snp.makeConstraints({ make in
             make.left.right.bottom.equalToSuperview().inset(10)
@@ -129,6 +175,16 @@ class DishesMenuViewControllerController: UIViewController {
             make.left.equalToSuperview().inset(25)
             make.centerY.equalToSuperview()
         })
+        
+        view.addSubview(loadView)
+        loadView.snp.makeConstraints { make in
+            make.left.right.top.bottom.equalToSuperview()
+        }
+        loadView.addSubview(prorgessActivityIndicator)
+        prorgessActivityIndicator.snp.makeConstraints { make in
+            make.centerY.centerX.equalToSuperview()
+        }
+        prorgessActivityIndicator.startAnimating()
         
         settingsView()
     }
@@ -272,6 +328,8 @@ class DishesMenuViewControllerController: UIViewController {
     
     deinit {
         closeVC()
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("dishLoadNotification"), object: nil)
+            
     }
 }
 
@@ -297,11 +355,14 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "1", for: indexPath)
         cell.subviews.forEach { $0.removeFromSuperview() }
-        cell.backgroundColor = .white
+        cell.backgroundColor = .white.withAlphaComponent(0.1)
+        cell.layer.cornerRadius = 12
         
         let categoryForSection = Array(categoryStorage)[indexPath.section]
         let filteredDishes = allDishes.filter { $0.0.category == categoryForSection }
         let dish = filteredDishes[indexPath.item]
+        
+        
         
         //MAIN
         
@@ -311,6 +372,7 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
             imageView.layer.cornerRadius = 13
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
+            imageView.backgroundColor = .clear
             return imageView
         }()
         cell.addSubview(imageView)

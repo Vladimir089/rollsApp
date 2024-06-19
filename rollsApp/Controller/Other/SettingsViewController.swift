@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class SettingsViewController: UIViewController {
     
@@ -38,6 +39,15 @@ class SettingsViewController: UIViewController {
         button.backgroundColor = .white
         return button
     }()
+    
+    let secondView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    
+    
 
     //MARK: -create interface
     
@@ -104,12 +114,130 @@ class SettingsViewController: UIViewController {
             make.top.equalTo(cafeImageView.snp.centerY)
         }
         
+        
+        view.addSubview(secondView)
+        secondView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(15)
+            make.height.equalTo(88)
+            make.top.equalTo(nameView.snp.bottom).inset(-30)
+        }
+        
+        let stackView: UIStackView = {
+            let stack = UIStackView()
+            stack.axis = .vertical
+            stack.spacing = 0
+            stack.alignment = .fill
+            return stack
+        }()
+        secondView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.left.right.top.bottom.equalTo(secondView)
+        }
+        
+        let shareApp = generateButton(text: "Поделиться приложением", image: UIImage(named: "share") ?? UIImage(), isBottomSeparator: true)
+        
+        let rateApp = generateButton(text: "Оценить приложение", image: UIImage(named: "star") ?? UIImage(), isBottomSeparator: false)
+        
+        var gestureShare = UITapGestureRecognizer(target: self, action: #selector(shareAppFunc))
+        shareApp.addGestureRecognizer(gestureShare)
+        shareApp.isUserInteractionEnabled = true
+        
+        var gestureRate = UITapGestureRecognizer(target: self, action: #selector(rateAppFunc))
+        rateApp.addGestureRecognizer(gestureRate)
+        rateApp.isUserInteractionEnabled = true
+        
+        stackView.addArrangedSubview(shareApp)
+        stackView.addArrangedSubview(rateApp)
+        
+        
+        
         view.addSubview(exitButton)
         exitButton.snp.makeConstraints { make in
             make.height.equalTo(44)
             make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(nameView.snp.bottom).inset(-30)
+            make.top.equalTo(secondView.snp.bottom).inset(-30)
         }
+    }
+   
+    
+    @objc func shareAppFunc() {
+        print(123)
+        let textToShare = "Посмотри, лучшая служба доставки в нашем регионе!"
+        if let appURL = URL(string: "https://appstore.com/yourapp") {
+            let itemsToShare = [textToShare, appURL] as [Any]
+            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+            
+            // Настройка для iPad
+            if let popoverController = activityViewController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            
+            self.present(activityViewController, animated: true, completion: nil)
+        }
+    }
+    
+    
+    @objc func rateAppFunc() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            
+            SKStoreReviewController.requestReview(in: windowScene)
+        }
+    }
+    
+    
+    func generateButton(text: String, image: UIImage, isBottomSeparator: Bool) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        view.snp.makeConstraints { make in
+                make.height.equalTo(44)
+            }
+        
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        view.addSubview(imageView)
+        imageView.tintColor = .systemBlue
+        imageView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(15)
+            make.centerY.equalToSuperview()
+            make.height.width.equalTo(24)
+        }
+        
+        let label = UILabel()
+        label.text = text
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(imageView.snp.right).inset(-15)
+        }
+        
+        let arrovImage = UIImage(named: "arrow")
+        let imageViewArrow = UIImageView(image: arrovImage)
+        view.addSubview(imageViewArrow)
+        imageViewArrow.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(15)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(10)
+            make.height.equalTo(18)
+        }
+        
+        if isBottomSeparator {
+            let viewSep = UIView()
+            viewSep.backgroundColor = .separator
+            view.addSubview(viewSep)
+            viewSep.snp.makeConstraints { make in
+                make.height.equalTo(0.5)
+                make.left.right.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+        }
+       
+        
+        return view
     }
     
     

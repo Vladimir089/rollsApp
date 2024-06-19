@@ -237,7 +237,12 @@ extension LoginViewController {
                     cafeID = cafe.id
                     nameCafe = cafe.title
                     adresCafe = cafe.address
-                    phoneCafe = cafe.number
+                    if cafe.number.hasPrefix("8") {
+                        phoneCafe = String(cafe.number.dropFirst())
+                    } else {
+                        phoneCafe = cafe.number
+                    }
+                    
                     self.loadStandartImage(url: cafe.img)
                 }
             case .failure(let error):
@@ -370,3 +375,5 @@ extension SimilarAdressTable {
 
     }
 }
+
+
