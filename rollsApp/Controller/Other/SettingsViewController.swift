@@ -119,7 +119,7 @@ class SettingsViewController: UIViewController {
         secondView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
             make.height.equalTo(88)
-            make.top.equalTo(nameView.snp.bottom).inset(-30)
+            make.top.equalTo(nameView.snp.bottom).inset(-15)
         }
         
         let stackView: UIStackView = {
@@ -163,7 +163,7 @@ class SettingsViewController: UIViewController {
     @objc func shareAppFunc() {
         print(123)
         let textToShare = "Посмотри, лучшая служба доставки в нашем регионе!"
-        if let appURL = URL(string: "https://appstore.com/yourapp") {
+        if let appURL = URL(string: "https://apps.apple.com/ru/app/apple-developer/id640199958") { //ТУТ МЕНЯЕМ ССЫЛКУ
             let itemsToShare = [textToShare, appURL] as [Any]
             let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
             
@@ -181,7 +181,6 @@ class SettingsViewController: UIViewController {
     
     @objc func rateAppFunc() {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            
             SKStoreReviewController.requestReview(in: windowScene)
         }
     }
