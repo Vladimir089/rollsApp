@@ -167,7 +167,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         //MARK: -Labels
         
-        let phoneLabel = generateLaels(text: "+7\(orderStatus[indexPath.row].0.phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .TC)
+        let phoneLabel = generateLaels(text: "\(orderStatus[indexPath.row].0.phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .TC)
         cell.addSubview(phoneLabel)
         phoneLabel.snp.makeConstraints { make in
             make.left.equalTo(viewInImageView.snp.right)

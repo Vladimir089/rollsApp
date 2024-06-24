@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		150FE3302C27534400206E69 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 150FE32F2C27534400206E69 /* Kingfisher */; };
+		15716A372C2A1E2B00EBA55B /* InputMask in Frameworks */ = {isa = PBXBuildFile; productRef = 15716A362C2A1E2B00EBA55B /* InputMask */; };
 		159D8BFF2BC9F3120075DCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */; };
 		159D8C022BCA9CF10075DCB5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C012BCA9CF10075DCB5 /* Alamofire */; };
 		159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C042BCA9D020075DCB5 /* SnapKit */; };
@@ -96,6 +97,7 @@
 				150FE3302C27534400206E69 /* Kingfisher in Frameworks */,
 				159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */,
 				159D8C0F2BCEA1590075DCB5 /* SDWebImage in Frameworks */,
+				15716A372C2A1E2B00EBA55B /* InputMask in Frameworks */,
 				159D8C082BCA9D140075DCB5 /* AlamofireImage in Frameworks */,
 				15AB13D72BD29115009BC4EB /* SocketIO in Frameworks */,
 			);
@@ -259,6 +261,7 @@
 				159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */,
 				15AB13D62BD29115009BC4EB /* SocketIO */,
 				150FE32F2C27534400206E69 /* Kingfisher */,
+				15716A362C2A1E2B00EBA55B /* InputMask */,
 			);
 			productName = rollsApp;
 			productReference = 15E908C92BBC49950086E9F5 /* Экосистема №9.app */;
@@ -318,6 +321,7 @@
 				159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				15AB13D52BD29115009BC4EB /* XCRemoteSwiftPackageReference "socket" */,
 				150FE32E2C27534400206E69 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */,
 			);
 			productRefGroup = 15E908CA2BBC49950086E9F5 /* Products */;
 			projectDirPath = "";
@@ -687,6 +691,14 @@
 				minimumVersion = 7.12.0;
 			};
 		};
+		15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RedMadRobot/input-mask-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.3.2;
+			};
+		};
 		159D8C002BCA9CF10075DCB5 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -734,6 +746,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 150FE32E2C27534400206E69 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		15716A362C2A1E2B00EBA55B /* InputMask */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */;
+			productName = InputMask;
 		};
 		159D8C012BCA9CF10075DCB5 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

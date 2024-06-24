@@ -460,11 +460,33 @@ extension EditView: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == phoneTextField {
-            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
-            return newString.count <= 10
+            let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            let formattedString = formatPhoneNumber(number: newString)
+            textField.text = formattedString
+            return false
+            
         }
         return true
     }
+    
+    func formatPhoneNumber(number: String) -> String {
+            let cleanNumber = number.replacingOccurrences(of: "\\D", with: "", options: .regularExpression)
+            let mask = "+# (###) ### ## ##"
+            
+            var result = ""
+            var index = cleanNumber.startIndex
+            
+            for ch in mask where index < cleanNumber.endIndex {
+                if ch == "#" {
+                    result.append(cleanNumber[index])
+                    index = cleanNumber.index(after: index)
+                } else {
+                    result.append(ch)
+                }
+            }
+            
+            return result
+        }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.resignFirstResponder()

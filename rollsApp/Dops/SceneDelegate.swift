@@ -45,6 +45,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
+    
+    
     func loadStandartImage(url: String) {
         
         AF.request("http://arbamarket.ru\(url)").responseImage { response in
