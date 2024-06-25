@@ -197,7 +197,7 @@ class SettingsViewController: UIViewController {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
-        imageView.tintColor = .iconsSelected
+        imageView.tintColor = .systemBlue
         imageView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(15)
             make.centerY.equalToSuperview()

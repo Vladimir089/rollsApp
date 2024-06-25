@@ -107,7 +107,7 @@ class EditView: UIView {
     }
     
     func createInterface() {
-            backgroundColor = .white
+            backgroundColor = .settingBG
             let tapInViewGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
             scrollView.addGestureRecognizer(tapInViewGesture)
             addGestureRecognizer(tapInViewGesture)
@@ -116,8 +116,8 @@ class EditView: UIView {
             contentView.isUserInteractionEnabled = true
             addSubview(scrollView)
             
-            scrollView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
-            contentView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+            scrollView.backgroundColor = .settingBG
+            contentView.backgroundColor = .settingBG
             scrollView.snp.makeConstraints { make in
                 make.left.right.bottom.equalToSuperview()
                 make.top.equalToSuperview()
@@ -134,7 +134,7 @@ class EditView: UIView {
                 view.delegate = self
                 view.dataSource = self
                 view.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-                view.backgroundColor = .white
+                view.backgroundColor = .settings
                 view.layer.cornerRadius = 15
                 view.isScrollEnabled = false
                 view.rowHeight = UITableView.automaticDimension // Установка автоматической высоты ячеек
@@ -151,7 +151,7 @@ class EditView: UIView {
             
             let viewCenter: UIView = {
                 let view = UIView()
-                view.backgroundColor = .white
+                view.backgroundColor = .settings
                 view.layer.cornerRadius = 20
                 return view
             }()
@@ -169,8 +169,8 @@ class EditView: UIView {
                 textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
                 textField.rightViewMode = .always
                 textField.keyboardType = .numberPad
-                textField.textColor = .black
-                textField.backgroundColor = .white
+                textField.textColor = .TC
+                textField.backgroundColor = .settings
                 textField.layer.cornerRadius = 10
                 textField.delegate = self
                 textField.text = orderStatus[index].0.phone
@@ -186,7 +186,7 @@ class EditView: UIView {
             adressButton = {
                 let button = UIButton(type: .system)
                 button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
-                button.tintColor = UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1)
+                button.tintColor = .TC
                 button.contentHorizontalAlignment = .left
                 button.addTarget(self, action: #selector(fillAdress), for: .touchUpInside)
                 button.alpha = 0
@@ -217,18 +217,18 @@ class EditView: UIView {
                 similarLabel = UILabel()
                 similarLabel?.font = .systemFont(ofSize: 18, weight: .bold)
                 similarLabel?.text = "0 ₽  "
-                similarLabel?.textColor = .black
+                similarLabel?.textColor = .TC
                 textField.text = orderStatus[index].0.address
                 textField.placeholder = "Адрес"
                 textField.rightView = similarLabel!
                 textField.rightViewMode = .always
-                textField.textColor = .black
-                textField.backgroundColor = .white
+                textField.textColor = .TC
+                textField.backgroundColor = .settings
                 textField.layer.cornerRadius = 10
                 textField.delegate = self
                 return textField
             }()
-    similadAdressView.editDelegate = self
+            similadAdressView.editDelegate = self
             scrollView.addSubview(adressTextField!)
             adressTextField?.snp.makeConstraints({ make in
                 make.left.right.equalToSuperview().inset(28)
@@ -253,8 +253,8 @@ class EditView: UIView {
                 let textField = UITextField()
                 textField.leftViewMode = .always
                 textField.placeholder = "Комментарий"
-                textField.textColor = .black
-                textField.backgroundColor = .white
+                textField.textColor = .TC
+                textField.backgroundColor = .settings
                 textField.layer.cornerRadius = 10
                 textField.delegate = self
                 textField.text = "\(orderStatus[index].0.clientsNumber)"
@@ -557,7 +557,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 let button = UIButton(type: .system)
                 button.setTitle("Изменить", for: .normal)
                 button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
-                button.tintColor = UIColor(red: 85/255, green: 112/255, blue: 241/255, alpha: 1)
+                button.tintColor = .systemBlue
                 button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
                 return button
             }()
@@ -591,7 +591,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 label.text = ""
             }
             label.font = .systemFont(ofSize: 18, weight: .regular)
-            label.textColor = .black
+            label.textColor = .TC
             cell.addSubview(label)
             let labelCount = UILabel()
             if indexPath.row < menuItemsArr.count {
@@ -602,7 +602,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 labelCount.text = ""
             }
             labelCount.font = .systemFont(ofSize: 18, weight: .semibold)
-            labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1)
+            labelCount.textColor = UIColor(red: 85/255, green: 51/255, blue: 85/255, alpha: 1) //ТУТ
             cell.addSubview(labelCount)
             
             label.snp.makeConstraints { make in
@@ -616,7 +616,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             let costLabel = UILabel()
             
             costLabel.font = .systemFont(ofSize: 18, weight: .bold)
-            costLabel.textColor = .black
+            costLabel.textColor = .TC
             if indexPath.row < menuItemsArr.count {
                 let item = menuItemsArr[indexPath.row]
                 let value = item.1.1

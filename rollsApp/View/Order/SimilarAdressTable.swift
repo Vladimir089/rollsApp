@@ -46,7 +46,7 @@ class SimilarAdressTable: UIView {
         clipsToBounds = true
         tableView = {
             let table = UITableView()
-            table.backgroundColor = .white
+            table.backgroundColor = .settings
             table.dataSource = self
             table.isUserInteractionEnabled = true
             table.delegate = self
@@ -73,7 +73,7 @@ extension SimilarAdressTable: UITableViewDelegate, UITableViewDataSource {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.text = adressArr[indexPath.row]
-        label.textColor = .black
+        label.textColor = .TC
         cell.addSubview(label)
         label.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(10)

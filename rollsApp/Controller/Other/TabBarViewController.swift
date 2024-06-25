@@ -48,7 +48,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         self.viewControllers = controllers
         tabBar.backgroundColor = .tabBar
         tabBar.unselectedItemTintColor = .iconsUnselected
-        tabBar.tintColor = .iconsSelected
+        tabBar.tintColor = .systemBlue
         view.addSubview(separatorView)
         separatorView.snp.makeConstraints { make in
             make.height.equalTo(1)

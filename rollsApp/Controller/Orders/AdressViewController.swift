@@ -22,7 +22,7 @@ class AdressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+        view.backgroundColor = .settingBG
         createInterface()
         similadAdressView?.secondDelegate = self
 
@@ -57,15 +57,15 @@ class AdressViewController: UIViewController {
             textField.text = adress
             
             let buttonClear = UIButton(type: .system)
-            buttonClear.backgroundColor = .white
+            buttonClear.backgroundColor = .settings
             buttonClear.setImage(UIImage(systemName: "xmark"), for: .normal)
             
             buttonClear.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 7)
             buttonClear.addTarget(self, action: #selector(clearAdres), for: .touchUpInside)
             textField.rightView = buttonClear
             textField.rightViewMode = .whileEditing
-            textField.textColor = .black
-            textField.backgroundColor = .white
+            textField.textColor = .TC
+            textField.backgroundColor = .settings
             textField.layer.cornerRadius = 10
             textField.placeholder = "Поиск"
             textField.delegate = self

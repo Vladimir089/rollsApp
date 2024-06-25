@@ -197,7 +197,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             let button = UIButton(type: .system)
             button.setTitle(orderStatus[indexPath.row].1.orderStatus, for: .normal) //меняем
             UIView.animate(withDuration: 0.5) {
-                button.setTitleColor(.but, for: .normal) //меняем
+                button.setTitleColor(.systemBlue, for: .normal) //меняем
                 button.backgroundColor = UIColor(hex: orderStatus[indexPath.row].1.orderColor).withAlphaComponent(0.5)
 
             }
