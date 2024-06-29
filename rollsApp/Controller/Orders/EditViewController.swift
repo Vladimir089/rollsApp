@@ -58,7 +58,6 @@ class EditViewController: UIViewController {
         menuItemIndex.removeAll()
         adress = ""
         totalCoast = 0
-        delegate?.closeVC()
     }
 }
 

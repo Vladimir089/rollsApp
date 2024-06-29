@@ -21,9 +21,8 @@ var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
 
 protocol OrderViewControllerDelegate: AnyObject {
-    func reloadCollection()
+
     func createButtonGo(index: Int)
-    func closeVC()
     func detailVC(index: Int)
     
 }
@@ -63,25 +62,7 @@ class OrderViewController: UIViewController {
         }
     }
     
-    func backgroundTask() {
-        isWorkCicle = true
-        while true {
-            if ((isLoad == true && isOpen == true) || (isLoad == false && isOpen == true) || (isLoad == true && isOpen == false))  {
-                sleep(1)
-                print("НЕТ")
-                DispatchQueue.main.sync { [self] in
-                    self.refreshControl.endRefreshing()
-                }
-            } else {
-                print("ДА")
-                DispatchQueue.main.async { [self] in
-                    regenerateTable()
-                    isWorkCicle = false
-                }
-                break
-            }
-        }
-    }
+    
     
     @objc private func newOrder() {
         let vc = NewOrderViewController()
@@ -104,7 +85,7 @@ class OrderViewController: UIViewController {
         // Проверяем, есть ли значение у authKey
         if !authKey.isEmpty {
             stopAuthCheckTimer()
-            reloadCollection()
+            regenerateTable()
             getDishes() {
                 NotificationCenter.default.post(name: Notification.Name("dishLoadNotification"), object: nil)
                 dishLoad = true
@@ -177,21 +158,14 @@ extension OrderViewController: OrderViewControllerDelegate {
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.boldSystemFont(ofSize: 17),
             .foregroundColor: UIColor.black ]
-        backItem.title = "Заказ №\(orderStatus[index].0.id)"
+        backItem.title = "Заказ №\(orderStatus[index].id)"
         backItem.setTitleTextAttributes(attributes, for: .normal)
         navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
         self.refreshControl.endRefreshing()
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func closeVC() {
-        isLoad = false
-        isOpen = false
-        if isWorkCicle == false {
-            print("ЗАПУСК")
-            backgroundTask()
-        }
-    }
+  
     
     func createButtonGo(index: Int) {
         let headers: HTTPHeaders = [
@@ -203,7 +177,7 @@ extension OrderViewController: OrderViewControllerDelegate {
         }
         
         let currentOrder = orderStatus[index]
-        AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.0.id)&cafe_id=\(currentOrder.0.cafeID)", method: .post, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.id)&cafe_id=\(currentOrder.cafeID)", method: .post, headers: headers).responseJSON { response in
             debugPrint(response)
             switch response.result {
             case .success(_):
@@ -214,17 +188,7 @@ extension OrderViewController: OrderViewControllerDelegate {
         }
     }
     
-    func reloadCollection() {
-        if isLoad == false && isOpen == false  {
-            print("ЗАКРЫТО")
-            regenerateTable()
-        } else {
-           print("ОТКРЫТО")
-            queue.async {
-                self.backgroundTask()
-            }
-        }
-    }
+    
 }
 
 //extension OrderViewController: UIApplicationDelegate {

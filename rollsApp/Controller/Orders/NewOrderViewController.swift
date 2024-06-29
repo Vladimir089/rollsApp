@@ -42,7 +42,6 @@ class NewOrderViewController: UIViewController {
         menuItemIndex.removeAll()
         adress = ""
         totalCoast = 0
-        delegate?.closeVC()
     }
     
     override func viewDidLayoutSubviews() {

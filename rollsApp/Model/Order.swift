@@ -31,6 +31,7 @@ struct Order: Codable {
     let cafeID: Int
     let createdDateString: String?
     let step: Int?
+    let orderForCourierStatus: String?
 
     var formattedCreatedTime: String? {
         guard let date = createdDate else { return nil }
@@ -70,6 +71,7 @@ struct Order: Codable {
         case createdDateString = "created_date"
         case cafeID = "cafe"
         case step = "step"
+        case orderForCourierStatus = "order_for_courier__status"
     }
 }
 
@@ -79,5 +81,5 @@ struct OrdersResponse: Codable {
     let orders: [Order]
 }
 
-var orderStatus: [(Order, OrderStatusResponse)] = []
+var orderStatus: [(Order)] = []
 

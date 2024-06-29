@@ -58,9 +58,9 @@ class EditView: UIView {
     
     func fillData() {
         //адрес
-        adress = orderStatus[index].0.address
+        adress = orderStatus[index].address
         //меню
-        let inputString = orderStatus[index].0.menuItems
+        let inputString = orderStatus[index].menuItems
         let items = inputString.components(separatedBy: ", ")
         for item in items {
             let components = item.components(separatedBy: " - ")
@@ -173,7 +173,7 @@ class EditView: UIView {
                 textField.backgroundColor = .settings
                 textField.layer.cornerRadius = 10
                 textField.delegate = self
-                textField.text = orderStatus[index].0.phone
+                textField.text = orderStatus[index].phone
                 return textField
             }()
             viewCenter.addSubview(phoneTextField!)
@@ -218,7 +218,7 @@ class EditView: UIView {
                 similarLabel?.font = .systemFont(ofSize: 18, weight: .bold)
                 similarLabel?.text = "0 ₽  "
                 similarLabel?.textColor = .TC
-                textField.text = orderStatus[index].0.address
+                textField.text = orderStatus[index].address
                 textField.placeholder = "Адрес"
                 textField.rightView = similarLabel!
                 textField.rightViewMode = .always
@@ -257,7 +257,7 @@ class EditView: UIView {
                 textField.backgroundColor = .settings
                 textField.layer.cornerRadius = 10
                 textField.delegate = self
-                textField.text = "\(orderStatus[index].0.clientsNumber)"
+                textField.text = "\(orderStatus[index].clientsNumber)"
                 return textField
             }()
             viewCenter.addSubview(commentTextField!)
@@ -276,11 +276,11 @@ class EditView: UIView {
                 var indexOplata = 0
                 for index in 0..<itemsForSegmented.count {
                     print(index)
-                    if itemsForSegmented[index] == orderStatus[self.index].0.paymentMethod {
+                    if itemsForSegmented[index] == orderStatus[self.index].paymentMethod {
                         indexOplata = index
                     }
                 }
-                print(orderStatus[index].0.paymentMethod)
+                print(orderStatus[index].paymentMethod)
                 let segmentedControl = UISegmentedControl(items: itemsForSegmented)
                 segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
                 segmentedControl.selectedSegmentTintColor = .white
@@ -396,7 +396,7 @@ class EditView: UIView {
         let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]
         let timeOrder = dateFormatter.string(from: currentDate)
         let idCafe = cafeID
-        let orderID = orderStatus[index].0.id
+        let orderID = orderStatus[index].id
 
         if phoneTextField?.text?.count ?? 0 < 10 {
             UIView.animate(withDuration: 0.5) {

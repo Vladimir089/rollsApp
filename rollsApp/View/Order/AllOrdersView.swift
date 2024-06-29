@@ -92,37 +92,7 @@ class AllOrdersView: UIView {
 
 extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        // Получаем видимые индексы ячеек
-//        guard let indexPath = collectionView?.indexPathsForVisibleItems.sorted().last else { return }
-//        
-//        // Проверяем, что у вас есть предыдущий IndexPath
-//        guard let previousIndexPath = self.previousIndexPath else {
-//            self.previousIndexPath = indexPath
-//            return
-//        }
-//        
-//        // Сравниваем текущий IndexPath с предыдущим
-//        if indexPath.row > previousIndexPath.row && (indexPath.row + 1) % 14 == 0 {
-//            // Прокрутка вниз
-//            
-//            if page * 14 == indexPath.row + 1 {
-//                page += 1
-//                print("page увеличена: \(page)")
-//            }
-//        } else if indexPath.row < previousIndexPath.row && (indexPath.row + 1) % 14 == 0 && page > 1 {
-//            print("Прокрутка вверх")
-//            if page * 14 != indexPath.row + 1 {
-//                page -= 1
-//                print("page уменьшена: \(page)")
-//                
-//            }
-//        }
-//        
-//        // Обновляем previousIndexPath для следующего сравнения
-//        self.previousIndexPath = indexPath
-//    }
-//    
+//
 //    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return orderStatus.count
@@ -167,14 +137,14 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         //MARK: -Labels
         
-        let phoneLabel = generateLaels(text: "\(orderStatus[indexPath.row].0.phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .TC)
+        let phoneLabel = generateLaels(text: "\(orderStatus[indexPath.row].phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .TC)
         cell.addSubview(phoneLabel)
         phoneLabel.snp.makeConstraints { make in
             make.left.equalTo(viewInImageView.snp.right)
             make.top.equalTo(imageView.snp.top)
         }
 
-        let adressLabel = generateLaels(text: "\(orderStatus[indexPath.row].0.address)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .TC)
+        let adressLabel = generateLaels(text: "\(orderStatus[indexPath.row].address)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .TC)
         adressLabel.numberOfLines = 2
         
         cell.addSubview(adressLabel)
@@ -184,7 +154,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.top.equalTo(phoneLabel.snp.bottom)
         }
         
-        let statusLabel = generateLaels(text: "#\(orderStatus[indexPath.row].0.id)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .TC)
+        let statusLabel = generateLaels(text: "#\(orderStatus[indexPath.row].id)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .TC)
         cell.addSubview(statusLabel)
         statusLabel.snp.makeConstraints { make in
             make.left.right.equalTo(phoneLabel)
@@ -195,10 +165,10 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         
         let inCellButton: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle(orderStatus[indexPath.row].1.orderStatus, for: .normal) //меняем
+            button.setTitle(orderStatus[indexPath.row].orderForCourierStatus, for: .normal) //меняем
             UIView.animate(withDuration: 0.5) {
                 button.setTitleColor(.systemBlue, for: .normal) //меняем
-                button.backgroundColor = UIColor(hex: orderStatus[indexPath.row].1.orderColor).withAlphaComponent(0.5)
+                button.backgroundColor = UIColor(.gray).withAlphaComponent(0.5)
 
             }
             button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
@@ -207,7 +177,16 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
             return button
         }()
-
+        
+        if orderStatus[indexPath.row].orderForCourierStatus == nil && orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз" {
+            inCellButton.setTitle("Вызвать", for: .normal) 
+        }
+        
+        
+        
+        
+        
+        
         cell.addSubview(inCellButton)
         inCellButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview().offset(14)
@@ -228,7 +207,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.right.equalTo(inCellButton.snp.right)
             make.centerY.equalTo(phoneLabel)
         }
-        let time = orderStatus[indexPath.row].0.formattedCreatedTime ?? "0:00"
+        let time = orderStatus[indexPath.row].formattedCreatedTime ?? "0:00"
         let timeLabel = generateLaels(text: "\(time)", fonc: .systemFont(ofSize: 15, weight: .regular), textColor: .time)
         
         cell.addSubview(timeLabel)
@@ -250,7 +229,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             inCellButton.backgroundColor = UIColor.clear
         }
         
-        if orderStatus[indexPath.row].0.address == "С собой, 0, Самовывоз" {
+        if orderStatus[indexPath.row].address == "С собой, 0, Самовывоз" {
             inCellButton.isUserInteractionEnabled = false
             inCellButton.isHidden = true
         } 
