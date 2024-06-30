@@ -52,6 +52,14 @@ class EditViewController: UIViewController {
         
 
     }
+    
+    func cleanString(_ string: String) -> String {
+        // Удаление пробелов
+        let noSpaces = string.replacingOccurrences(of: " ", with: "")
+        // Удаление скобок
+        let cleanString = noSpaces.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
+        return cleanString
+    }
 
     deinit {
         menuItemsArr.removeAll()
@@ -86,24 +94,30 @@ extension EditViewController: EditViewControllerDelegate {
     
     
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
-        var lastAdress = ""
-        
+        var a = ""
+
+        // Очистка строк от пробелов и скобок
+        let cleanPhoneNumber = cleanString(phoneNumber)
+        let cleanCafeID = cleanString(cafeID)
+
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
-        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(phoneNumber)&cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+        
+        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(cleanPhoneNumber)&cafe_id=\(cleanCafeID)", method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any],
                    let address = json["address"] as? [String: Any],
                    let addressValue = address["address"] as? String {
-                    lastAdress = addressValue
+                a = addressValue
                 }
             case .failure(_):
-                lastAdress = ""
+                a = ""
             }
-            completion(lastAdress)
+            completion(a)
         }
     }
 

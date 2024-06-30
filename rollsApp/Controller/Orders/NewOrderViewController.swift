@@ -54,6 +54,14 @@ class NewOrderViewController: UIViewController {
         mainView?.tableView?.layoutIfNeeded()
         mainView?.updateContentSize()
     }
+    
+    func cleanString(_ string: String) -> String {
+        // Удаление пробелов
+        let noSpaces = string.replacingOccurrences(of: " ", with: "")
+        // Удаление скобок
+        let cleanString = noSpaces.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
+        return cleanString
+    }
 }
 
 
@@ -64,6 +72,8 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    
+    
     func showAdressVC() {
         let vc = AdressViewController()
         vc.similadAdressView = mainView?.similadAdressView
@@ -75,16 +85,21 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    
+
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
         var a = ""
-        
+
+        // Очистка строк от пробелов и скобок
+        let cleanPhoneNumber = cleanString(phoneNumber)
+        let cleanCafeID = cleanString(cafeID)
+
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(phoneNumber)&cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(cleanPhoneNumber)&cafe_id=\(cleanCafeID)", method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any],
@@ -115,7 +130,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         ]
         
         let parameters: [String : Any] = [
-            "phone": phonee,
+            "phone": cleanString(phonee),
             "menu_items": menuItems,
             "clients_number": clientsNumber,
             "address": adress,

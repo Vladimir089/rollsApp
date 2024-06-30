@@ -343,33 +343,33 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     @objc func goCourier(sender: UIButton) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
-        delegate?.createButtonGo(index: indexPath.row)
-        
-        let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .heavy)
-        impactFeedbackgenerator.prepare()
-        impactFeedbackgenerator.impactOccurred()
-        
-        sender.isUserInteractionEnabled = false
-        sender.setTitle("Заказ создан", for: .normal)
-        UIView.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
-            UIView.animate(withDuration: 0.2) {
-                sender.transform = .identity
+        delegate?.createButtonGo(index: indexPath.row) {
+            
+            let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .heavy)
+            impactFeedbackgenerator.prepare()
+            impactFeedbackgenerator.impactOccurred()
+            
+            sender.isUserInteractionEnabled = false
+            sender.setTitle("Заказ создан", for: .normal)
+            UIView.animate(withDuration: 0.2, animations: {
+                sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }) { _ in
+                UIView.animate(withDuration: 0.2) {
+                    sender.transform = .identity
+                }
             }
-        }
-        
-        
-        let originalBackgroundColor = sender.backgroundColor
-        sender.backgroundColor = .systemGreen
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            UIView.animate(withDuration: 0.5) {
-                sender.backgroundColor = originalBackgroundColor
+            
+            
+            let originalBackgroundColor = sender.backgroundColor
+            sender.backgroundColor = .systemGreen
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIView.animate(withDuration: 0.5) {
+                    sender.backgroundColor = originalBackgroundColor
+                }
             }
-        }
-        
+        } 
     }
     
     

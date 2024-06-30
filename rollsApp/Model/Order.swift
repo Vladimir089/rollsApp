@@ -18,7 +18,7 @@ struct OrderStatusResponse: Codable {
 
 struct Order: Codable {
     let id: Int
-    let phone: String
+    var phone: String
     let menuItems: String
     let clientsNumber: String
     let address: String

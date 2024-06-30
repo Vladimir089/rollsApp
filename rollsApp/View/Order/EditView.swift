@@ -358,22 +358,20 @@ class EditView: UIView {
         return button
     }
     
+    func butonIsEnabled() {
+        if menuItemsArr.count != 0 {
+            createOrderButton?.isEnabled = true
+        } else {
+            createOrderButton?.isEnabled = false
+        }
+    }
+    
     //MARK: -Objc func
     
-    @objc func guestTapped() {
-        phoneTextField?.text = phoneCafe
-        adressTextField?.text = "С собой, 0, Самовывоз"
-        adress = "С собой, 0, Самовывоз"
-        similadAdressView.getCostAdress()
-    }
-    
-    @objc func sSoboiTapped() {
-        adressTextField?.text = "С собой, 0, Самовывоз"
-        adress = "С собой, 0, Самовывоз"
-        similadAdressView.getCostAdress()
-    }
+
     
     @objc func hideKeyboard() {
+        butonIsEnabled()
         phoneTextField?.endEditing(true)
     }
     
@@ -388,10 +386,10 @@ class EditView: UIView {
         let currentDate = Date()
 
         
-        let phone = phoneTextField?.text ?? ""
+        var phone = phoneTextField?.text ?? ""
         var menuItems = ""
         let clientNumber = Int(commentTextField?.text ?? "1") ?? 1
-        let adress = adress
+        var adress = adress
         let coast = totalCoast
         let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]
         let timeOrder = dateFormatter.string(from: currentDate)
@@ -399,15 +397,11 @@ class EditView: UIView {
         let orderID = orderStatus[index].id
 
         if phoneTextField?.text?.count ?? 0 < 10 {
-            UIView.animate(withDuration: 0.5) {
-                self.phoneTextField?.backgroundColor = .red
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                UIView.animate(withDuration: 0.5) {
-                    self.phoneTextField?.backgroundColor = .white // или ваш исходный цвет
-                }
-            }
-            return
+            phone = "+7\(phoneCafe)"
+        }
+       
+        if adress == "" {
+            adress = "С собой, 0, Самовывоз"
         }
         
         for (index, (key, value)) in menuItemsArr.enumerated() {
@@ -459,36 +453,70 @@ class EditView: UIView {
 extension EditView: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        butonIsEnabled()
         if textField == phoneTextField {
-            let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-            let formattedString = formatPhoneNumber(number: newString)
-            textField.text = formattedString
-            return false
-            
-        }
-        return true
-    }
-    
-    func formatPhoneNumber(number: String) -> String {
-            let cleanNumber = number.replacingOccurrences(of: "\\D", with: "", options: .regularExpression)
-            let mask = "+# (###) ### ## ##"
-            
-            var result = ""
-            var index = cleanNumber.startIndex
-            
-            for ch in mask where index < cleanNumber.endIndex {
-                if ch == "#" {
-                    result.append(cleanNumber[index])
-                    index = cleanNumber.index(after: index)
-                } else {
-                    result.append(ch)
-                }
+            // Если начинается ввод и поле пустое, устанавливаем "+7 "
+            if textField.text?.isEmpty ?? true && string.count > 0 {
+                textField.text = "+7 "
+                // После установки "+7 " нужно применить форматирование для оставшейся части номера (если есть)
+                let formattedString = formatPhoneNumber(number: textField.text! + string)
+                textField.text = formattedString
+                return false
             }
             
-            return result
+            // Временная строка с возможным новым значением
+            let prospectiveText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            
+            // Проверка на попытку удаления части "+7 "
+            if string.count == 0 && range.location < 3 {
+                // Предотвратим удаление "+7"
+                return false
+            } else {
+                // Применить форматирование для новой строки
+                let formattedString = formatPhoneNumber(number: prospectiveText)
+                textField.text = formattedString
+                // Предотвратить дальнейшую обработку ввода, так как мы уже обновили текст поля ввода
+                return false
+            }
         }
+        // Для других полей ввода возвратить true, чтобы разрешить обычное изменение текста
+        return true
+    }
+
+    func formatPhoneNumber(number: String) -> String {
+        butonIsEnabled()
+        var cleanNumber = number.replacingOccurrences(of: "\\D", with: "", options: .regularExpression)
+        
+        // Убедиться, что номер начинается с "7" и удаление первой "7"
+        if cleanNumber.hasPrefix("7") {
+            cleanNumber = String(cleanNumber.dropFirst())
+        }
+        
+        // Контент после "+7 ", который нам нужно проверить на нежелательные символы и возможно удалить
+        let additionalNumbers = cleanNumber
+        
+        // Удаление нежелательных символов из начала дополнительной части номера
+        let charsToRemove: [Character] = ["+", "7", "8"]
+        let filteredNumbers = additionalNumbers.drop(while: { charsToRemove.contains($0) })
+        
+        var result = "+7 "
+        let mask = "(###) ### ## ##"
+        var index = filteredNumbers.startIndex
+        
+        for ch in mask where index < filteredNumbers.endIndex {
+            if ch == "#" {
+                result.append(filteredNumbers[index])
+                index = filteredNumbers.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        
+        return result
+    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        butonIsEnabled()
         self.resignFirstResponder()
         if textField == adressTextField {
             UIView.animate(withDuration: 0.5) { [self] in
@@ -499,6 +527,7 @@ extension EditView: UITextFieldDelegate {
             }
         }
         if textField == commentTextField {
+            butonIsEnabled()
             UIView.animate(withDuration: 0.5) { [self] in
                 self.frame.origin.y = 0
                 self.layoutIfNeeded()
@@ -510,6 +539,7 @@ extension EditView: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        butonIsEnabled()
         if let textPhoneTextField = phoneTextField?.text {
             let _: ()? = delegate?.getLastAdress(phoneNumber: textPhoneTextField, cafeID: "\(cafeID)") { adress in
                 if adress != "" && self.adressTextField?.text == "" {
@@ -526,6 +556,7 @@ extension EditView: UITextFieldDelegate {
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        butonIsEnabled()
         if textField == adressTextField {
             delegate?.showAdressVC()
             adressTextField?.endEditing(true)
@@ -534,6 +565,7 @@ extension EditView: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
+        butonIsEnabled()
         if textField == adressTextField {
             if let text = adressTextField?.text  {
                 similadAdressView.reload(address: text)
@@ -652,6 +684,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func delButtonTapped(_ sender: UIButton) {
+        butonIsEnabled()
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
@@ -691,6 +724,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
 
 extension EditView: EditViewProtocol {
     func updateTable() {
+        butonIsEnabled()
         print("Обновляем")
         self.tableView?.snp.updateConstraints({ make in
             make.height.equalTo((menuItemsArr.count + 1) * 44)
@@ -703,6 +737,7 @@ extension EditView: EditViewProtocol {
     }
     
     func fillButton(coast: String) {
+        butonIsEnabled()
         createOrderButton?.setTitle("Сохранить \(coast) ₽", for: .normal)
         totalCoast = Int(coast) ?? 0
         print(totalCoast)

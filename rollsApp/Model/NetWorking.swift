@@ -10,7 +10,18 @@ var newOrdersForInsert: [Order] = []
 
 extension OrderViewController { //для обновления чтобы таблица не моргала
     
- 
+    func formatPhoneNumber(_ phone: String) -> String {
+        let digits = phone.compactMap { $0.isNumber ? $0 : nil }
+        guard digits.count >= 11 else { return phone } // На случай, если номер короче ожидаемого
+        
+        let country = String(digits[0])
+        let code = String(digits[1...3])
+        let part1 = String(digits[4...6])
+        let part2 = String(digits[7...8])
+        let part3 = String(digits[9...10])
+        
+        return "+\(country) (\(code)) \(part1) \(part2) \(part3)"
+    }
     
     
     func regenerateTable() {
@@ -45,23 +56,28 @@ extension OrderViewController { //для обновления чтобы таб�
                     
 
                     for newOrder in newOrders {
+                        
+                        
+                        var order = newOrder
+                        order.phone = self.formatPhoneNumber(order.phone)
+                        
                         if let existingIndex = orderStatus.firstIndex(where: {$0.id == newOrder.id}) {
                             // Заказ уже существует, проверяем на изменения
-                            if orderStatus[existingIndex].phone != newOrder.phone || orderStatus[existingIndex].menuItems != newOrder.menuItems ||  orderStatus[existingIndex].clientsNumber != newOrder.clientsNumber || orderStatus[existingIndex].address != newOrder.address || orderStatus[existingIndex].totalCost != newOrder.totalCost ||
-                                orderStatus[existingIndex].paymentMethod != newOrder.paymentMethod ||
-                                orderStatus[existingIndex].status != newOrder.status ||
-                                orderStatus[existingIndex].cookingTime != newOrder.cookingTime ||
-                                orderStatus[existingIndex].orderOnTime != newOrder.orderOnTime ||
-                                orderStatus[existingIndex].step != newOrder.step ||
-                                orderStatus[existingIndex].orderForCourierStatus != newOrder.orderForCourierStatus   {
+                            if orderStatus[existingIndex].phone != order.phone || orderStatus[existingIndex].menuItems != order.menuItems ||  orderStatus[existingIndex].clientsNumber != order.clientsNumber || orderStatus[existingIndex].address != order.address || orderStatus[existingIndex].totalCost != order.totalCost ||
+                                orderStatus[existingIndex].paymentMethod != order.paymentMethod ||
+                                orderStatus[existingIndex].status != order.status ||
+                                orderStatus[existingIndex].cookingTime != order.cookingTime ||
+                                orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
+                                orderStatus[existingIndex].step != order.step ||
+                                orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
                                 
-                                orderStatus[existingIndex] = newOrder
+                                orderStatus[existingIndex] = order
                                 let indexPath = IndexPath(item: existingIndex, section: 0)
                                 indexPathsToUpdate.append(indexPath)
                             }
                         } else {
                             // Новый заказ, добавляем во временный массив
-                            newOrdersForInsert.append(newOrder)
+                            newOrdersForInsert.append(order)
                         }
                     }
                     

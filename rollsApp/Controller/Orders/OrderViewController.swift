@@ -22,7 +22,7 @@ var indexPathsToUpdate: [IndexPath] = []
 
 protocol OrderViewControllerDelegate: AnyObject {
 
-    func createButtonGo(index: Int)
+    func createButtonGo(index: Int, completion: @escaping () -> Void)
     func detailVC(index: Int)
     
 }
@@ -167,7 +167,7 @@ extension OrderViewController: OrderViewControllerDelegate {
     
   
     
-    func createButtonGo(index: Int) {
+    func createButtonGo(index: Int, completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
@@ -175,17 +175,49 @@ extension OrderViewController: OrderViewControllerDelegate {
         if orderStatus.count < index {
             return
         }
-        
         let currentOrder = orderStatus[index]
-        AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.id)&cafe_id=\(currentOrder.cafeID)", method: .post, headers: headers).responseJSON { response in
-            debugPrint(response)
-            switch response.result {
-            case .success(_):
-                print(response)
-            case .failure(_):
-                print(1)
-            }
+        
+        let messageText = "Вызвать курьера на адрес \(currentOrder.address) ?"
+        let attributedString = NSMutableAttributedString(string: messageText)
+
+        // Настройка атрибутов для жирного текста
+        let boldAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        let range = (messageText as NSString).range(of: currentOrder.address)
+
+        // Применение атрибутов к части строки
+        attributedString.addAttributes(boldAttribute, range: range)
+        
+        
+        let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        
+        alertController.setValue(attributedString, forKey: "attributedMessage")
+
+
+        // Создаем первое действие
+        let action1 = UIAlertAction(title: "Отмена", style: .destructive) { (action) in
+            return
         }
+
+        // Создаем второе действие
+        let action2 = UIAlertAction(title: "Вызвать", style: .default) { (action) in
+            AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.id)&cafe_id=\(currentOrder.cafeID)", method: .post, headers: headers).responseJSON { response in
+                switch response.result {
+                case .success(_):
+                    print(response)
+                case .failure(_):
+                    print(1)
+                }
+            }
+            completion() 
+        }
+
+        // Добавляем действия к UIAlertController
+        alertController.addAction(action1)
+        alertController.addAction(action2)
+        
+        present(alertController, animated: true, completion: nil)
+        
+        
     }
     
     
