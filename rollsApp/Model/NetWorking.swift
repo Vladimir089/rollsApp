@@ -20,6 +20,7 @@ extension OrderViewController { //для обновления чтобы таб�
         // Очищаем вспомогательные массивы
         indexPathsToInsert.removeAll()
         indexPathsToUpdate.removeAll()
+        var indexPathsToDelete: [IndexPath] = []
         
         print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         let headers: HTTPHeaders = [
@@ -32,8 +33,16 @@ extension OrderViewController { //для обновления чтобы таб�
             case .success(_):
                 if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
                     var newOrders = order.orders
-
+                    let newOrderIDs = Set(newOrders.map { $0.id })
                     var newOrdersForInsert: [Order] = []
+                    
+                    for (index, existingOrder) in orderStatus.enumerated().reversed() {
+                        if !newOrderIDs.contains(existingOrder.id) {
+                            orderStatus.remove(at: index)
+                            indexPathsToDelete.append(IndexPath(item: index, section: 0))
+                        }
+                    }
+                    
 
                     for newOrder in newOrders {
                         if let existingIndex = orderStatus.firstIndex(where: {$0.id == newOrder.id}) {
@@ -55,8 +64,7 @@ extension OrderViewController { //для обновления чтобы таб�
                             newOrdersForInsert.append(newOrder)
                         }
                     }
-
-                    // Сортируем новые заказы по ID
+                    
                     newOrdersForInsert.sort(by: {$0.id > $1.id})
 
                     // Вставляем отсортированные новые заказы в начало основного массива
@@ -79,6 +87,10 @@ extension OrderViewController { //для обновления чтобы таб�
                             if !indexPathsToUpdate.isEmpty {
                                 self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
                             }
+                            
+                            if !indexPathsToDelete.isEmpty {
+                                self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
+                            }
                         }
                     }
                     
@@ -94,7 +106,9 @@ extension OrderViewController { //для обновления чтобы таб�
             case .failure(_):
                 self.isLoad = false
                 print("ERRRRRRRRROR")
-                // Если загрузка не удалась, нет необходимости вызывать `regenerateTable` повторно из блока case .failure, чтобы избежать потенциального бесконечного цикла.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                    self.regenerateTable()
+                }
             }
         }
     }

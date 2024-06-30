@@ -277,6 +277,7 @@ class NewOrderView: UIView {
             button.tintColor = .white
             button.addTarget(self, action: #selector(createOrder), for: .touchUpInside)
             button.layer.cornerRadius = 12
+            button.isEnabled = false
             return button
         }()
 
@@ -304,6 +305,14 @@ class NewOrderView: UIView {
         
         
         
+    }
+    
+    func butonIsEnabled() {
+        if menuItemsArr.count != 0 {
+            createOrderButton?.isEnabled = true
+        } else {
+            createOrderButton?.isEnabled = false
+        }
     }
     
     func generateLabel(text: String, font: UIFont, isUnderlining: Bool, textColor: UIColor) -> UILabel {
@@ -424,6 +433,7 @@ class NewOrderView: UIView {
     }
     
     @objc func fillAdress() {
+        butonIsEnabled()
         if adressButton?.titleLabel?.text != nil {
             adressTextField?.text = adressButton?.titleLabel?.text
             if let a = adressButton?.titleLabel?.text {
@@ -439,6 +449,7 @@ class NewOrderView: UIView {
     }
     
     @objc func hideKeyboard() {
+        butonIsEnabled()
         phoneTextField?.endEditing(true)
     }
       
@@ -448,6 +459,7 @@ class NewOrderView: UIView {
 extension NewOrderView: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        butonIsEnabled()
         if textField == phoneTextField {
             let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
             let formattedString = formatPhoneNumber(number: newString)
@@ -478,6 +490,7 @@ extension NewOrderView: UITextFieldDelegate {
         }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        butonIsEnabled()
         self.resignFirstResponder()
         if textField == adressTextField {
             UIView.animate(withDuration: 0.5) { [self] in
@@ -499,6 +512,7 @@ extension NewOrderView: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        butonIsEnabled()
         if let textPhoneTextField = phoneTextField?.text {
             let _: ()? = delegate?.getLastAdress(phoneNumber: textPhoneTextField, cafeID: "\(cafeID)") { adress in
                 if adress != "" && self.adressTextField?.text == "" {
@@ -517,6 +531,7 @@ extension NewOrderView: UITextFieldDelegate {
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        butonIsEnabled()
         if textField == adressTextField {
             delegate?.showAdressVC()
             adressTextField?.endEditing(true)
@@ -532,6 +547,7 @@ extension NewOrderView: UITextFieldDelegate {
     
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
+        butonIsEnabled()
         if textField == adressTextField {
             if let text = adressTextField?.text  {
                 similadAdressView.reload(address: text)
@@ -646,12 +662,14 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func addButtonTapped(_ sender: UIButton) {
+        butonIsEnabled()
         phoneTextField?.endEditing(true)
         adressTextField?.endEditing(true)
         delegate?.showVC()
     }
     
     @objc func delButtonTapped(_ sender: UIButton) {
+        butonIsEnabled()
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
@@ -690,6 +708,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
 
 extension NewOrderView: NewOrderViewProtocol {
     func updateTable() {
+        butonIsEnabled()
         print("Обновляем")
         self.tableView?.snp.updateConstraints({ make in
             make.height.equalTo((menuItemsArr.count + 1) * 44)

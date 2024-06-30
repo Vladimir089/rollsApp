@@ -32,6 +32,7 @@ class StatView: UIView {
         backgroundColor = .BG
         let imageView: UIImageView = {
             let imageView = UIImageView(image: imageSatandart)
+            imageView.clipsToBounds = true
             return imageView
         }()
         addSubview(imageView)

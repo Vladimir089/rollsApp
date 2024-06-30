@@ -178,12 +178,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             return button
         }()
         
-        if orderStatus[indexPath.row].orderForCourierStatus == nil && orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз" {
-            inCellButton.setTitle("Вызвать", for: .normal) 
+        if orderStatus[indexPath.row].orderForCourierStatus == nil && (orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз") {
+            inCellButton.setTitle("Вызвать", for: .normal)
         }
-        
-        
-        
         
         
         
@@ -232,7 +229,30 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         if orderStatus[indexPath.row].address == "С собой, 0, Самовывоз" {
             inCellButton.isUserInteractionEnabled = false
             inCellButton.isHidden = true
-        } 
+        }
+        
+        switch inCellButton.titleLabel?.text {
+        case "Ищем курьера":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.backgroundColor = UIColor(hex: "#ffff00")
+        case "Курьер назначен":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.backgroundColor = UIColor(hex: "#ffb7b7")
+        case "Курьер подъехал":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.backgroundColor = UIColor(hex: "#fa00a3")
+        case "В исполнении":
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = false
+            inCellButton.backgroundColor = UIColor(hex: "#a5b307")
+        case .none:
+            break
+        case .some(_):
+            break
+        }
         
         
        
