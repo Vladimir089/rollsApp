@@ -342,7 +342,9 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     //MARK: -change ststus
     
     @objc func goCourier(sender: UIButton) {
+       
         let indexPath = IndexPath(row: sender.tag, section: 0)
+        print(orderStatus[indexPath.row].id)
         delegate?.createButtonGo(index: indexPath.row) {
             
             let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .heavy)

@@ -85,10 +85,23 @@ class OrderViewController: UIViewController {
         // Проверяем, есть ли значение у authKey
         if !authKey.isEmpty {
             stopAuthCheckTimer()
-            regenerateTable()
+            reload()
             getDishes() {
                 NotificationCenter.default.post(name: Notification.Name("dishLoadNotification"), object: nil)
                 dishLoad = true
+            }
+           
+        }
+    }
+    
+    func reload() {
+        self.mainView?.collectionView?.reloadData()
+        regenerateTable() {
+            DispatchQueue.main.async {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.reload()
+                }
             }
            
         }
@@ -148,6 +161,7 @@ class OrderViewController: UIViewController {
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
+    
     func detailVC(index: Int) {
         let vc = EditViewController()
         isLoad = true
@@ -176,6 +190,7 @@ extension OrderViewController: OrderViewControllerDelegate {
             return
         }
         let currentOrder = orderStatus[index]
+        print(currentOrder.id, 324)
         
         let messageText = "Вызвать курьера на адрес \(currentOrder.address) ?"
         let attributedString = NSMutableAttributedString(string: messageText)

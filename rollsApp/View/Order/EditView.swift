@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 protocol EditViewProtocol: AnyObject {
     func fillTextField(adress: String, cost: String)
@@ -38,6 +39,9 @@ class EditView: UIView {
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
     var numberPhoneLabel: UILabel?
     var callButton: UIButton?
+    var labelItog: UILabel?
+    var isEdit = 1
+    var callButtonPhone: UIButton?
     
     //MARK: -init
     override init(frame: CGRect) {
@@ -52,8 +56,6 @@ class EditView: UIView {
         super.layoutSubviews()
         layoutIfNeeded()
         updateContentSize()
-        print(menuItemsArr)
-
     }
     
     func fillData() {
@@ -107,226 +109,340 @@ class EditView: UIView {
     }
     
     func createInterface() {
-            backgroundColor = .settingBG
-            let tapInViewGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-            scrollView.addGestureRecognizer(tapInViewGesture)
-            addGestureRecognizer(tapInViewGesture)
-            scrollView.isUserInteractionEnabled = true
-            scrollView.showsVerticalScrollIndicator = false
-            contentView.isUserInteractionEnabled = true
-            addSubview(scrollView)
-            
-            scrollView.backgroundColor = .settingBG
-            contentView.backgroundColor = .settingBG
-            scrollView.snp.makeConstraints { make in
-                make.left.right.bottom.equalToSuperview()
-                make.top.equalToSuperview()
-            }
-            scrollView.addSubview(contentView)
-            contentView.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
-                make.width.equalToSuperview()
-                
-            }
-            
-            tableView = {
-                let view = UITableView()
-                view.delegate = self
-                view.dataSource = self
-                view.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-                view.backgroundColor = .settings
-                view.layer.cornerRadius = 15
-                view.isScrollEnabled = false
-                view.rowHeight = UITableView.automaticDimension // Установка автоматической высоты ячеек
-                view.estimatedRowHeight = 44
-                view.separatorStyle = .none
-                return view
-            }()
-            scrollView.addSubview(tableView!)
-            tableView?.snp.makeConstraints({ make in
-                make.left.right.equalToSuperview().inset(15)
-                make.top.equalToSuperview()
-                make.height.equalTo((menuItemsArr.count + 1) * 44)
-            })
-            
-            let viewCenter: UIView = {
-                let view = UIView()
-                view.backgroundColor = .settings
-                view.layer.cornerRadius = 20
-                return view
-            }()
-            scrollView.addSubview(viewCenter)
-            viewCenter.snp.makeConstraints { make in
-                make.height.equalTo(134)
-                make.left.right.equalToSuperview().inset(15)
-                make.top.equalTo((tableView ?? UIView()).snp.bottom).inset(-25)
-            }
-            
-            phoneTextField = {
-                let textField = UITextField()
-                textField.placeholder = "Номер телефона"
-                textField.leftViewMode = .always
-                textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-                textField.rightViewMode = .always
-                textField.keyboardType = .numberPad
-                textField.textColor = .TC
-                textField.backgroundColor = .settings
-                textField.layer.cornerRadius = 10
-                textField.delegate = self
-                textField.text = orderStatus[index].phone
-                return textField
-            }()
-            viewCenter.addSubview(phoneTextField!)
-            phoneTextField?.snp.makeConstraints({ make in
-                make.left.right.equalToSuperview().inset(13)
-                make.height.equalTo(44)
-                make.top.equalToSuperview()
-            })
-            
-            adressButton = {
-                let button = UIButton(type: .system)
-                button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
-                button.tintColor = .TC
-                button.contentHorizontalAlignment = .left
-                button.addTarget(self, action: #selector(fillAdress), for: .touchUpInside)
-                button.alpha = 0
-                return button
-            }()
-            scrollView.addSubview(adressButton!)
-            adressButton?.snp.makeConstraints({ make in
-                make.left.equalTo((phoneTextField ?? UIView()).snp.left)
-                make.bottom.equalTo(viewCenter.snp.top)
-                make.height.equalTo(18)
-                
-            })
-            
-            let oneSep: UIView = {
-                let view = UIView()
-                view.backgroundColor = .separator
-                return view
-            }()
-            viewCenter.addSubview(oneSep)
-            oneSep.snp.makeConstraints { make in
-                make.height.equalTo(0.3)
-                make.left.right.equalToSuperview().inset(13)
-                make.top.equalTo((phoneTextField ?? UIView()).snp.bottom)
-            }
-            
-            adressTextField = {
-                let textField = UITextField()
-                similarLabel = UILabel()
-                similarLabel?.font = .systemFont(ofSize: 18, weight: .bold)
-                similarLabel?.text = "0 ₽  "
-                similarLabel?.textColor = .TC
-                textField.text = orderStatus[index].address
-                textField.placeholder = "Адрес"
-                textField.rightView = similarLabel!
-                textField.rightViewMode = .always
-                textField.textColor = .TC
-                textField.backgroundColor = .settings
-                textField.layer.cornerRadius = 10
-                textField.delegate = self
-                return textField
-            }()
-            similadAdressView.editDelegate = self
-            scrollView.addSubview(adressTextField!)
-            adressTextField?.snp.makeConstraints({ make in
-                make.left.right.equalToSuperview().inset(28)
-                make.top.equalTo(oneSep.snp.bottom)
-                make.height.equalTo(44)
-            })
-            
-            
-            let twoSep: UIView = {
-                let view = UIView()
-                view.backgroundColor = .separator
-                return view
-            }()
-            viewCenter.addSubview(twoSep)
-            twoSep.snp.makeConstraints { make in
-                make.height.equalTo(0.5)
-                make.left.right.equalToSuperview().inset(13)
-                make.top.equalTo((adressTextField ?? UIView()).snp.bottom)
-            }
-            
-            commentTextField = {
-                let textField = UITextField()
-                textField.leftViewMode = .always
-                textField.placeholder = "Комментарий"
-                textField.textColor = .TC
-                textField.backgroundColor = .settings
-                textField.layer.cornerRadius = 10
-                textField.delegate = self
-                textField.text = "\(orderStatus[index].clientsNumber)"
-                return textField
-            }()
-            viewCenter.addSubview(commentTextField!)
-            commentTextField?.snp.makeConstraints({ make in
-                make.left.right.equalToSuperview().inset(13)
-                make.top.equalTo(twoSep.snp.bottom)
-                make.height.equalTo(44)
-            })
-            
-            
-         
-          
-         
-            
-            oplataSegmentedControl = {
-                var indexOplata = 0
-                for index in 0..<itemsForSegmented.count {
-                    print(index)
-                    if itemsForSegmented[index] == orderStatus[self.index].paymentMethod {
-                        indexOplata = index
-                    }
-                }
-                print(orderStatus[index].paymentMethod)
-                let segmentedControl = UISegmentedControl(items: itemsForSegmented)
-                segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
-                segmentedControl.selectedSegmentTintColor = .white
-                segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
-                segmentedControl.selectedSegmentIndex = indexOplata
-                segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
-                return segmentedControl
-            }()
-            scrollView.addSubview(oplataSegmentedControl!)
-            oplataSegmentedControl?.snp.makeConstraints({ make in
-                make.height.equalTo(44)
-                make.top.equalTo(viewCenter.snp.bottom).inset(-25)
-                make.left.right.equalToSuperview().inset(15)
-            })
-            
-            createOrderButton = {
-                let button = UIButton(type: .system)
-                button.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
-                button.setTitle("Сохранить 0 ₽", for: .normal)
-                button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
-                button.tintColor = .white
-                button.addTarget(self, action: #selector(saveOrder), for: .touchUpInside)
-                button.layer.cornerRadius = 12
-                return button
-            }()
-
-            scrollView.addSubview(createOrderButton!)
-            createOrderButton?.snp.makeConstraints({ make in
-                make.height.equalTo(50)
-                make.left.right.equalToSuperview().inset(15)
-                make.top.equalTo((oplataSegmentedControl?.snp.bottom)!).inset(-25)
-            })
-            
-            let botView: UIView = {
-                let view = UIView()
-                view.backgroundColor = .clear
-                return view
-            }()
-            contentView.addSubview(botView)
-            botView.snp.makeConstraints { make in
-                make.height.equalTo(200) //мб тут сдеклать высоту таблицы
-                make.left.right.equalToSuperview()
-                make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
-            }
+        backgroundColor = .settingBG
+        let tapInViewGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        scrollView.addGestureRecognizer(tapInViewGesture)
+        addGestureRecognizer(tapInViewGesture)
+        scrollView.isUserInteractionEnabled = true
+        scrollView.showsVerticalScrollIndicator = false
+        contentView.isUserInteractionEnabled = true
+        addSubview(scrollView)
+        
+        scrollView.backgroundColor = .settingBG
+        contentView.backgroundColor = .settingBG
+        scrollView.snp.makeConstraints { make in
+            make.left.right.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+        }
+        scrollView.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
             
         }
+        
+        tableView = {
+            let view = UITableView()
+            view.delegate = self
+            view.dataSource = self
+            view.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+            view.backgroundColor = .settings
+            view.layer.cornerRadius = 15
+            view.isScrollEnabled = false
+            view.rowHeight = UITableView.automaticDimension // Установка автоматической высоты ячеек
+            view.estimatedRowHeight = 44
+            view.separatorStyle = .none
+            return view
+        }()
+        scrollView.addSubview(tableView!)
+        tableView?.snp.makeConstraints({ make in
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalToSuperview()
+            if isEdit == 1 {
+                make.height.equalTo((menuItemsArr.count) * 44)
+            } else {
+                make.height.equalTo((menuItemsArr.count + 1) * 44)
+            }
+        })
+        
+        let viewCenter: UIView = {
+            let view = UIView()
+            view.backgroundColor = .settings
+            view.layer.cornerRadius = 20
+            return view
+        }()
+        scrollView.addSubview(viewCenter)
+        viewCenter.snp.makeConstraints { make in
+            make.height.equalTo(134)
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo((tableView ?? UIView()).snp.bottom).inset(-25)
+        }
+        
+        callButtonPhone = {
+            let button = UIButton(type: .system)
+            let image = UIImage.clearPhone.resize(targetSize: CGSize(width: 20, height: 20))
+            button.setImage(image, for: .normal)
+            button.backgroundColor = .clear
+            return button
+        }()
+        viewCenter.addSubview(callButtonPhone!)
+        callButtonPhone?.snp.makeConstraints({ make in
+            make.height.width.equalTo(44)
+            make.right.equalToSuperview().inset(13)
+            make.top.equalToSuperview()
+        })
+        callButtonPhone?.addTarget(self, action: #selector(call), for: .touchUpInside)
+        
+        phoneTextField = {
+            let textField = UITextField()
+            textField.placeholder = "Номер телефона"
+            textField.leftViewMode = .always
+            textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+            textField.rightViewMode = .always
+            textField.keyboardType = .numberPad
+            textField.textColor = .TC
+            textField.backgroundColor = .settings
+            textField.layer.cornerRadius = 10
+            textField.delegate = self
+            textField.text = orderStatus[index].phone
+            return textField
+        }()
+        viewCenter.addSubview(phoneTextField!)
+        phoneTextField?.snp.makeConstraints({ make in
+            make.left.equalToSuperview().inset(13)
+            make.right.equalTo(callButtonPhone!.snp.left)
+            make.height.equalTo(44)
+            make.top.equalToSuperview()
+        })
+        
+        adressButton = {
+            let button = UIButton(type: .system)
+            button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
+            button.tintColor = .TC
+            button.contentHorizontalAlignment = .left
+            button.addTarget(self, action: #selector(fillAdress), for: .touchUpInside)
+            button.alpha = 0
+            return button
+        }()
+        scrollView.addSubview(adressButton!)
+        adressButton?.snp.makeConstraints({ make in
+            make.left.equalTo((phoneTextField ?? UIView()).snp.left)
+            make.bottom.equalTo(viewCenter.snp.top)
+            make.height.equalTo(18)
+            
+        })
+        
+        let oneSep: UIView = {
+            let view = UIView()
+            view.backgroundColor = .separator
+            return view
+        }()
+        viewCenter.addSubview(oneSep)
+        oneSep.snp.makeConstraints { make in
+            make.height.equalTo(0.3)
+            make.left.right.equalToSuperview().inset(13)
+            make.top.equalTo((phoneTextField ?? UIView()).snp.bottom)
+        }
+        
+        adressTextField = {
+            let textField = UITextField()
+            similarLabel = UILabel()
+            similarLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+            similarLabel?.text = "0 ₽  "
+            similarLabel?.textColor = .TC
+            textField.text = orderStatus[index].address
+            textField.placeholder = "Адрес"
+            textField.rightView = similarLabel!
+            textField.rightViewMode = .always
+            textField.textColor = .TC
+            textField.backgroundColor = .settings
+            textField.layer.cornerRadius = 10
+            textField.delegate = self
+            return textField
+        }()
+        similadAdressView.editDelegate = self
+        scrollView.addSubview(adressTextField!)
+        adressTextField?.snp.makeConstraints({ make in
+            make.left.right.equalToSuperview().inset(28)
+            make.top.equalTo(oneSep.snp.bottom)
+            make.height.equalTo(44)
+        })
+        
+        
+        let twoSep: UIView = {
+            let view = UIView()
+            view.backgroundColor = .separator
+            return view
+        }()
+        viewCenter.addSubview(twoSep)
+        twoSep.snp.makeConstraints { make in
+            make.height.equalTo(0.5)
+            make.left.right.equalToSuperview().inset(13)
+            make.top.equalTo((adressTextField ?? UIView()).snp.bottom)
+        }
+        
+        commentTextField = {
+            let textField = UITextField()
+            textField.leftViewMode = .always
+            textField.placeholder = "Комментарий"
+            textField.textColor = .TC
+            textField.backgroundColor = .settings
+            textField.layer.cornerRadius = 10
+            textField.delegate = self
+            textField.text = "\(orderStatus[index].clientsNumber)"
+            return textField
+        }()
+        viewCenter.addSubview(commentTextField!)
+        commentTextField?.snp.makeConstraints({ make in
+            make.left.right.equalToSuperview().inset(13)
+            make.top.equalTo(twoSep.snp.bottom)
+            make.height.equalTo(44)
+        })
+        
+        
+        
+        
+        
+        
+        oplataSegmentedControl = {
+            var indexOplata = 0
+            for index in 0..<itemsForSegmented.count {
+                print(index)
+                if itemsForSegmented[index] == orderStatus[self.index].paymentMethod {
+                    indexOplata = index
+                }
+            }
+            print(orderStatus[index].paymentMethod)
+            let segmentedControl = UISegmentedControl(items: itemsForSegmented)
+            segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
+            segmentedControl.selectedSegmentTintColor = .white
+            segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+            segmentedControl.selectedSegmentIndex = indexOplata
+            segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+            segmentedControl.isUserInteractionEnabled = false
+            return segmentedControl
+        }()
+        scrollView.addSubview(oplataSegmentedControl!)
+        oplataSegmentedControl?.snp.makeConstraints({ make in
+            make.height.equalTo(44)
+            make.top.equalTo(viewCenter.snp.bottom).inset(-25)
+            make.left.right.equalToSuperview().inset(15)
+        })
+        
+        let viewBotton: UIView = {
+            let view = UIView()
+            view.backgroundColor = .settings
+            view.layer.cornerRadius = 12
+            return view
+        }()
+        contentView.addSubview(viewBotton)
+        viewBotton.snp.makeConstraints { make in
+            make.height.equalTo(44)
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo(oplataSegmentedControl!.snp.bottom).inset(-25)
+        }
+        
+        let labelItogText: UILabel = {
+            let label = UILabel()
+            label.text = "Итого"
+            label.font = .systemFont(ofSize: 18, weight: .bold)
+            label.textColor = .TC
+            return label
+        }()
+        viewBotton.addSubview(labelItogText)
+        labelItogText.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(15)
+        }
+        
+        labelItog = {
+            let label = UILabel()
+            label.text = "0 ₽"
+            label.font = .systemFont(ofSize: 18, weight: .bold)
+            label.textColor = .TC
+            label.textAlignment = .right
+            return label
+        }()
+        viewBotton.addSubview(labelItog!)
+        labelItog?.snp.makeConstraints({ make in
+            make.left.equalTo(labelItogText.snp.right)
+            make.right.equalToSuperview().inset(15)
+            make.centerY.equalToSuperview()
+        })
+        
+        
+        createOrderButton = {
+            let button = UIButton(type: .system)
+            button.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+            button.setTitle("Сохранить", for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+            button.tintColor = .white
+            button.alpha = 0
+            button.layer.cornerRadius = 12
+            return button
+        }()
+        
+        if isEdit == 1 && orderStatus[index].paymentStatus != "Оплачено" {
+            createOrderButton?.setTitle("Оплатить", for: .normal)
+            createOrderButton?.backgroundColor = .systemGreen
+            createOrderButton?.addTarget(self, action: #selector(changeStatus), for: .touchUpInside)
+            createOrderButton?.alpha = 1
+        } else if isEdit == 1 && orderStatus[index].paymentStatus == "Оплачено" {
+            createOrderButton?.alpha = 0
+        } else {
+            createOrderButton?.setTitle("Сохранить", for: .normal)
+            createOrderButton?.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+            createOrderButton?.addTarget(self, action: #selector(saveOrder), for: .touchUpInside)
+            createOrderButton?.alpha = 1
+        }
+            
+        
+        scrollView.addSubview(createOrderButton!)
+        createOrderButton?.snp.makeConstraints({ make in
+            make.height.equalTo(50)
+            make.left.right.equalToSuperview().inset(15)
+            make.top.equalTo(viewBotton.snp.bottom).inset(-25)
+        })
+        
+        
+        let botView: UIView = {
+            let view = UIView()
+            view.backgroundColor = .clear
+            return view
+        }()
+        contentView.addSubview(botView)
+        botView.snp.makeConstraints { make in
+            make.height.equalTo(200) //мб тут сдеклать высоту таблицы
+            make.left.right.equalToSuperview()
+            make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
+        }
+        
+        
+        checkEdit()
+        
+    }
+    
+    func checkEdit() {
+        createOrderButton?.removeTarget(nil, action: nil, for: .allEvents)
+        
+        if isEdit == 1 && orderStatus[index].paymentStatus == "Не оплачено" {
+            createOrderButton?.setTitle("Оплатить", for: .normal)
+            createOrderButton?.backgroundColor = .systemGreen
+            createOrderButton?.addTarget(self, action: #selector(changeStatus), for: .touchUpInside)
+            UIView.animate(withDuration: 0.5) {
+                self.createOrderButton?.alpha = 1
+            }
+            
+        } else if isEdit == 1 && orderStatus[index].paymentStatus == "Оплачено" {
+            createOrderButton?.alpha = 0
+            UIView.animate(withDuration: 0.5) {
+                self.createOrderButton?.alpha = 0
+            }
+        } else {
+            createOrderButton?.setTitle("Сохранить", for: .normal)
+            createOrderButton?.backgroundColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+            createOrderButton?.addTarget(self, action: #selector(saveOrder), for: .touchUpInside)
+            UIView.animate(withDuration: 0.5) {
+                self.createOrderButton?.alpha = 1
+            }
+        }
+    }
+    
+    
+    
+    @objc func changeStatus() {
+        delegate?.changePaymentStatus()
+    }
     
     @objc func call() {
         delegate?.cell()
@@ -368,7 +484,7 @@ class EditView: UIView {
     
     //MARK: -Objc func
     
-
+    
     
     @objc func hideKeyboard() {
         butonIsEnabled()
@@ -384,7 +500,7 @@ class EditView: UIView {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         let currentDate = Date()
-
+        
         
         var phone = phoneTextField?.text ?? ""
         var menuItems = ""
@@ -395,11 +511,11 @@ class EditView: UIView {
         let timeOrder = dateFormatter.string(from: currentDate)
         let idCafe = cafeID
         let orderID = orderStatus[index].id
-
+        
         if phoneTextField?.text?.count ?? 0 < 10 {
             phone = "+7\(phoneCafe)"
         }
-       
+        
         if adress == "" {
             adress = "С собой, 0, Самовывоз"
         }
@@ -407,15 +523,15 @@ class EditView: UIView {
         for (index, (key, value)) in menuItemsArr.enumerated() {
             let count = value.0
             menuItems.append("\(key) - \(count)")
-
+            
             if index != menuItemsArr.count - 1 {
                 menuItems.append(", ")
             }
         }
         
-       
+        
         print("МЕТОД ОПЛАТЫ \(payMethod)")
-    
+        
         
         delegate?.updateOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe, orderId: orderID, completion:  { success in
             if success {
@@ -482,7 +598,7 @@ extension EditView: UITextFieldDelegate {
         // Для других полей ввода возвратить true, чтобы разрешить обычное изменение текста
         return true
     }
-
+    
     func formatPhoneNumber(number: String) -> String {
         butonIsEnabled()
         var cleanNumber = number.replacingOccurrences(of: "\\D", with: "", options: .regularExpression)
@@ -577,14 +693,18 @@ extension EditView: UITextFieldDelegate {
 
 extension EditView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItemsArr.count + 1
+        if isEdit == 1 {
+            return menuItemsArr.count
+        } else {
+            return menuItemsArr.count + 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.subviews.forEach { $0.removeFromSuperview() }
         if indexPath.row >= menuItemsArr.count  {
-        
+            
             addButton = {
                 let button = UIButton(type: .system)
                 button.setTitle("Изменить", for: .normal)
@@ -609,7 +729,14 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             }()
             cell.addSubview(delButton)
             delButton.snp.makeConstraints { make in
-                make.height.width.equalTo(25)
+                if isEdit == 1 {
+                    make.height.width.equalTo(0)
+                    make.left.equalToSuperview().inset(10)
+                } else {
+                    make.height.width.equalTo(25)
+                    make.left.equalToSuperview().inset(20)
+                }
+                
                 make.left.equalToSuperview().inset(20)
                 make.centerY.equalToSuperview()
             }
@@ -664,13 +791,25 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
             
             let separatorView = UIView()
             separatorView.backgroundColor = UIColor(red: 185/255, green: 185/255, blue: 187/255, alpha: 1)
+            
             cell.addSubview(separatorView)
             separatorView.snp.makeConstraints { make in
-                make.left.equalTo(delButton.snp.left).inset(1)
+                make.left.equalToSuperview().inset(20)
                 make.right.equalToSuperview().inset(15)
                 make.bottom.equalToSuperview()
                 make.height.equalTo(1)
             }
+            
+            
+            if indexPath.row == menuItemsArr.count - 1 && isEdit == 1 {
+                separatorView.alpha = 0
+            } else {
+                separatorView.alpha = 1
+            }
+            
+            
+            
+            
             cell.accessoryView = delButton
         }
         
@@ -688,7 +827,7 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView?.indexPath(for: cell) else {
             return
         }
-
+        
         if indexPath.row < menuItemsArr.count {
             var item = menuItemsArr[indexPath.row]
             if item.1.0 > 1 {
@@ -701,11 +840,11 @@ extension EditView: UITableViewDelegate, UITableViewDataSource {
                 tableView?.deleteRows(at: [indexPath], with: .automatic)
             }
         }
-
+        
         similadAdressView.getCostAdress()
         tableView?.beginUpdates()
         tableView?.endUpdates()
-
+        
         UIView.animate(withDuration: 0.5) {
             let previousAdress = self.adressButton?.titleLabel?.text
             let previousAdressText = self.adressTextField?.text
@@ -727,7 +866,12 @@ extension EditView: EditViewProtocol {
         butonIsEnabled()
         print("Обновляем")
         self.tableView?.snp.updateConstraints({ make in
-            make.height.equalTo((menuItemsArr.count + 1) * 44)
+            if isEdit == 1 {
+                make.height.equalTo((menuItemsArr.count) * 44)
+            } else {
+                make.height.equalTo((menuItemsArr.count + 1) * 44)
+            }
+            
         })
         self.tableView?.reloadData()
         // Обновление размера и содержимого scrollView
@@ -738,7 +882,7 @@ extension EditView: EditViewProtocol {
     
     func fillButton(coast: String) {
         butonIsEnabled()
-        createOrderButton?.setTitle("Сохранить \(coast) ₽", for: .normal)
+        labelItog?.text = "\(coast) ₽"
         totalCoast = Int(coast) ?? 0
         print(totalCoast)
     }
@@ -761,6 +905,6 @@ extension EditView: EditViewProtocol {
                 self.layoutIfNeeded()
             }
         }
-    }  
+    }
 }
 

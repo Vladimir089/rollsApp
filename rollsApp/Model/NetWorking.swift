@@ -24,7 +24,7 @@ extension OrderViewController { //для обновления чтобы таб�
     }
     
     
-    func regenerateTable() {
+    func regenerateTable(completion: @escaping () -> Void) {
         isLoad = true
         self.refreshControl.beginRefreshing()
 
@@ -69,6 +69,7 @@ extension OrderViewController { //для обновления чтобы таб�
                                 orderStatus[existingIndex].cookingTime != order.cookingTime ||
                                 orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
                                 orderStatus[existingIndex].step != order.step ||
+                                orderStatus[existingIndex].paymentStatus != order.paymentStatus ||
                                 orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
                                 
                                 orderStatus[existingIndex] = order
@@ -87,7 +88,6 @@ extension OrderViewController { //для обновления чтобы таб�
                     for newOrder in newOrdersForInsert.reversed() {
                         orderStatus.insert(newOrder, at: 0)
                     }
-
                     // Генерируем IndexPath для новых заказов
                     indexPathsToInsert = newOrdersForInsert.indices.map { IndexPath(row: $0, section: 0) }
                     
@@ -98,33 +98,35 @@ extension OrderViewController { //для обновления чтобы таб�
                             // Вставляем новые элементы
                             if !indexPathsToInsert.isEmpty {
                                 self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
+                                self.mainView?.collectionView?.reloadData()
                             }
                             // Обновляем измененные элементы
                             if !indexPathsToUpdate.isEmpty {
                                 self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
+                                self.mainView?.collectionView?.reloadData()
                             }
                             
                             if !indexPathsToDelete.isEmpty {
                                 self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
+                                self.mainView?.collectionView?.reloadData()
                             }
                         }
                     }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                        self.regenerateTable()
+                    DispatchQueue.main.async {
+                        self.mainView?.collectionView?.reloadData()
                     }
                     self.refreshControl.endRefreshing()
-                    // После успешной загрузки
+                    
+                   
                     isFirstLoadApp += 1
-
+                    completion()
                 }
                 
             case .failure(_):
                 self.isLoad = false
                 print("ERRRRRRRRROR")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-                    self.regenerateTable()
-                }
+                completion()
             }
         }
     }

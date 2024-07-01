@@ -24,7 +24,7 @@ struct Order: Codable {
     let address: String
     let totalCost: Int?
     let paymentMethod: String
-    let paymentStatus: String
+    var paymentStatus: String
     let status: String
     let cookingTime: String?
     let orderOnTime: String?
