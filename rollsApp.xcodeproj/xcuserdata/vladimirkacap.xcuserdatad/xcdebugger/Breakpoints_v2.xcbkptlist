@@ -62,8 +62,8 @@
             filePath = "rollsApp/Model/NetWorking.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "getCafeInfo()"
             landmarkType = "7">
             <Locations>

@@ -95,27 +95,26 @@ extension OrderViewController { //для обновления чтобы таб�
                         if isFirstLoadApp == 0 {
                             self.mainView?.collectionView?.reloadData()
                         } else {
-                            // Вставляем новые элементы
-                            if !indexPathsToInsert.isEmpty {
-                                self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
-                                self.mainView?.collectionView?.reloadData()
-                            }
-                            // Обновляем измененные элементы
-                            if !indexPathsToUpdate.isEmpty {
-                                self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
-                                self.mainView?.collectionView?.reloadData()
-                            }
-                            
-                            if !indexPathsToDelete.isEmpty {
-                                self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
-                                self.mainView?.collectionView?.reloadData()
-                            }
+                            self.mainView?.collectionView?.performBatchUpdates({
+                                // Вставляем новые элементы
+                                if !indexPathsToInsert.isEmpty {
+                                    self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
+                                }
+                                // Обновляем измененные элементы
+                                if !indexPathsToUpdate.isEmpty {
+                                    self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
+                                }
+                                // Удаляем удаленные элементы
+                                if !indexPathsToDelete.isEmpty {
+                                    self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
+                                }
+                            }, completion: { _ in
+                                self.mainView?.collectionView?.reloadData() // Обновляем данные после выполнения пакетных обновлений
+                            })
                         }
                     }
                     
-                    DispatchQueue.main.async {
-                        self.mainView?.collectionView?.reloadData()
-                    }
+                    
                     self.refreshControl.endRefreshing()
                     
                    
