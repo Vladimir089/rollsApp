@@ -37,11 +37,13 @@ class NewOrderViewController: UIViewController {
     }
     
     
+    
     deinit {
         menuItemsArr.removeAll()
         menuItemIndex.removeAll()
         adress = ""
         totalCoast = 0
+        delegate?.close()
     }
     
     override func viewDidLayoutSubviews() {
@@ -55,7 +57,7 @@ class NewOrderViewController: UIViewController {
         mainView?.updateContentSize()
     }
     
-    func cleanString(_ string: String) -> String {
+    func cleaвnString(_ string: String) -> String {
         // Удаление пробелов
         let noSpaces = string.replacingOccurrences(of: " ", with: "")
         // Удаление скобок
@@ -90,8 +92,8 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         var a = ""
 
         // Очистка строк от пробелов и скобок
-        let cleanPhoneNumber = cleanString(phoneNumber)
-        let cleanCafeID = cleanString(cafeID)
+        let cleanPhoneNumber = phoneNumber
+        let cleanCafeID = cafeID
 
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
@@ -130,7 +132,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         ]
         
         let parameters: [String : Any] = [
-            "phone": cleanString(phonee),
+            "phone": phonee,
             "menu_items": menuItems,
             "clients_number": clientsNumber,
             "address": adress,

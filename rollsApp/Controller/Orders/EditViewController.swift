@@ -109,7 +109,7 @@ class EditViewController: UIViewController {
     
     }
     
-    func cleanString(_ string: String) -> String {
+    func cleanывString(_ string: String) -> String {
         // Удаление пробелов
         let noSpaces = string.replacingOccurrences(of: " ", with: "")
         // Удаление скобок
@@ -178,8 +178,8 @@ extension EditViewController: EditViewControllerDelegate {
         var a = ""
 
         // Очистка строк от пробелов и скобок
-        let cleanPhoneNumber = cleanString(phoneNumber)
-        let cleanCafeID = cleanString(cafeID)
+        let cleanPhoneNumber = phoneNumber
+        let cleanCafeID = cafeID
 
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),

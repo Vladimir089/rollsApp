@@ -55,6 +55,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             make.left.right.equalToSuperview()
         }
         selectedIndex = 1
+        settingsVC.checkHide()
     }
 }
 

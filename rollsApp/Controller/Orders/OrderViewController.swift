@@ -24,7 +24,7 @@ protocol OrderViewControllerDelegate: AnyObject {
 
     func createButtonGo(index: Int, completion: @escaping () -> Void)
     func detailVC(index: Int)
-    
+    func close()
 }
 
 class OrderViewController: UIViewController {
@@ -49,6 +49,11 @@ class OrderViewController: UIViewController {
         mainView?.delegate = self
         setupRefreshControl()
         startAuthCheckTimer()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.isOpen = false
     }
     
     func setupRefreshControl() {
@@ -161,6 +166,10 @@ class OrderViewController: UIViewController {
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
+    func close() {
+        isOpen = false
+    }
+    
     
     func detailVC(index: Int) {
         let vc = EditViewController()

@@ -27,13 +27,12 @@ extension OrderViewController { //для обновления чтобы таб�
     func regenerateTable(completion: @escaping () -> Void) {
         isLoad = true
         self.refreshControl.beginRefreshing()
-
+        
         // Очищаем вспомогательные массивы
         indexPathsToInsert.removeAll()
         indexPathsToUpdate.removeAll()
         var indexPathsToDelete: [IndexPath] = []
         
-        print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("application/json")
@@ -42,83 +41,86 @@ extension OrderViewController { //для обновления чтобы таб�
         AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
             switch response.result {
             case .success(_):
-                if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
-                    var newOrders = order.orders
-                    let newOrderIDs = Set(newOrders.map { $0.id })
-                    var newOrdersForInsert: [Order] = []
-                    
-                    for (index, existingOrder) in orderStatus.enumerated().reversed() {
-                        if !newOrderIDs.contains(existingOrder.id) {
-                            orderStatus.remove(at: index)
-                            indexPathsToDelete.append(IndexPath(item: index, section: 0))
-                        }
-                    }
-                    
-
-                    for newOrder in newOrders {
+                if self.isOpen == false {
+                    print("ВЫПОЛНЯЕТСЯ ЗАГРУЗКА")
+                    if let data = response.data, let order = try? JSONDecoder().decode(OrdersResponse.self, from: data) {
+                        var newOrders = order.orders
+                        let newOrderIDs = Set(newOrders.map { $0.id })
+                        var newOrdersForInsert: [Order] = []
+                        print(isHide)
                         
-                        
-                        var order = newOrder
-                        order.phone = self.formatPhoneNumber(order.phone)
-                        
-                        if let existingIndex = orderStatus.firstIndex(where: {$0.id == newOrder.id}) {
-                            // Заказ уже существует, проверяем на изменения
-                            if orderStatus[existingIndex].phone != order.phone || orderStatus[existingIndex].menuItems != order.menuItems ||  orderStatus[existingIndex].clientsNumber != order.clientsNumber || orderStatus[existingIndex].address != order.address || orderStatus[existingIndex].totalCost != order.totalCost ||
-                                orderStatus[existingIndex].paymentMethod != order.paymentMethod ||
-                                orderStatus[existingIndex].status != order.status ||
-                                orderStatus[existingIndex].cookingTime != order.cookingTime ||
-                                orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
-                                orderStatus[existingIndex].step != order.step ||
-                                orderStatus[existingIndex].paymentStatus != order.paymentStatus ||
-                                orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
-                                
-                                orderStatus[existingIndex] = order
-                                let indexPath = IndexPath(item: existingIndex, section: 0)
-                                indexPathsToUpdate.append(indexPath)
+                        // Удаляем заказы, которых больше нет в новых данных или которые завершены и isHide == true
+                        for (index, existingOrder) in orderStatus.enumerated().reversed() {
+                            if !newOrderIDs.contains(existingOrder.id) || (isHide && (existingOrder.orderForCourierStatus == "Заказ выполнен" || existingOrder.orderForCourierStatus == "Заказ отменен" || existingOrder.orderForCourierStatus == "Заказ завершен")) {
+                                orderStatus.remove(at: index)
+                                indexPathsToDelete.append(IndexPath(item: index, section: 0))
                             }
-                        } else {
-                            // Новый заказ, добавляем во временный массив
-                            newOrdersForInsert.append(order)
                         }
-                    }
-                    
-                    newOrdersForInsert.sort(by: {$0.id > $1.id})
-
-                    // Вставляем отсортированные новые заказы в начало основного массива
-                    for newOrder in newOrdersForInsert.reversed() {
-                        orderStatus.insert(newOrder, at: 0)
-                    }
-                    // Генерируем IndexPath для новых заказов
-                    indexPathsToInsert = newOrdersForInsert.indices.map { IndexPath(row: $0, section: 0) }
-                    
-                    DispatchQueue.main.async {
-                        if isFirstLoadApp == 0 {
-                            self.mainView?.collectionView?.reloadData()
-                        } else {
-                            self.mainView?.collectionView?.performBatchUpdates({
-                                // Вставляем новые элементы
-                                if !indexPathsToInsert.isEmpty {
-                                    self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
+                        
+                        for newOrder in newOrders {
+                            var order = newOrder
+                            order.phone = self.formatPhoneNumber(order.phone)
+                            
+                            if let existingIndex = orderStatus.firstIndex(where: { $0.id == newOrder.id }) {
+                                if orderStatus[existingIndex].phone != order.phone || orderStatus[existingIndex].menuItems != order.menuItems ||  orderStatus[existingIndex].clientsNumber != order.clientsNumber || orderStatus[existingIndex].address != order.address || orderStatus[existingIndex].totalCost != order.totalCost ||
+                                                                    orderStatus[existingIndex].paymentMethod != order.paymentMethod ||
+                                                                    orderStatus[existingIndex].status != order.status ||
+                                                                    orderStatus[existingIndex].cookingTime != order.cookingTime ||
+                                                                    orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
+                                                                    orderStatus[existingIndex].step != order.step ||
+                                                                    orderStatus[existingIndex].paymentStatus != order.paymentStatus ||
+                                                                    orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
+                                    orderStatus[existingIndex] = order
+                                    let indexPath = IndexPath(item: existingIndex, section: 0)
+                                    indexPathsToUpdate.append(indexPath)
                                 }
-                                // Обновляем измененные элементы
-                                if !indexPathsToUpdate.isEmpty {
-                                    self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
+                            } else {
+                                // Добавляем новый заказ, если isHide == false или если заказ не завершен
+                                if !isHide || (order.orderForCourierStatus != "Заказ завершен" && order.orderForCourierStatus != "Заказ выполнен" && order.orderForCourierStatus != "Заказ отменен") {
+                                    newOrdersForInsert.append(order)
                                 }
-                                // Удаляем удаленные элементы
-                                if !indexPathsToDelete.isEmpty {
-                                    self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
-                                }
-                            }, completion: { _ in
-                                self.mainView?.collectionView?.reloadData() // Обновляем данные после выполнения пакетных обновлений
-                            })
+                            }
                         }
+                        
+                        // Сортируем новые заказы по id от самого большого до самого маленького
+                        newOrdersForInsert.sort(by: { $0.id > $1.id })
+                        
+                        // Вставляем новые заказы в начало основного массива
+                        for newOrder in newOrdersForInsert {
+                            orderStatus.insert(newOrder, at: 0)
+                        }
+                        
+                        // Сортируем основной массив заказов по id от самого большого до самого маленького
+                        orderStatus.sort(by: { $0.id > $1.id })
+                        
+                        indexPathsToInsert = (0..<newOrdersForInsert.count).map { IndexPath(item: $0, section: 0) }
+                        
+                        DispatchQueue.main.async {
+                            if isFirstLoadApp == 0 {
+                                self.mainView?.collectionView?.reloadData()
+                            } else {
+                                self.mainView?.collectionView?.performBatchUpdates({
+                                    if !indexPathsToDelete.isEmpty {
+                                        self.mainView?.collectionView?.deleteItems(at: indexPathsToDelete)
+                                    }
+                                    if !indexPathsToInsert.isEmpty {
+                                        self.mainView?.collectionView?.insertItems(at: indexPathsToInsert)
+                                    }
+                                    if !indexPathsToUpdate.isEmpty {
+                                        self.mainView?.collectionView?.reloadItems(at: indexPathsToUpdate)
+                                    }
+                                }, completion: { _ in
+                                    self.mainView?.collectionView?.reloadData()
+                                })
+                            }
+                        }
+                        
+                        self.refreshControl.endRefreshing()
+                        isFirstLoadApp += 1
+                        completion()
                     }
-                    
-                    
-                    self.refreshControl.endRefreshing()
-                    
-                   
-                    isFirstLoadApp += 1
+                } else {
+                    print(1)
                     completion()
                 }
                 
@@ -132,9 +134,6 @@ extension OrderViewController { //для обновления чтобы таб�
     
     
     
-
-    
-
     
     
 }
@@ -164,7 +163,7 @@ extension LoginViewController {
                     indexPathsToInsert.removeAll()
                     indexPathsToUpdate.removeAll()
                     orderStatus.removeAll()
-                   
+                    
                     
                     
                     completion(.success(()))
@@ -214,7 +213,7 @@ extension LoginViewController {
         }
         
     }
-   
+    
     
     func loadStandartImage(url: String) {
         
@@ -290,7 +289,7 @@ extension SimilarAdressTable {
         let headers: HTTPHeaders = [.accept("application/json")]
         
         var menu = ""
-
+        
         for (index, (key, value)) in menuItemsArr.enumerated() {
             let count = value.0 // Получаем первое значение типа Int из кортежа
             
@@ -333,8 +332,8 @@ extension SimilarAdressTable {
                 
             }
         }
-    
-
+        
+        
     }
 }
 
