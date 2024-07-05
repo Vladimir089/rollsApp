@@ -39,6 +39,7 @@ extension OrderViewController { //для обновления чтобы таб�
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 if self.isOpen == false {
@@ -51,7 +52,8 @@ extension OrderViewController { //для обновления чтобы таб�
                         
                         // Удаляем заказы, которых больше нет в новых данных или которые завершены и isHide == true
                         for (index, existingOrder) in orderStatus.enumerated().reversed() {
-                            if !newOrderIDs.contains(existingOrder.id) || (isHide && (existingOrder.orderForCourierStatus == "Заказ выполнен" || existingOrder.orderForCourierStatus == "Заказ отменен" || existingOrder.orderForCourierStatus == "Заказ завершен")) {
+                            if !newOrderIDs.contains(existingOrder.id) || (isHide && (existingOrder.orderForCourierStatus == "Заказ выполнен" || existingOrder.orderForCourierStatus == "Заказ отменен" || existingOrder.orderForCourierStatus == "Заказ завершен" ||
+                                existingOrder.issued == true)) {
                                 orderStatus.remove(at: index)
                                 indexPathsToDelete.append(IndexPath(item: index, section: 0))
                             }
@@ -63,20 +65,21 @@ extension OrderViewController { //для обновления чтобы таб�
                             
                             if let existingIndex = orderStatus.firstIndex(where: { $0.id == newOrder.id }) {
                                 if orderStatus[existingIndex].phone != order.phone || orderStatus[existingIndex].menuItems != order.menuItems ||  orderStatus[existingIndex].clientsNumber != order.clientsNumber || orderStatus[existingIndex].address != order.address || orderStatus[existingIndex].totalCost != order.totalCost ||
-                                                                    orderStatus[existingIndex].paymentMethod != order.paymentMethod ||
-                                                                    orderStatus[existingIndex].status != order.status ||
-                                                                    orderStatus[existingIndex].cookingTime != order.cookingTime ||
-                                                                    orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
-                                                                    orderStatus[existingIndex].step != order.step ||
-                                                                    orderStatus[existingIndex].paymentStatus != order.paymentStatus ||
-                                                                    orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
+                                    orderStatus[existingIndex].paymentMethod != order.paymentMethod ||
+                                    orderStatus[existingIndex].status != order.status ||
+                                    orderStatus[existingIndex].cookingTime != order.cookingTime ||
+                                    orderStatus[existingIndex].orderOnTime != order.orderOnTime ||
+                                    orderStatus[existingIndex].step != order.step ||
+                                    orderStatus[existingIndex].paymentStatus != order.paymentStatus ||
+                                    orderStatus[existingIndex].issued != order.issued ||
+                                    orderStatus[existingIndex].orderForCourierStatus != order.orderForCourierStatus   {
                                     orderStatus[existingIndex] = order
                                     let indexPath = IndexPath(item: existingIndex, section: 0)
                                     indexPathsToUpdate.append(indexPath)
                                 }
                             } else {
                                 // Добавляем новый заказ, если isHide == false или если заказ не завершен
-                                if !isHide || (order.orderForCourierStatus != "Заказ завершен" && order.orderForCourierStatus != "Заказ выполнен" && order.orderForCourierStatus != "Заказ отменен") {
+                                if isHide == false || (order.orderForCourierStatus != "Заказ завершен" && order.orderForCourierStatus != "Заказ выполнен" && order.orderForCourierStatus != "Заказ отменен" && order.issued == false )   {
                                     newOrdersForInsert.append(order)
                                 }
                             }

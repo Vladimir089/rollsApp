@@ -178,8 +178,20 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             return button
         }()
         
-        if orderStatus[indexPath.row].orderForCourierStatus == nil && (orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз") {
+        
+        
+        if orderStatus[indexPath.row].orderForCourierStatus == nil && (orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз") && orderStatus[indexPath.row].issued == false {
             inCellButton.setTitle("Вызвать", for: .normal)
+        }
+        
+        if orderStatus[indexPath.row].issued == false && orderStatus[indexPath.row].address == "С собой, 0, Самовывоз" {
+            inCellButton.removeTarget(nil, action: nil, for: .allEvents)
+            inCellButton.setTitle("Выдать", for: .normal)
+            inCellButton.isHidden = false
+            inCellButton.isUserInteractionEnabled = true
+            inCellButton.tag = indexPath.row
+            inCellButton.backgroundColor = UIColor(hex: "#F7F7F7")
+            inCellButton.addTarget(self, action: #selector(issued), for: .touchUpInside)
         }
         
         
@@ -213,6 +225,24 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.centerY.equalTo(phoneLabel)
         }
         
+        if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" || inCellButton.titleLabel?.text == "Заказ выполнен" || orderStatus[indexPath.row].issued == true {
+           
+                let filter = CIFilter(name: "CIColorControls")
+                filter?.setValue(CIImage(image: imageView.image!), forKey: kCIInputImageKey)
+                filter?.setValue(0.0, forKey: kCIInputSaturationKey) // Установка насыщенности цвета в ноль
+                let context = CIContext(options: nil)
+                let cgImage = context.createCGImage((filter?.outputImage)!, from: (filter?.outputImage!.extent)!)
+                imageView.image = UIImage(cgImage: cgImage!)
+                phoneLabel.alpha = 0.5
+                adressLabel.alpha = 0.5
+                statusLabel.alpha = 0.5
+                arrowImageView.alpha = 0.5
+                timeLabel.alpha = 0.5
+                inCellButton.alpha = 0
+            
+        }
+        
+        
         if inCellButton.titleLabel?.text == "Вызвать" {
             inCellButton.isHidden = false
             inCellButton.isUserInteractionEnabled = true
@@ -226,10 +256,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             inCellButton.backgroundColor = UIColor.clear
         }
         
-        if orderStatus[indexPath.row].address == "С собой, 0, Самовывоз" {
-            inCellButton.isUserInteractionEnabled = false
-            inCellButton.isHidden = true
-        }
+       
         
         switch inCellButton.titleLabel?.text {
         case "Ищем курьера":
@@ -253,6 +280,13 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         case .some(_):
             break
         }
+        
+        if orderStatus[indexPath.row].issued == true {
+            inCellButton.isHidden = true
+            inCellButton.isUserInteractionEnabled = false
+        }
+        
+       
         
         
        
@@ -311,22 +345,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                 }
             }
         }
-        if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" || inCellButton.titleLabel?.text == "Заказ выполнен" {
-            UIView.animate(withDuration: 0.2) {
-                let filter = CIFilter(name: "CIColorControls")
-                filter?.setValue(CIImage(image: imageView.image!), forKey: kCIInputImageKey)
-                filter?.setValue(0.0, forKey: kCIInputSaturationKey) // Установка насыщенности цвета в ноль
-                let context = CIContext(options: nil)
-                let cgImage = context.createCGImage((filter?.outputImage)!, from: (filter?.outputImage!.extent)!)
-                imageView.image = UIImage(cgImage: cgImage!)
-                phoneLabel.alpha = 0.5
-                adressLabel.alpha = 0.5
-                statusLabel.alpha = 0.5
-                arrowImageView.alpha = 0.5
-                timeLabel.alpha = 0.5
-                inCellButton.alpha = 0.5
-            }
-        }
+        
         
         return cell
     }
@@ -373,6 +392,24 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             }
         } 
     }
+    
+    
+    @objc func issued(sender: UIButton) {
+       
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        print(orderStatus[indexPath.row].id)
+        delegate?.issued(index: indexPath.row) {
+            
+            let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .heavy)
+            impactFeedbackgenerator.prepare()
+            impactFeedbackgenerator.impactOccurred()
+            
+            sender.isUserInteractionEnabled = false
+            sender.setTitle("Заказ выдан", for: .normal)
+
+        }
+    }
+
     
     
 }

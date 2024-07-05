@@ -25,6 +25,7 @@ protocol OrderViewControllerDelegate: AnyObject {
     func createButtonGo(index: Int, completion: @escaping () -> Void)
     func detailVC(index: Int)
     func close()
+    func issued(index: Int, completion: @escaping () -> Void)
 }
 
 class OrderViewController: UIViewController {
@@ -240,6 +241,34 @@ extension OrderViewController: OrderViewControllerDelegate {
         alertController.addAction(action2)
         
         present(alertController, animated: true, completion: nil)
+        
+        
+    }
+    
+    func issued(index: Int, completion: @escaping () -> Void) {
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("*/*")
+        ]
+        if orderStatus.count < index {
+            return
+        }
+        let currentOrder = orderStatus[index]
+       
+
+        AF.request("http://arbamarket.ru/api/v1/main/change_issued_filed/?cafe_id=\(currentOrder.cafeID)&order_id=\(currentOrder.id)", method: .post, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(_):
+                print(response)
+            case .failure(_):
+                print(1)
+            }
+        }
+        completion()
+
+      
+        
+        
         
         
     }
