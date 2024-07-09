@@ -175,8 +175,8 @@ class NewOrderView: UIView {
         }()
         scrollView.addSubview(adressButton!)
         adressButton?.snp.makeConstraints({ make in
-            make.left.equalTo((phoneTextField ?? UIView()).snp.left)
-            make.bottom.equalTo(viewCenter.snp.top)
+            make.right.equalTo((phoneTextField ?? UIView()).snp.right)
+            make.bottom.equalTo(viewCenter.snp.top).inset(-3)
             make.height.equalTo(18)
             
         })
@@ -461,6 +461,11 @@ extension NewOrderView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         butonIsEnabled()
         if textField == phoneTextField {
+            
+           
+            
+            
+            
             // Если начинается ввод и поле пустое, устанавливаем "+7 "
             if textField.text?.isEmpty ?? true && string.count > 0 {
                 textField.text = "+7 "
@@ -473,6 +478,8 @@ extension NewOrderView: UITextFieldDelegate {
             // Временная строка с возможным новым значением
             let prospectiveText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
             
+            
+            
             // Проверка на попытку удаления части "+7 "
             if string.count == 0 && range.location < 3 {
                 // Предотвратим удаление "+7"
@@ -481,9 +488,26 @@ extension NewOrderView: UITextFieldDelegate {
                 // Применить форматирование для новой строки
                 let formattedString = formatPhoneNumber(number: prospectiveText)
                 textField.text = formattedString
-                // Предотвратить дальнейшую обработку ввода, так как мы уже обновили текст поля ввода
+                print(phoneTextField?.text ?? "")
+                delegate?.getLastAdress(phoneNumber: phoneTextField?.text ?? "", cafeID: "\(cafeID)") { adress in
+                    if adress != "" && self.adressTextField?.text == "" {
+                        print(234)
+                        self.adressButton?.setTitle(adress, for: .normal)
+                        UIView.animate(withDuration: 0.5) {
+                            self.adressButton?.alpha = 100
+                        }
+                    }
+                    if adress == "" {
+                        
+                        self.adressButton?.setTitle(nil, for: .normal)
+                        
+                    }
+                }
                 return false
             }
+            
+            
+            
         }
         // Для других полей ввода возвратить true, чтобы разрешить обычное изменение текста
         return true
@@ -541,6 +565,9 @@ extension NewOrderView: UITextFieldDelegate {
         }
         return true
     }
+    
+    
+    
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         butonIsEnabled()

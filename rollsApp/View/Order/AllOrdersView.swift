@@ -135,6 +135,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             make.left.equalTo(viewInImageView.snp.right)
         }
         
+       
         //MARK: -Labels
         
         let phoneLabel = generateLaels(text: "\(orderStatus[indexPath.row].phone)", fonc: .systemFont(ofSize: 17, weight: .semibold), textColor: .TC)
@@ -157,11 +158,44 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         let statusLabel = generateLaels(text: "#\(orderStatus[indexPath.row].id)", fonc: .systemFont(ofSize: 13.5, weight: .light), textColor: .TC)
         cell.addSubview(statusLabel)
         statusLabel.snp.makeConstraints { make in
-            make.left.right.equalTo(phoneLabel)
+            make.left.equalTo(phoneLabel)
             make.top.equalTo(adressLabel.snp.bottom)
         }
         
         //MARK: -Other elements
+        
+        let statusImageView: UIImageView = {
+            let imageView = UIImageView()
+            imageView.contentMode = .scaleAspectFit
+
+            imageView.image = UIImage.check1
+            return imageView
+        }()
+        cell.addSubview(statusImageView)
+        statusImageView.snp.makeConstraints { make in
+            make.height.equalTo(10)
+            make.width.equalTo(16)
+            make.centerY.equalTo(statusLabel.snp.centerY)
+            make.left.equalTo(statusLabel.snp.right).inset(-5)
+        }
+        
+        
+        if orderStatus[indexPath.row].paymentStatus != "Оплачено" && orderStatus[indexPath.row].status != "Готово" {
+            statusImageView.image = UIImage.stat4
+        }
+        
+        if orderStatus[indexPath.row].paymentStatus == "Оплачено" && orderStatus[indexPath.row].status != "Готово" {
+            statusImageView.image = UIImage.stat2
+        }
+        if orderStatus[indexPath.row].paymentStatus != "Оплачено" && orderStatus[indexPath.row].status == "Готово" {
+            statusImageView.image = UIImage.stat3
+        }
+        if orderStatus[indexPath.row].paymentStatus == "Оплачено" && orderStatus[indexPath.row].status == "Готово" {
+            statusImageView.image = UIImage.stat1
+        }
+        
+        
+        
         
         let inCellButton: UIButton = {
             let button = UIButton(type: .system)
@@ -178,7 +212,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             return button
         }()
         
-        
+       
         
         if orderStatus[indexPath.row].orderForCourierStatus == nil && (orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз") && orderStatus[indexPath.row].issued == false {
             inCellButton.setTitle("Вызвать", for: .normal)

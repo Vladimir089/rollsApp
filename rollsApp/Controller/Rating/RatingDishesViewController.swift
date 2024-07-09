@@ -125,6 +125,7 @@ class RatingDishesViewController: UIViewController {
             case .success(_):
                 if let data = response.data, let dish = try? JSONDecoder().decode(RatingDishesResponse.self, from: data) {
                     self.arrRatingDishesResponse = dish.dishes
+                    self.arrRatingDishesResponse.sort(by: { $0.quantity > $1.quantity})
                 }
                 completion()
             case .failure(_):
@@ -145,12 +146,14 @@ class RatingDishesViewController: UIViewController {
                 if let foundDish = allDishes.first(where: { $0.0.name == ratingDish.name }) {
                     let dishImage = foundDish.1
                     dishArr.append((dishImage, ratingDish.name, ratingDish.quantity))
+                    
                 } else {
                     print("нет картинки \(ratingDish.name)")
                 }
             }
         }
         print(allDishes)
+        dishArr.sort(by: {$0.2 > $1.2})
         tableView.reloadData()
     }
     

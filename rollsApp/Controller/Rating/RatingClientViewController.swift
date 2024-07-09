@@ -195,7 +195,7 @@ extension RatingClientViewController: UITableViewDelegate, UITableViewDataSource
         imageView.layer.cornerRadius = 5
         
         let labelName = UILabel()
-        labelName.text = "+7\(clientArr[indexPath.row].1)"
+        labelName.text = "\(clientArr[indexPath.row].1)"
         labelName.textColor = .TC
         labelName.font = .systemFont(ofSize: 18, weight: .regular)
         cell.addSubview(labelName)
