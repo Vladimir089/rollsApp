@@ -56,58 +56,63 @@ class EditViewController: UIViewController {
 
         // Создаем кнопку Редактировать/Сохранить
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Редактировать", style: .plain, target: self, action: #selector(toggleEditSave))
+        mainView?.phoneTextField?.isUserInteractionEnabled = false
+        mainView?.adressTextField?.isUserInteractionEnabled = false
+        mainView?.commentTextField?.isUserInteractionEnabled = false
+        mainView?.oplataSegmentedControl?.isUserInteractionEnabled = false
+        mainView?.addButton?.isUserInteractionEnabled = false
     }
 
     // Метод, который будет вызываться при нажатии на кнопку Редактировать/Сохранить
     @objc func toggleEditSave() {
-        if self.navigationItem.rightBarButtonItem?.title == "Редактировать" {
-            UIView.animate(withDuration: 0.5) { [self] in
-                
+           if self.navigationItem.rightBarButtonItem?.title == "Редактировать" {
+               UIView.animate(withDuration: 0.5) { [self] in
+                   
 
-                mainView?.oplataSegmentedControl?.isUserInteractionEnabled = true
-                mainView?.addButton?.isUserInteractionEnabled = true
-                mainView?.isEdit = 2
-                
-                mainView?.tableView?.snp.updateConstraints({ make in
-                    make.height.equalTo((menuItemsArr.count + 1) * 44)
-                })
-                
-                mainView?.phoneTextField?.isUserInteractionEnabled = true
-                mainView?.adressTextField?.isUserInteractionEnabled = true
-                mainView?.commentTextField?.isUserInteractionEnabled = true
-                mainView?.callButtonPhone?.alpha = 0
-                
-                mainView?.layoutIfNeeded()
-                mainView?.scrollView.layoutIfNeeded()
-                mainView?.tableView?.reloadData()
-            }
-            mainView?.checkEdit()
-            self.navigationItem.rightBarButtonItem?.title = "Сохранить"
-        } else {
-            UIView.animate(withDuration: 0.5) { [self] in
-                mainView?.oplataSegmentedControl?.isUserInteractionEnabled = false
-                mainView?.addButton?.isUserInteractionEnabled = false
-                mainView?.isEdit = 1
-                mainView?.callButtonPhone?.alpha = 1
-                
-                mainView?.tableView?.snp.updateConstraints({ make in
-                    make.height.equalTo((menuItemsArr.count) * 44)
-                })
-                
-                mainView?.phoneTextField?.isUserInteractionEnabled = false
-                mainView?.adressTextField?.isUserInteractionEnabled = false
-                mainView?.commentTextField?.isUserInteractionEnabled = false
-                
-                mainView?.layoutIfNeeded()
-                mainView?.scrollView.layoutIfNeeded()
-                mainView?.tableView?.reloadData()
-            }
-            mainView?.checkEdit()
-            self.navigationItem.rightBarButtonItem?.title = "Редактировать"
-            mainView?.saveOrder()
-        }
-    
-    }
+                   mainView?.oplataSegmentedControl?.isUserInteractionEnabled = true
+                   mainView?.addButton?.isUserInteractionEnabled = true
+                   mainView?.isEdit = 2
+                   
+                   mainView?.tableView?.snp.updateConstraints({ make in
+                       make.height.equalTo((menuItemsArr.count + 1) * 44)
+                   })
+                   
+                   mainView?.phoneTextField?.isUserInteractionEnabled = true
+                   mainView?.adressTextField?.isUserInteractionEnabled = true
+                   mainView?.commentTextField?.isUserInteractionEnabled = true
+                   mainView?.callButtonPhone?.alpha = 0
+                   
+                   mainView?.layoutIfNeeded()
+                   mainView?.scrollView.layoutIfNeeded()
+                   mainView?.tableView?.reloadData()
+               }
+               mainView?.checkEdit()
+               self.navigationItem.rightBarButtonItem?.title = "Сохранить"
+           } else {
+               UIView.animate(withDuration: 0.5) { [self] in
+                   mainView?.oplataSegmentedControl?.isUserInteractionEnabled = false
+                   mainView?.addButton?.isUserInteractionEnabled = false
+                   mainView?.isEdit = 1
+                   mainView?.callButtonPhone?.alpha = 1
+                   
+                   mainView?.tableView?.snp.updateConstraints({ make in
+                       make.height.equalTo((menuItemsArr.count) * 44)
+                   })
+                   
+                   mainView?.phoneTextField?.isUserInteractionEnabled = false
+                   mainView?.adressTextField?.isUserInteractionEnabled = false
+                   mainView?.commentTextField?.isUserInteractionEnabled = false
+                   
+                   mainView?.layoutIfNeeded()
+                   mainView?.scrollView.layoutIfNeeded()
+                   mainView?.tableView?.reloadData()
+               }
+               mainView?.checkEdit()
+               self.navigationItem.rightBarButtonItem?.title = "Редактировать"
+               mainView?.saveOrder()
+           }
+       
+       }
     
     func cleanывString(_ string: String) -> String {
         // Удаление пробелов
@@ -170,7 +175,27 @@ extension EditViewController: EditViewControllerDelegate {
     }
     
     func succesCreate() {
-        navigationController?.popToRootViewController(animated: true)
+        UIView.animate(withDuration: 0.5) { [self] in
+            mainView?.oplataSegmentedControl?.isUserInteractionEnabled = false
+            mainView?.addButton?.isUserInteractionEnabled = false
+            mainView?.isEdit = 1
+            mainView?.callButtonPhone?.alpha = 1
+            
+            mainView?.tableView?.snp.updateConstraints({ make in
+                make.height.equalTo((menuItemsArr.count) * 44)
+            })
+            
+            mainView?.phoneTextField?.isUserInteractionEnabled = false
+            mainView?.adressTextField?.isUserInteractionEnabled = false
+            mainView?.commentTextField?.isUserInteractionEnabled = false
+            
+            mainView?.layoutIfNeeded()
+            mainView?.scrollView.layoutIfNeeded()
+            mainView?.tableView?.reloadData()
+        }
+        mainView?.checkEdit()
+        self.navigationItem.rightBarButtonItem?.title = "Редактировать"
+
     }
     
     
