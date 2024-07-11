@@ -1,31 +1,19 @@
-//
-//  OrderViewController.swift
-//  rollsApp
-//
-//  Created by Владимир Кацап on 02.04.2024.
-//
-
 import UIKit
 import Alamofire
-import AlamofireImage
 import Kingfisher
 
-
-
 var isFirstLoadApp = 0
-var dishLoad = false 
-
-
+var dishLoad = false
 
 var indexPathsToInsert: [IndexPath] = []
 var indexPathsToUpdate: [IndexPath] = []
 
 protocol OrderViewControllerDelegate: AnyObject {
-
     func createButtonGo(index: Int, completion: @escaping () -> Void)
     func detailVC(index: Int)
     func close()
     func issued(index: Int, completion: @escaping () -> Void)
+    func openSplitEdit(vc: UIViewController)
 }
 
 class OrderViewController: UIViewController {
@@ -40,8 +28,7 @@ class OrderViewController: UIViewController {
     var isWorkCicle = false
     var refreshControl = UIRefreshControl()
     
-  //MARK: -viewDidLoad()
-    
+    // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView = AllOrdersView()
@@ -68,14 +55,23 @@ class OrderViewController: UIViewController {
         }
     }
     
-    
-    
     @objc private func newOrder() {
         let vc = NewOrderViewController()
         vc.delegate = self
-        isLoad = true
-        isOpen = true
-        self.present(vc, animated: true)
+        
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            menuItemsArr.removeAll()
+            menuItemIndex.removeAll()
+            adress = ""
+            totalCoast = 0
+            self.present(vc, animated: true)
+        } else {
+            isLoad = true
+            isOpen = true
+            self.present(vc, animated: true)
+        }
+
     }
     
     func stopAuthCheckTimer() {
@@ -88,7 +84,6 @@ class OrderViewController: UIViewController {
     }
     
     @objc func checkAuthKey() {
-        // Проверяем, есть ли значение у authKey
         if !authKey.isEmpty {
             stopAuthCheckTimer()
             reload()
@@ -96,20 +91,15 @@ class OrderViewController: UIViewController {
                 NotificationCenter.default.post(name: Notification.Name("dishLoadNotification"), object: nil)
                 dishLoad = true
             }
-           
         }
     }
     
     func reload() {
         self.mainView?.collectionView?.reloadData()
         regenerateTable() {
-            DispatchQueue.main.async {
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self.reload()
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self.reload()
             }
-           
         }
     }
     
@@ -155,7 +145,6 @@ class OrderViewController: UIViewController {
                 }
                 completion()
             }
-            
         } else {
             completion()
         }
@@ -167,29 +156,52 @@ class OrderViewController: UIViewController {
 }
 
 extension OrderViewController: OrderViewControllerDelegate {
+    func openSplitEdit(vc: UIViewController) {
+        //УЗНАТЬ ЧТО С ЭТИМ ДЕЛАТЬ 
+        self.splitViewController?.setViewController(vc, for: .compact)
+    }
+    
     func close() {
         isOpen = false
     }
     
-    
     func detailVC(index: Int) {
+        // Проверяем, есть ли уже открытый EditViewController
+        if let existingDetailVC = navigationController?.viewControllers.first(where: { $0 is EditViewController }) as? EditViewController {
+            // Если есть, удаляем его из стека
+            if let indexToRemove = navigationController?.viewControllers.firstIndex(of: existingDetailVC) {
+                navigationController?.viewControllers.remove(at: indexToRemove)
+            }
+        }
+
+        print(123123123123)
         let vc = EditViewController()
-        isLoad = true
-        isOpen = true
         vc.delegate = self
         vc.indexOne = index
         let backItem = UIBarButtonItem()
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.boldSystemFont(ofSize: 17),
-            .foregroundColor: UIColor.black ]
+            .foregroundColor: UIColor.black
+        ]
         backItem.title = "Заказ №\(orderStatus[index].id)"
         backItem.setTitleTextAttributes(attributes, for: .normal)
         navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
         self.refreshControl.endRefreshing()
-        navigationController?.pushViewController(vc, animated: true)
+
+        if let splitVC = self.splitViewController {
+            menuItemsArr.removeAll()
+            menuItemIndex.removeAll()
+            adress = ""
+            totalCoast = 0
+            let detailNavController = UINavigationController(rootViewController: vc)
+            splitVC.showDetailViewController(detailNavController, sender: nil)
+        } else {
+            isLoad = true
+            isOpen = true
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
-    
-  
+
     
     func createButtonGo(index: Int, completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
@@ -205,26 +217,18 @@ extension OrderViewController: OrderViewControllerDelegate {
         let messageText = "Вызвать курьера на адрес \(currentOrder.address) ?"
         let attributedString = NSMutableAttributedString(string: messageText)
 
-        // Настройка атрибутов для жирного текста
         let boldAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
         let range = (messageText as NSString).range(of: currentOrder.address)
-
-        // Применение атрибутов к части строки
         attributedString.addAttributes(boldAttribute, range: range)
         
-        
         let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        
         alertController.setValue(attributedString, forKey: "attributedMessage")
 
-
-        // Создаем первое действие
-        let action1 = UIAlertAction(title: "Отмена", style: .destructive) { (action) in
+        let action1 = UIAlertAction(title: "Отмена", style: .destructive) { _ in
             return
         }
 
-        // Создаем второе действие
-        let action2 = UIAlertAction(title: "Вызвать", style: .default) { (action) in
+        let action2 = UIAlertAction(title: "Вызвать", style: .default) { _ in
             AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.id)&cafe_id=\(currentOrder.cafeID)", method: .post, headers: headers).responseJSON { response in
                 switch response.result {
                 case .success(_):
@@ -233,16 +237,13 @@ extension OrderViewController: OrderViewControllerDelegate {
                     print(1)
                 }
             }
-            completion() 
+            completion()
         }
 
-        // Добавляем действия к UIAlertController
         alertController.addAction(action1)
         alertController.addAction(action2)
         
         present(alertController, animated: true, completion: nil)
-        
-        
     }
     
     func issued(index: Int, completion: @escaping () -> Void) {
@@ -254,7 +255,6 @@ extension OrderViewController: OrderViewControllerDelegate {
             return
         }
         let currentOrder = orderStatus[index]
-       
 
         AF.request("http://arbamarket.ru/api/v1/main/change_issued_filed/?cafe_id=\(currentOrder.cafeID)&order_id=\(currentOrder.id)", method: .post, headers: headers).responseJSON { response in
             switch response.result {
@@ -265,25 +265,5 @@ extension OrderViewController: OrderViewControllerDelegate {
             }
         }
         completion()
-
-      
-        
-        
-        
-        
     }
-    
-    
 }
-
-//extension OrderViewController: UIApplicationDelegate {
-//    func applicationDidEnterBackground(_ application: UIApplication) {
-//        isOpen = true
-//        isLoad = true
-//        print(123)
-//    }
-//    
-//    func applicationWillEnterForeground(_ application: UIApplication) {
-//        closeVC()
-//    }
-//}

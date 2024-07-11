@@ -123,10 +123,13 @@ class EditViewController: UIViewController {
     }
 
     deinit {
-        menuItemsArr.removeAll()
-        menuItemIndex.removeAll()
-        adress = ""
-        totalCoast = 0
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            print("dfsdfsdfsdfs")
+            menuItemsArr.removeAll()
+            menuItemIndex.removeAll()
+            adress = ""
+            totalCoast = 0
+        }
     }
 }
 
@@ -229,10 +232,20 @@ extension EditViewController: EditViewControllerDelegate {
 
     
     func showVC() {
-        let vc = DishesMenuViewControllerController()
-        vc.coast = mainView?.similadAdressView
-        vc.delegateEdit = self.mainView
-        self.present(vc, animated: true)
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let vc = DishesMenuViewControllerController()
+            vc.coast = mainView?.similadAdressView
+            vc.delegateEdit = self.mainView
+            //delegate?.openSplitEdit(vc: self) //ЭТО НЕПОНЯТНО ЧТО
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let vc = DishesMenuViewControllerController()
+            vc.coast = mainView?.similadAdressView
+            vc.delegateEdit = self.mainView
+            self.present(vc, animated: true)
+        }
+    
     }
     
     

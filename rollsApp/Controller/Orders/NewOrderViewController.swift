@@ -117,11 +117,26 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     }
 
     func showVC() {
-        print(1)
-        let vc = DishesMenuViewControllerController()
-        vc.coast = mainView?.similadAdressView
-        vc.delegate = self.mainView
-        self.present(vc, animated: true)
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+//            let vc = DishesMenuViewControllerController()
+//            vc.coast = mainView?.similadAdressView
+//            vc.delegate = self.mainView
+//            self.navigationController?.pushViewController(vc, animated: true)
+            //ПОКА ДЕЛАЕМ РЕДАКТИРОВАНИЕ ПО ЭТОМУ ТАК
+            
+            let vc = DishesMenuViewControllerController()
+            vc.coast = mainView?.similadAdressView
+            vc.delegate = self.mainView
+            self.present(vc, animated: true)
+            
+        } else {
+            let vc = DishesMenuViewControllerController()
+            vc.coast = mainView?.similadAdressView
+            vc.delegate = self.mainView
+            self.present(vc, animated: true)
+        }
+        
     }
     
     func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {

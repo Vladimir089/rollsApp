@@ -89,10 +89,19 @@ class DishesMenuViewControllerController: UIViewController {
         
         view.addSubview(hideView)
         hideView.snp.makeConstraints { make in
-            make.height.equalTo(2)
-            make.width.equalTo(55)
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                make.height.equalTo(0)
+                make.width.equalTo(0)
+                make.centerX.equalToSuperview()
+                make.top.equalToSuperview()
+            } else {
+                make.height.equalTo(2)
+                make.width.equalTo(55)
+                make.centerX.equalToSuperview()
+                make.top.equalToSuperview().inset(20)
+            }
+
+           
         }
         
         collectionView = {
@@ -296,7 +305,11 @@ class DishesMenuViewControllerController: UIViewController {
     }
     
     @objc func hideVC() {
-        self.dismiss(animated: true)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
     }
   
    
@@ -443,10 +456,18 @@ extension DishesMenuViewControllerController: UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let paddingSpace = 15 * 5
-        let availableWidth = collectionView.frame.width - CGFloat(paddingSpace)
-        let widthPerItem = availableWidth / 4
-        return CGSize(width: widthPerItem, height: 114)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let paddingSpace = 15 * 7
+            let availableWidth = collectionView.frame.width - CGFloat(paddingSpace)
+            let widthPerItem = availableWidth / 6
+            return CGSize(width: widthPerItem, height: 105)
+        } else {
+            let paddingSpace = 15 * 5
+            let availableWidth = collectionView.frame.width - CGFloat(paddingSpace)
+            let widthPerItem = availableWidth / 4
+            return CGSize(width: widthPerItem, height: 114)
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

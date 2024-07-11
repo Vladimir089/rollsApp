@@ -24,13 +24,33 @@ class LoginViewController: UIViewController {
         dishLoad = false
         if UserDefaults.standard.object(forKey: "authKey") != nil {
             authKey = UserDefaults.standard.string(forKey: "authKey") ?? ""
-            navigationController?.setViewControllers([TabBarViewController()], animated: false)
-            
+            navigateToMainApp()
         } else {
             createInterface()
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         }
+    }
+    
+    func navigateToMainApp() {
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let orderVC = TabBarViewController()
+            let orderNavController = UINavigationController(rootViewController: orderVC)
+            
+            let splitVC = UISplitViewController()
+            splitVC.viewControllers = [orderNavController]
+            splitVC.preferredDisplayMode = .allVisible
+            
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = splitVC
+                window.makeKeyAndVisible()
+            }
+        } else {
+            navigationController?.setViewControllers([TabBarViewController()], animated: false)
+        }
+ 
+        
     }
     
     func createInterface() {

@@ -39,7 +39,6 @@ extension OrderViewController { //для обновления чтобы таб�
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
-            debugPrint(response)
             switch response.result {
             case .success(_):
                 if self.isOpen == false {
