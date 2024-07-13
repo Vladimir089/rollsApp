@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		150FE3302C27534400206E69 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 150FE32F2C27534400206E69 /* Kingfisher */; };
-		15716A372C2A1E2B00EBA55B /* InputMask in Frameworks */ = {isa = PBXBuildFile; productRef = 15716A362C2A1E2B00EBA55B /* InputMask */; };
 		159D8BFF2BC9F3120075DCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */; };
 		159D8C022BCA9CF10075DCB5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C012BCA9CF10075DCB5 /* Alamofire */; };
 		159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C042BCA9D020075DCB5 /* SnapKit */; };
@@ -18,6 +17,10 @@
 		159D8C112BCEA1590075DCB5 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */; };
 		159D8C152BCEA7E90075DCB5 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C142BCEA7E90075DCB5 /* EditViewController.swift */; };
 		159D8C172BCEA7FF0075DCB5 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159D8C162BCEA7FF0075DCB5 /* EditView.swift */; };
+		15A730992C42F70900DAC4E8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 15A730982C42F70900DAC4E8 /* Lottie */; };
+		15A7309E2C42FB9200DAC4E8 /* wait.json in Resources */ = {isa = PBXBuildFile; fileRef = 15A7309D2C42FB9200DAC4E8 /* wait.json */; };
+		15A730A02C42FE0800DAC4E8 /* Done.json in Resources */ = {isa = PBXBuildFile; fileRef = 15A7309F2C42FE0800DAC4E8 /* Done.json */; };
+		15A730A22C4301F300DAC4E8 /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 15A730A12C4301F200DAC4E8 /* loading.json */; };
 		15AB13D72BD29115009BC4EB /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 15AB13D62BD29115009BC4EB /* SocketIO */; };
 		15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13D82BD2960C009BC4EB /* NetWorking.swift */; };
 		15AB13DB2BD69E6A009BC4EB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */; };
@@ -32,6 +35,7 @@
 		15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF522BC5702A005E3562 /* CreateOrder.swift */; };
 		15B8FF552BC595DB005E3562 /* DishesMenuViewControllerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */; };
 		15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */; };
+		15BE2B6B2C42F29600F5A6E2 /* IpadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15BE2B6A2C42F29600F5A6E2 /* IpadViewController.swift */; };
 		15D7E4A12BD926AE007100AB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7E4A02BD926AE007100AB /* SettingsViewController.swift */; };
 		15D7E4A42BD9521F007100AB /* RatingDishesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */; };
 		15D7E4A72BDA9DA1007100AB /* DishRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7E4A62BDA9DA1007100AB /* DishRate.swift */; };
@@ -59,6 +63,9 @@
 		159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdressViewController.swift; sourceTree = "<group>"; };
 		159D8C142BCEA7E90075DCB5 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		159D8C162BCEA7FF0075DCB5 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		15A7309D2C42FB9200DAC4E8 /* wait.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wait.json; sourceTree = "<group>"; };
+		15A7309F2C42FE0800DAC4E8 /* Done.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Done.json; sourceTree = "<group>"; };
+		15A730A12C4301F200DAC4E8 /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
 		15AB13D82BD2960C009BC4EB /* NetWorking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorking.swift; sourceTree = "<group>"; };
 		15AB13DA2BD69E6A009BC4EB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		15AB13DC2BD7E6B4009BC4EB /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +79,7 @@
 		15B8FF522BC5702A005E3562 /* CreateOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrder.swift; sourceTree = "<group>"; };
 		15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishesMenuViewControllerController.swift; sourceTree = "<group>"; };
 		15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarAdressTable.swift; sourceTree = "<group>"; };
+		15BE2B6A2C42F29600F5A6E2 /* IpadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadViewController.swift; sourceTree = "<group>"; };
 		15D7E4A02BD926AE007100AB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingDishesViewController.swift; sourceTree = "<group>"; };
 		15D7E4A62BDA9DA1007100AB /* DishRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRate.swift; sourceTree = "<group>"; };
@@ -97,9 +105,9 @@
 				150FE3302C27534400206E69 /* Kingfisher in Frameworks */,
 				159D8C052BCA9D020075DCB5 /* SnapKit in Frameworks */,
 				159D8C0F2BCEA1590075DCB5 /* SDWebImage in Frameworks */,
-				15716A372C2A1E2B00EBA55B /* InputMask in Frameworks */,
 				159D8C082BCA9D140075DCB5 /* AlamofireImage in Frameworks */,
 				15AB13D72BD29115009BC4EB /* SocketIO in Frameworks */,
+				15A730992C42F70900DAC4E8 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +121,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15A7309A2C42FB6200DAC4E8 /* Lottie */ = {
+			isa = PBXGroup;
+			children = (
+				15A730A12C4301F200DAC4E8 /* loading.json */,
+				15A7309D2C42FB9200DAC4E8 /* wait.json */,
+				15A7309F2C42FE0800DAC4E8 /* Done.json */,
+			);
+			path = Lottie;
+			sourceTree = "<group>";
+		};
+		15BE2B692C42F20F00F5A6E2 /* Ipad */ = {
+			isa = PBXGroup;
+			children = (
+				15BE2B6A2C42F29600F5A6E2 /* IpadViewController.swift */,
+			);
+			path = Ipad;
+			sourceTree = "<group>";
+		};
 		15D7E4A22BD9520A007100AB /* Rating */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				15B8FF4C2BC040FE005E3562 /* NewOrderView.swift */,
+				15A7309A2C42FB6200DAC4E8 /* Lottie */,
 				15E908E62BBC51330086E9F5 /* AllOrdersView.swift */,
 				15B8FF5B2BC6C220005E3562 /* SimilarAdressTable.swift */,
 				159D8C162BCEA7FF0075DCB5 /* EditView.swift */,
@@ -195,6 +222,7 @@
 		15E908E02BBC4B030086E9F5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				15BE2B692C42F20F00F5A6E2 /* Ipad */,
 				15D7E4AB2BDD502F007100AB /* Other */,
 				15D7E4AA2BDD500E007100AB /* Orders */,
 				15D7E4A22BD9520A007100AB /* Rating */,
@@ -261,7 +289,7 @@
 				159D8C102BCEA1590075DCB5 /* SDWebImageMapKit */,
 				15AB13D62BD29115009BC4EB /* SocketIO */,
 				150FE32F2C27534400206E69 /* Kingfisher */,
-				15716A362C2A1E2B00EBA55B /* InputMask */,
+				15A730982C42F70900DAC4E8 /* Lottie */,
 			);
 			productName = rollsApp;
 			productReference = 15E908C92BBC49950086E9F5 /* Экосистема №9.app */;
@@ -321,7 +349,7 @@
 				159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				15AB13D52BD29115009BC4EB /* XCRemoteSwiftPackageReference "socket" */,
 				150FE32E2C27534400206E69 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */,
+				15A730972C42F70900DAC4E8 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = 15E908CA2BBC49950086E9F5 /* Products */;
 			projectDirPath = "";
@@ -338,8 +366,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15A730A02C42FE0800DAC4E8 /* Done.json in Resources */,
 				15E908D92BBC49970086E9F5 /* LaunchScreen.storyboard in Resources */,
+				15A730A22C4301F300DAC4E8 /* loading.json in Resources */,
 				159D8BFF2BC9F3120075DCB5 /* Assets.xcassets in Resources */,
+				15A7309E2C42FB9200DAC4E8 /* wait.json in Resources */,
 				15E908D42BBC49950086E9F5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,6 +391,7 @@
 			files = (
 				159D8C152BCEA7E90075DCB5 /* EditViewController.swift in Sources */,
 				15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */,
+				15BE2B6B2C42F29600F5A6E2 /* IpadViewController.swift in Sources */,
 				15D7E4A12BD926AE007100AB /* SettingsViewController.swift in Sources */,
 				15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */,
 				15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */,
@@ -558,12 +590,12 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.arbamarket.employees;
 				PRODUCT_NAME = "Экосистема №9";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -593,12 +625,12 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.arbamarket.employees;
 				PRODUCT_NAME = "Экосистема №9";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -691,14 +723,6 @@
 				minimumVersion = 7.12.0;
 			};
 		};
-		15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RedMadRobot/input-mask-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.3.2;
-			};
-		};
 		159D8C002BCA9CF10075DCB5 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -731,6 +755,14 @@
 				minimumVersion = 5.19.1;
 			};
 		};
+		15A730972C42F70900DAC4E8 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.0;
+			};
+		};
 		15AB13D52BD29115009BC4EB /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
@@ -746,11 +778,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 150FE32E2C27534400206E69 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		15716A362C2A1E2B00EBA55B /* InputMask */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15716A352C2A1E2B00EBA55B /* XCRemoteSwiftPackageReference "input-mask-ios" */;
-			productName = InputMask;
 		};
 		159D8C012BCA9CF10075DCB5 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -776,6 +803,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 159D8C0D2BCEA1590075DCB5 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		15A730982C42F70900DAC4E8 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15A730972C42F70900DAC4E8 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 		15AB13D62BD29115009BC4EB /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;

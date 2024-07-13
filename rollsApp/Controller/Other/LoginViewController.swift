@@ -8,6 +8,9 @@
 import UIKit
 import Alamofire
 import SnapKit
+import Lottie
+
+let lottieVC = IpadViewController()
 
 class LoginViewController: UIViewController {
     var loginTextField, passwordTextField: UITextField?
@@ -16,6 +19,7 @@ class LoginViewController: UIViewController {
     var vhodButton: UIButton?
     var texSupportLabel: UILabel?
     var orderVC: OrderViewController?
+    var animationView: LottieAnimationView = .init()
     
     //MARK: -viewDidLoad()
     
@@ -45,6 +49,8 @@ class LoginViewController: UIViewController {
             if let window = UIApplication.shared.windows.first {
                 window.rootViewController = splitVC
                 window.makeKeyAndVisible()
+                let detailNavController = UINavigationController(rootViewController: lottieVC)
+                splitVC.showDetailViewController(detailNavController, sender: nil)
             }
         } else {
             navigationController?.setViewControllers([TabBarViewController()], animated: false)
@@ -239,6 +245,20 @@ class LoginViewController: UIViewController {
     }
     
     @objc func goLogin() {
+        
+        animationView.animation = LottieAnimation.named("loading")
+        animationView.loopMode = .loop
+        animationView.play()
+        view.addSubview(animationView)
+        animationView.snp.makeConstraints({ make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(80)
+            make.width.equalTo(200)
+            make.bottom.equalTo(vhodButton!.snp.top)
+        })
+        self.animationView.alpha = 1
+        
+        
         self.vhodButton?.isEnabled = false
         let loginText = loginTextField?.text ?? ""
         let password = passwordTextField?.text ?? ""
@@ -246,6 +266,7 @@ class LoginViewController: UIViewController {
         login(login: loginText, password: password) { result in
             switch result {
             case .success:
+                
                 UIView.animate(withDuration: 0.3) {
                     self.vhodButton?.backgroundColor = .systemGreen
                 } completion: { _ in
@@ -253,10 +274,11 @@ class LoginViewController: UIViewController {
                     if self.isSave == true {
                         UserDefaults.standard.setValue(authKey, forKey: "authKey")
                     }
-                    let tabBarVC = TabBarViewController() // Ваш TabBarController
-                    self.navigationController?.setViewControllers([tabBarVC], animated: true)
+                    
+                    self.navigateToMainApp()
                 }
             case .failure(_):
+                
                 UserDefaults.standard.removeObject(forKey: "authKey")
                 self.vhodButton?.isEnabled = false
                 UIView.transition(with: self.vhodButton!, duration: 0.3, options: .transitionCrossDissolve, animations: {
@@ -268,6 +290,7 @@ class LoginViewController: UIViewController {
                 })
                 
                 UIView.animate(withDuration: 0.1, animations: {
+                    
                     self.vhodButton?.transform = CGAffineTransform(translationX: -10, y: 0)
                 }, completion: { _ in
                     UIView.animate(withDuration: 0.1, animations: {
@@ -276,6 +299,7 @@ class LoginViewController: UIViewController {
                         UIView.animate(withDuration: 0.1, animations: {
                             self.vhodButton?.transform = .identity
                             self.vhodButton?.isEnabled = true
+                            self.animationView.alpha = 0
                         })
                     })
                 })

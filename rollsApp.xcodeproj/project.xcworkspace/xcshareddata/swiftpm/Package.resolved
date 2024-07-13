@@ -19,21 +19,21 @@
       }
     },
     {
-      "identity" : "input-mask-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/RedMadRobot/input-mask-ios",
-      "state" : {
-        "revision" : "b492f115cc8b3aeb1b6395b4c4157d6bba1fceab",
-        "version" : "7.3.2"
-      }
-    },
-    {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher",
       "state" : {
         "revision" : "2ef543ee21d63734e1c004ad6c870255e8716c50",
         "version" : "7.12.0"
+      }
+    },
+    {
+      "identity" : "lottie-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
+      "state" : {
+        "revision" : "b842598f1295f3ffa1475b1580672d1fe5b83580",
+        "version" : "4.5.0"
       }
     },
     {

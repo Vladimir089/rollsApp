@@ -202,7 +202,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             button.setTitle(orderStatus[indexPath.row].orderForCourierStatus, for: .normal) //меняем
             UIView.animate(withDuration: 0.5) {
                 button.setTitleColor(.systemBlue, for: .normal) //меняем
-                button.backgroundColor = UIColor(.gray).withAlphaComponent(0.5)
+                button.backgroundColor = .gray.withAlphaComponent(0.5)
 
             }
             button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)

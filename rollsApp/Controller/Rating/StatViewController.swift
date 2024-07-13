@@ -71,16 +71,54 @@ class StatViewController: UIViewController {
 
 extension StatViewController: StatViewControllerDelegate {
     func showDishesRating() {
-        let vc = RatingDishesViewController()
-        vc.hidesBottomBarWhenPushed = false
-        self.navigationController?.pushViewController(vc, animated: true)
+        
+        if let existingDetailVC = navigationController?.viewControllers.first(where: { $0 is RatingDishesViewController }) as? RatingDishesViewController {
+            // Если есть, удаляем его из стека
+            if let indexToRemove = navigationController?.viewControllers.firstIndex(of: existingDetailVC) {
+                navigationController?.viewControllers.remove(at: indexToRemove)
+            }
+        }
+        
+        if let splitVC = self.splitViewController {
+            let vc = RatingDishesViewController()
+            vc.hidesBottomBarWhenPushed = false
+            let detailNavController = UINavigationController(rootViewController: vc)
+            splitVC.showDetailViewController(detailNavController, sender: nil)
+        } else {
+            let vc = RatingDishesViewController()
+            vc.hidesBottomBarWhenPushed = false
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        
 
     }
+    
+    
     func showClientRating() {
-        let vc = RatingClientViewController()
-        vc.hidesBottomBarWhenPushed = false
-        self.navigationController?.pushViewController(vc, animated: true)
+        
+        if let existingDetailVC = navigationController?.viewControllers.first(where: { $0 is RatingClientViewController }) as? RatingClientViewController {
+            // Если есть, удаляем его из стека
+            if let indexToRemove = navigationController?.viewControllers.firstIndex(of: existingDetailVC) {
+                navigationController?.viewControllers.remove(at: indexToRemove)
+            }
+        }
+        
+        if let splitVC = self.splitViewController {
+            let vc = RatingClientViewController()
+            vc.hidesBottomBarWhenPushed = false
+
+            let detailNavController = UINavigationController(rootViewController: vc)
+            splitVC.showDetailViewController(detailNavController, sender: nil)
+        } else {
+            let vc = RatingDishesViewController()
+            vc.hidesBottomBarWhenPushed = false
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        
     }
+    
+    
 }
 
 

@@ -489,6 +489,7 @@ class EditView: UIView {
     @objc func hideKeyboard() {
         butonIsEnabled()
         phoneTextField?.endEditing(true)
+        delegate?.resetTimer()
     }
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {

@@ -16,12 +16,18 @@ protocol EditViewControllerDelegate: AnyObject {
     func showAdressVC()
     func cell()
     func changePaymentStatus()
+    
+    func startTimer()
+    func stopTimer()
+    func resetTimer()
 }
 
 class EditViewController: UIViewController {
     
     var delegate: OrderViewControllerDelegate?
     var indexOne = 0
+    
+    var inactivityTimer: Timer?
     
     var mainView: EditView?
     
@@ -61,14 +67,59 @@ class EditViewController: UIViewController {
         mainView?.commentTextField?.isUserInteractionEnabled = false
         mainView?.oplataSegmentedControl?.isUserInteractionEnabled = false
         mainView?.addButton?.isUserInteractionEnabled = false
+        
+        if let splitVC = self.splitViewController {
+            startInactivityTimer()
+        }
+        // Подписка на уведомления о взаимодействиях
+        NotificationCenter.default.addObserver(self, selector: #selector(resetInactivityTimer), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetInactivityTimer), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetInactivityTimer), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
+    
+    func startInactivityTimer() {
+        // Сброс предыдущего таймера, если он существует
+        inactivityTimer?.invalidate()
+        
+        // Запуск нового таймера на 1 минуту (60 секунд)
+        inactivityTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(handleInactivity), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleInactivity() {
+        if let splitVC = self.splitViewController {
+            let newNavController = UINavigationController(rootViewController: lottieVC)
+            splitVC.showDetailViewController(newNavController, sender: nil)
+            lottieVC.changeInterface(named: "wait")
+        }
+        print("Прошла минута без активности")
+    }
+    
+
+    
+    @objc func resetInactivityTimer() {
+        print("Активность обнаружена, сброс таймера")
+        print(123)
+        startInactivityTimer()
+    }
+    
+    // Отслеживание других событий взаимодействия (например, свайпы)
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionBegan(motion, with: event)
+        resetInactivityTimer()
+    }
+    
+    
+    
+    
+    
 
     // Метод, который будет вызываться при нажатии на кнопку Редактировать/Сохранить
     @objc func toggleEditSave() {
            if self.navigationItem.rightBarButtonItem?.title == "Редактировать" {
+               stopTimer()
                UIView.animate(withDuration: 0.5) { [self] in
                    
-
+                   
                    mainView?.oplataSegmentedControl?.isUserInteractionEnabled = true
                    mainView?.addButton?.isUserInteractionEnabled = true
                    mainView?.isEdit = 2
@@ -129,11 +180,38 @@ class EditViewController: UIViewController {
             menuItemIndex.removeAll()
             adress = ""
             totalCoast = 0
+        } else {
+            inactivityTimer?.invalidate()
+            NotificationCenter.default.removeObserver(self)
         }
+        
     }
 }
 
 extension EditViewController: EditViewControllerDelegate {
+    func resetTimer() {
+        if self.navigationItem.rightBarButtonItem?.title == "Редактировать" {
+            startInactivityTimer()
+            print(123)
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    func startTimer() {
+        if let splitVC = self.splitViewController {
+            startInactivityTimer()
+        }
+    }
+    
+    func stopTimer() {
+        inactivityTimer?.invalidate()
+    }
+    
     
     
     func changePaymentStatus() {
@@ -171,6 +249,11 @@ extension EditViewController: EditViewControllerDelegate {
     }
     
     func showAdressVC() {
+        
+        
+      
+        
+        
         let vc = AdressViewController()
         vc.similadAdressView = mainView?.similadAdressView
         vc.adress = self.mainView?.adressTextField?.text ?? ""
@@ -198,7 +281,7 @@ extension EditViewController: EditViewControllerDelegate {
         }
         mainView?.checkEdit()
         self.navigationItem.rightBarButtonItem?.title = "Редактировать"
-
+        startTimer()
     }
     
     
@@ -237,7 +320,7 @@ extension EditViewController: EditViewControllerDelegate {
             let vc = DishesMenuViewControllerController()
             vc.coast = mainView?.similadAdressView
             vc.delegateEdit = self.mainView
-            //delegate?.openSplitEdit(vc: self) //ЭТО НЕПОНЯТНО ЧТО
+            delegate?.openSplitEdit(vc: self) //ЭТО НЕПОНЯТНО ЧТО
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = DishesMenuViewControllerController()

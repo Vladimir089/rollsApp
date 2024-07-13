@@ -7,7 +7,7 @@
 
 import UIKit
 import Alamofire
-import InputMask
+
 
 protocol NewOrderViewControllerDelegate: AnyObject {
     func removeDelegates()
@@ -37,14 +37,19 @@ class NewOrderViewController: UIViewController {
     }
     
     
-    
     deinit {
-        menuItemsArr.removeAll()
-        menuItemIndex.removeAll()
-        adress = ""
-        totalCoast = 0
-        delegate?.close()
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            print("new ok")
+            menuItemsArr.removeAll()
+            menuItemIndex.removeAll()
+            adress = ""
+            totalCoast = 0
+            delegate?.close()
+        }
     }
+    
+    
+   
     
     override func viewDidLayoutSubviews() {
         mainView?.tableView?.reloadData()
@@ -84,7 +89,14 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     }
     
     func succesCreate() {
-        dismiss(animated: true, completion: nil)
+        if let splitVC = self.splitViewController {
+            let newNavController = UINavigationController(rootViewController: lottieVC)
+            splitVC.showDetailViewController(newNavController, sender: nil)
+            lottieVC.changeInterface(named: "Done")
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+        
     }
     
 
@@ -128,7 +140,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
             let vc = DishesMenuViewControllerController()
             vc.coast = mainView?.similadAdressView
             vc.delegate = self.mainView
-            self.present(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
             
         } else {
             let vc = DishesMenuViewControllerController()

@@ -243,7 +243,15 @@ class SettingsViewController: UIViewController {
     
     @objc func rateAppFunc() {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            SKStoreReviewController.requestReview(in: windowScene)
+            if #available(iOS 14.0, *) {
+                SKStoreReviewController.requestReview(in: windowScene)
+            } else {
+                if let url = URL(string: "https://apps.apple.com/app/IDDDD") {  //ССЫЛКА НА ПРИЛОЖЕНИЕ
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            }
         }
     }
     
@@ -305,7 +313,15 @@ class SettingsViewController: UIViewController {
         let yesAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
             UserDefaults.standard.removeObject(forKey: "authKey")
             authKey = ""
+            
+            
+            if let splitVC = self.splitViewController {
+                let newNavController = UINavigationController(rootViewController: lottieVC)
+                splitVC.showDetailViewController(newNavController, sender: nil)
+                lottieVC.changeInterface(named: "wait")
+            }
             self.navigationController?.setViewControllers([LoginViewController()], animated: false)
+            
         }
         alertContoller.addAction(yesAction)
         

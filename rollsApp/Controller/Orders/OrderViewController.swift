@@ -37,6 +37,11 @@ class OrderViewController: UIViewController {
         mainView?.delegate = self
         setupRefreshControl()
         startAuthCheckTimer()
+        
+        
+       
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,16 +61,25 @@ class OrderViewController: UIViewController {
     }
     
     @objc private func newOrder() {
+        
+        if let existingDetailVC = navigationController?.viewControllers.first(where: { $0 is NewOrderViewController }) as? NewOrderViewController {
+            if let indexToRemove = navigationController?.viewControllers.firstIndex(of: existingDetailVC) {
+                navigationController?.viewControllers.remove(at: indexToRemove)
+            }
+        }
+        
+        
         let vc = NewOrderViewController()
         vc.delegate = self
         
         
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if let splitVC = self.splitViewController {
             menuItemsArr.removeAll()
             menuItemIndex.removeAll()
             adress = ""
             totalCoast = 0
-            self.present(vc, animated: true)
+            let newNavController = UINavigationController(rootViewController: vc)
+            splitVC.showDetailViewController(newNavController, sender: nil)
         } else {
             isLoad = true
             isOpen = true
@@ -158,7 +172,7 @@ class OrderViewController: UIViewController {
 extension OrderViewController: OrderViewControllerDelegate {
     func openSplitEdit(vc: UIViewController) {
         //УЗНАТЬ ЧТО С ЭТИМ ДЕЛАТЬ 
-        self.splitViewController?.setViewController(vc, for: .compact)
+        print(1234)
     }
     
     func close() {

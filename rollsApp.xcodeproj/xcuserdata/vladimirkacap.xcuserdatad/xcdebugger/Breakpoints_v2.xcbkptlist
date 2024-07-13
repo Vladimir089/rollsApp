@@ -158,8 +158,8 @@
             filePath = "rollsApp/View/Order/EditView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "870"
-            endingLineNumber = "870"
+            startingLineNumber = "871"
+            endingLineNumber = "871"
             landmarkName = "updateTable()"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "rollsApp/View/Order/EditView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "868"
-            endingLineNumber = "868"
+            startingLineNumber = "869"
+            endingLineNumber = "869"
             landmarkName = "updateTable()"
             landmarkType = "7">
             <Locations>
@@ -230,20 +230,20 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7EA8362F-B393-4A58-BBDA-8158DF33516A"
+            uuid = "CF3CC144-6761-4EB8-8F1A-48EAF6B920EF"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "rollsApp/Controller/Orders/OrderViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "detailVC(index:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7EA8362F-B393-4A58-BBDA-8158DF33516A - ba53b10e5ca664eb"
+                  uuid = "CF3CC144-6761-4EB8-8F1A-48EAF6B920EF - ba53b10e5ca666bd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -253,12 +253,12 @@
                   urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/OrderViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "3268">
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "1328">
                </Location>
                <Location
-                  uuid = "7EA8362F-B393-4A58-BBDA-8158DF33516A - ba53b10e5ca664eb"
+                  uuid = "CF3CC144-6761-4EB8-8F1A-48EAF6B920EF - ba53b10e5ca666bd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -268,9 +268,153 @@
                   urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/OrderViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "2884">
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "152">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0E736A1C-16DC-4963-958E-076E0D7CBD9A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/Controller/Orders/OrderViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "newOrder()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0E736A1C-16DC-4963-958E-076E0D7CBD9A - 60f36e7d2ed1a8de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.OrderViewController.newOrder() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/OrderViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "0E736A1C-16DC-4963-958E-076E0D7CBD9A - 60f36e7d2ed1a8de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.OrderViewController.newOrder() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/OrderViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "128">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1801B575-F825-4E8C-94E5-19DA1022E8A7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/Controller/Orders/EditViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "317"
+            endingLineNumber = "317"
+            landmarkName = "showVC()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1801B575-F825-4E8C-94E5-19DA1022E8A7 - 8d3fa5b2d618e0d5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.EditViewController.showVC() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/EditViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "249"
+                  endingLineNumber = "249"
+                  offsetFromSymbolStart = "1156">
+               </Location>
+               <Location
+                  uuid = "1801B575-F825-4E8C-94E5-19DA1022E8A7 - 8d3fa5b2d618e0b4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.EditViewController.showVC() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/EditViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "248"
+                  endingLineNumber = "248"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D37914F4-0DDD-4A83-AC35-7FEA266A548F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/Controller/Orders/EditViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
+            landmarkName = "showAdressVC()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D37914F4-0DDD-4A83-AC35-7FEA266A548F - 6442a4355b7e44a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.EditViewController.showAdressVC() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/EditViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "173"
+                  endingLineNumber = "173"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "D37914F4-0DDD-4A83-AC35-7FEA266A548F - 6442a4355b7e44a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.EditViewController.showAdressVC() -&gt; ()"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/Controller/Orders/EditViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "173"
+                  endingLineNumber = "173"
+                  offsetFromSymbolStart = "64">
                </Location>
             </Locations>
          </BreakpointContent>

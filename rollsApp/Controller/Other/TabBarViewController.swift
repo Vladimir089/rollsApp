@@ -56,6 +56,9 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         }
         selectedIndex = 1
         settingsVC.checkHide()
+        
+       
+        
     }
 }
 
