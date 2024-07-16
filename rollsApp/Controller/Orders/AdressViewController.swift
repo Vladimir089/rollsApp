@@ -58,7 +58,7 @@ class AdressViewController: UIViewController {
             
             let buttonClear = UIButton(type: .system)
             buttonClear.backgroundColor = .settings
-            buttonClear.setImage(UIImage(systemName: "xmark"), for: .normal)
+            buttonClear.setImage(UIImage(systemName: "xmark")?.resize(targetSize: CGSize(width: 15, height: 15)), for: .normal)
             
             buttonClear.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 7)
             buttonClear.addTarget(self, action: #selector(clearAdres), for: .touchUpInside)

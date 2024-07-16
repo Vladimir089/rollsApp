@@ -199,8 +199,8 @@ class NewOrderView: UIView {
             similarLabel = UILabel()
             similarLabel?.font = .systemFont(ofSize: 18, weight: .bold)
             similarLabel?.text = "0 ₽  "
-            similarLabel?.textColor = .settings
-            
+            similarLabel?.textColor = .TC
+            //similarLabel?.backgroundColor = .red
             textField.placeholder = "Адрес"
             textField.rightView = similarLabel!
             textField.rightViewMode = .always
@@ -363,6 +363,9 @@ class NewOrderView: UIView {
     
     
     @objc func createOrder() {
+        
+        self.createOrderButton?.isUserInteractionEnabled = false
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         let currentDate = Date()
@@ -397,32 +400,40 @@ class NewOrderView: UIView {
         
 
         
+        
+
+        
         delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
-            debugPrint(success)
+
             if success {
                 self.delegate?.succesCreate()
-                
+                self.createOrderButton?.isUserInteractionEnabled = true
             } else {
                 UIView.animate(withDuration: 0.2, animations: {
                     self.createOrderButton?.center.x -= 12
+                    self.createOrderButton?.isUserInteractionEnabled = true
                 }) { _ in
                     // Анимация движения кнопки вправо после завершения анимации влево
                     UIView.animate(withDuration: 0.2, animations: {
                         self.createOrderButton?.center.x += 24
+                        self.createOrderButton?.isUserInteractionEnabled = true
                     }) { _ in
                         // Возврат кнопки в исходное положение после завершения анимации вправо
                         UIView.animate(withDuration: 0.2, animations: {
                             self.createOrderButton?.center.x -= 12
+                            self.createOrderButton?.isUserInteractionEnabled = true 
                         })
                     }
                 }
                 // Анимация изменения цвета кнопки
                 UIView.transition(with: self.createOrderButton!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                     self.createOrderButton?.backgroundColor = .red
+                    self.createOrderButton?.isUserInteractionEnabled = true
                 }) { _ in
                     // Возвращаем исходный цвет после завершения анимации
                     UIView.transition(with: self.createOrderButton!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                         self.createOrderButton?.backgroundColor = .systemBlue
+                        self.createOrderButton?.isUserInteractionEnabled = true
                     }, completion: nil)
                 }
                 

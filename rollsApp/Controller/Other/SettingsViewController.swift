@@ -243,6 +243,7 @@ class SettingsViewController: UIViewController {
     
     @objc func rateAppFunc() {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            print(2345555)
             if #available(iOS 14.0, *) {
                 SKStoreReviewController.requestReview(in: windowScene)
             } else {
