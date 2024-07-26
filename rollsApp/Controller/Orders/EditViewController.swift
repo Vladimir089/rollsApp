@@ -342,7 +342,7 @@ extension EditViewController: EditViewControllerDelegate {
         let parameters: [String : Any] = [
             "phone": phonee,
             "menu_items": menuItems,
-            "clients_number": clientsNumber,
+            "clients_number": String(clientsNumber),
             "address": adress,
             "total_cost": totalCost,
             "payment_method": paymentMethod,

@@ -110,7 +110,7 @@ extension StatViewController: StatViewControllerDelegate {
             let detailNavController = UINavigationController(rootViewController: vc)
             splitVC.showDetailViewController(detailNavController, sender: nil)
         } else {
-            let vc = RatingDishesViewController()
+            let vc = RatingClientViewController()
             vc.hidesBottomBarWhenPushed = false
             self.navigationController?.pushViewController(vc, animated: true)
         }

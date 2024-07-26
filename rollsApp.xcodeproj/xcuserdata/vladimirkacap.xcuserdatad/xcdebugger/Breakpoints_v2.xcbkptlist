@@ -103,54 +103,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "rollsApp/View/Order/NewOrderView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
-            landmarkName = "NewOrderView"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21 - 748413a0cc83704d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.guestTapped() -&gt; ()"
-                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/View/Order/NewOrderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "398"
-                  endingLineNumber = "398"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  uuid = "AEDAC083-13E3-47F3-A3E0-79B7E4CA7C21 - 748413a0cc83706a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.guestTapped() -&gt; ()"
-                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vladimirkacap/Desktop/Swift/rollsApp/rollsApp/View/Order/NewOrderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "397"
-                  endingLineNumber = "397"
-                  offsetFromSymbolStart = "248">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C0BFCC8B-4B75-4AC4-A31B-E0695CDCDDDC"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -415,6 +367,69 @@
                   startingLineNumber = "173"
                   endingLineNumber = "173"
                   offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F15A9074-E288-48C3-B9A6-1BAAD0AD62FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "rollsApp/View/Order/NewOrderView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
+            landmarkName = "textField(_:shouldChangeCharactersIn:replacementString:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F15A9074-E288-48C3-B9A6-1BAAD0AD62FD - f3c18eda4142170a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String) -&gt; () in &#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.textField(_: __C.UITextField, shouldChangeCharactersIn: __C._NSRange, replacementString: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/View/Order/NewOrderView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "507"
+                  endingLineNumber = "507"
+                  offsetFromSymbolStart = "1264">
+               </Location>
+               <Location
+                  uuid = "F15A9074-E288-48C3-B9A6-1BAAD0AD62FD - a30c311f37f29be1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.String) -&gt; () in &#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.textField(_: __C.UITextField, shouldChangeCharactersIn: __C._NSRange, replacementString: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/View/Order/NewOrderView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "507"
+                  endingLineNumber = "507"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  uuid = "F15A9074-E288-48C3-B9A6-1BAAD0AD62FD - f3c18eda4142170a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String) -&gt; () in &#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430;__9.NewOrderView.textField(_: __C.UITextField, shouldChangeCharactersIn: __C._NSRange, replacementString: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "&#x42d;&#x43a;&#x43e;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x430; &#x2116;9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vladimirkacap/Desktop/rollsApp/rollsApp/View/Order/NewOrderView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "507"
+                  endingLineNumber = "507"
+                  offsetFromSymbolStart = "1096">
                </Location>
             </Locations>
          </BreakpointContent>

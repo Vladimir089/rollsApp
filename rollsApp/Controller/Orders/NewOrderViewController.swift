@@ -84,7 +84,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     func showAdressVC() {
         let vc = AdressViewController()
         vc.similadAdressView = mainView?.similadAdressView
-        vc.adress = self.mainView?.adressTextField?.text ?? ""
+        //vc.adress = self.mainView?.adressTextField?.text ?? ""
         present(vc, animated: true)
     }
     
@@ -161,7 +161,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         let parameters: [String : Any] = [
             "phone": phonee,
             "menu_items": menuItems,
-            "clients_number": clientsNumber,
+            "clients_number": String(clientsNumber),
             "address": adress,
             "total_cost": totalCost,
             "payment_method": paymentMethod,
@@ -170,7 +170,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-            print(response)
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 completion(true)

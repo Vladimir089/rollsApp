@@ -34,6 +34,7 @@ class NewOrderView: UIView {
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
 
+    var oldAdress = ""
     
     //MARK: -init
     
@@ -169,7 +170,6 @@ class NewOrderView: UIView {
             button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
             button.tintColor = .TC
             button.contentHorizontalAlignment = .left
-            button.addTarget(self, action: #selector(fillAdress), for: .touchUpInside)
             button.alpha = 0
             return button
         }()
@@ -347,20 +347,7 @@ class NewOrderView: UIView {
         feedbackGenerator.selectionChanged()
     }
     
-    
-//    @objc func guestTapped() {
-//        phoneTextField?.text = phoneCafe
-//        adressTextField?.text = "С собой, 0, Самовывоз"
-//        adress = "С собой, 0, Самовывоз"
-//        similadAdressView.getCostAdress()
-//    }
-//    
-//    @objc func sSoboiTapped() {
-//        adressTextField?.text = "С собой, 0, Самовывоз"
-//        adress = "С собой, 0, Самовывоз"
-//        similadAdressView.getCostAdress()
-//    }
-    
+
     
     @objc func createOrder() {
         
@@ -397,11 +384,6 @@ class NewOrderView: UIView {
                 menuItems.append(", ")
             }
         }
-        
-
-        
-        
-
         
         delegate?.createNewOrder(phonee: phone, menuItems: menuItems, clientsNumber: clientNumber, adress: adress, totalCost: coast, paymentMethod: payMethod, timeOrder: timeOrder, cafeID: idCafe) { success in
 
@@ -443,21 +425,7 @@ class NewOrderView: UIView {
         
     }
     
-    @objc func fillAdress() {
-        butonIsEnabled()
-        if adressButton?.titleLabel?.text != nil {
-            adressTextField?.text = adressButton?.titleLabel?.text
-            if let a = adressButton?.titleLabel?.text {
-                adress = a
-                similadAdressView.getCostAdress()
-            }
-            UIView.animate(withDuration: 0.5) {
-                self.adressButton?.setTitle(nil, for: .normal)
-                self.adressButton?.alpha = 0
-                self.layoutIfNeeded()
-            }
-        }
-    }
+
     
     @objc func hideKeyboard() {
         butonIsEnabled()
@@ -500,25 +468,24 @@ extension NewOrderView: UITextFieldDelegate {
                 let formattedString = formatPhoneNumber(number: prospectiveText)
                 textField.text = formattedString
                 print(phoneTextField?.text ?? "")
-                delegate?.getLastAdress(phoneNumber: phoneTextField?.text ?? "", cafeID: "\(cafeID)") { adress in
-                    if adress != "" && self.adressTextField?.text == "" {
+                delegate?.getLastAdress(phoneNumber: phoneTextField?.text ?? "", cafeID: "\(cafeID)") { adres in
+                    if adres != "" && self.adressTextField?.text == "" {
                         print(234)
-                        self.adressButton?.setTitle(adress, for: .normal)
-                        UIView.animate(withDuration: 0.5) {
-                            self.adressButton?.alpha = 100
+                        self.oldAdress = adres
+                        adress = adres
+                        self.adressTextField?.text = adres
+                        self.similadAdressView.getCostAdress()
+                        if adress == self.oldAdress {
+                            self.adressTextField?.textColor = .systemBlue
+                        } else {
+                            self.adressTextField?.textColor = .black
                         }
                     }
-                    if adress == "" {
-                        
-                        self.adressButton?.setTitle(nil, for: .normal)
-                        
-                    }
+
                 }
                 return false
             }
-            
-            
-            
+
         }
         // Для других полей ввода возвратить true, чтобы разрешить обычное изменение текста
         return true
@@ -585,15 +552,11 @@ extension NewOrderView: UITextFieldDelegate {
         if let textPhoneTextField = phoneTextField?.text {
             let _: ()? = delegate?.getLastAdress(phoneNumber: textPhoneTextField, cafeID: "\(cafeID)") { adress in
                 if adress != "" && self.adressTextField?.text == "" {
-                    print(234)
-                    self.adressButton?.setTitle(adress, for: .normal)
-                    UIView.animate(withDuration: 0.5) {
-                        self.adressButton?.alpha = 100
-                    }
+                    self.adressTextField?.text = adress
                 }
                 if adress == "" {
                     
-                    self.adressButton?.setTitle(nil, for: .normal)
+                    self.adressTextField?.text = adress
                     
                 }
             }
@@ -805,15 +768,11 @@ extension NewOrderView: NewOrderViewProtocol {
             self.layoutIfNeeded()
         }
         adressTextField?.endEditing(true)
-        if adressTextField?.text != "" {
-            self.adressButton?.setTitle(nil, for: .normal)
-            UIView.animate(withDuration: 0.5) {
-                self.adressButton?.snp.updateConstraints { make in
-                    make.height.equalTo(0)
-                }
-                self.layoutIfNeeded()
-            }
+        if adress == self.oldAdress {
+            self.adressTextField?.textColor = .systemBlue
+        } else {
+            self.adressTextField?.textColor = .black
         }
-    }   
+    }
 }
 
