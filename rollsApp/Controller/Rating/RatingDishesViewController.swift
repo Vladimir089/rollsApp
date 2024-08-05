@@ -44,7 +44,7 @@ class RatingDishesViewController: UIViewController {
     }()
    
     let segmentedControl: UISegmentedControl = {
-        let items = ["Этот месяц", "Все время"]
+        let items = ["Этот месяц", "Все время", "За сегодня"]
         let segmentedControl = UISegmentedControl(items: items)
         segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
         segmentedControl.selectedSegmentTintColor = .white
@@ -54,13 +54,13 @@ class RatingDishesViewController: UIViewController {
     }()
 
     @objc func segmentedControlValueChanged() {
-        dishArr.removeAll()
-        arrRatingDishesResponse.removeAll()
         page = 1
         if segmentedControl.selectedSegmentIndex == 1 {
             period = "all_time"
-        } else {
+        } else if segmentedControl.selectedSegmentIndex == 0 {
             period = "per_month"
+        } else if segmentedControl.selectedSegmentIndex == 2  {
+            period = "per_day"
         }
         getRate {
             self.checkDishes()
@@ -115,6 +115,9 @@ class RatingDishesViewController: UIViewController {
     
     
     func getRate(completion: @escaping () -> Void) {
+        dishArr.removeAll()
+        arrRatingDishesResponse.removeAll()
+        
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
