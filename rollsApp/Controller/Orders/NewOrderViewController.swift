@@ -62,7 +62,7 @@ class NewOrderViewController: UIViewController {
         mainView?.updateContentSize()
     }
     
-    func cleaвnString(_ string: String) -> String {
+    func cleanString(_ string: String) -> String {
         // Удаление пробелов
         let noSpaces = string.replacingOccurrences(of: " ", with: "")
         // Удаление скобок
@@ -79,6 +79,51 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
+        var resultAddress = ""
+
+        // Очистка строк от пробелов и скобок
+        let cleanPhoneNumber = phoneNumber
+        let cleanCafeID = cafeID
+
+        let headers: HTTPHeaders = [
+            HTTPHeader.authorization(bearerToken: authKey),
+            HTTPHeader.accept("*/*")
+        ]
+
+        // Создание URLComponents для корректного кодирования параметров
+        var urlComponents = URLComponents(string: "http://arbamarket.ru/api/v1/main/get_last_address/")
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "phone_number", value: cleanPhoneNumber),
+            URLQueryItem(name: "cafe_id", value: cleanCafeID)
+        ]
+
+        // Получение закодированного URL
+        guard let encodedURL = urlComponents?.url else {
+            print("Ошибка: не удалось создать закодированный URL.")
+            completion(resultAddress)
+            return
+        }
+
+        // Выполнение запроса с использованием Alamofire
+        AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
+            switch response.result {
+            case .success(let value):
+                if let json = value as? [String: Any],
+                   let address = json["address"] as? [String: Any],
+                   let addressValue = address["address"] as? String {
+                    resultAddress = addressValue
+                }
+            case .failure(_):
+                resultAddress = ""
+            }
+            completion(resultAddress)
+        }
+    }
+    
+  
+    
     
     
     func showAdressVC() {
@@ -100,34 +145,9 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     }
     
 
-    func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
-        var a = ""
+ 
 
-        // Очистка строк от пробелов и скобок
-        let cleanPhoneNumber = phoneNumber
-        let cleanCafeID = cafeID
-
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("*/*")
-        ]
-        
-        AF.request("http://arbamarket.ru/api/v1/main/get_last_address/?phone_number=\(cleanPhoneNumber)&cafe_id=\(cleanCafeID)", method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
-            switch response.result {
-            case .success(let value):
-                if let json = value as? [String: Any],
-                   let address = json["address"] as? [String: Any],
-                   let addressValue = address["address"] as? String {
-                    a = addressValue
-                }
-            case .failure(_):
-                a = ""
-            }
-            completion(a)
-        }
-    }
-
+   
     func showVC() {
 
         if UIDevice.current.userInterfaceIdiom == .pad {

@@ -13,7 +13,7 @@ class RatingClientViewController: UIViewController {
     var clientArr: [(UIImage, String, Int)] = []
     var arrRatingClientResponse: [RatingClient] = []
     var page = 1
-    var period = "per_month"
+    var period = "per_day"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -45,7 +45,7 @@ class RatingClientViewController: UIViewController {
     }()
    
     let segmentedControl: UISegmentedControl = {
-        let items = ["Этот месяц", "Все время", "За сегодня"]
+        let items = ["За сегодня", "Этот месяц", "Все время"]
         let segmentedControl = UISegmentedControl(items: items)
         segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
         segmentedControl.selectedSegmentTintColor = .white
@@ -58,11 +58,11 @@ class RatingClientViewController: UIViewController {
        
         page = 1
         if segmentedControl.selectedSegmentIndex == 1 {
-            period = "all_time"
-        } else if segmentedControl.selectedSegmentIndex == 0 {
             period = "per_month"
-        } else if segmentedControl.selectedSegmentIndex == 2  {
+        } else if segmentedControl.selectedSegmentIndex == 0 {
             period = "per_day"
+        } else if segmentedControl.selectedSegmentIndex == 2  {
+            period = "all_time"
         }
         getRate {
             self.checkCleints()

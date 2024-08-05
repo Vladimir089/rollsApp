@@ -258,9 +258,27 @@ extension StatViewController {
 
 
 extension SimilarAdressTable {
+  
+
     func reload(address: String) {
         let headers: HTTPHeaders = [.accept("application/json")]
-        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?cafe_id=\(cafeID)&value=\(address)", method: .get, headers: headers).responseJSON { response in
+
+        // Создание URLComponents для корректного кодирования параметров
+        var urlComponents = URLComponents(string: "http://arbamarket.ru/api/v1/main/get_similar_addresses/")
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "cafe_id", value: "\(cafeID)"),
+            URLQueryItem(name: "value", value: address)
+        ]
+
+        // Получение закодированного URL
+        guard let encodedURL = urlComponents?.url else {
+            print("Ошибка: не удалось создать закодированный URL.")
+            return
+        }
+
+        // Выполнение запроса с использованием Alamofire
+        AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(let value):
                 guard let json = value as? [String: Any] else {
@@ -287,6 +305,8 @@ extension SimilarAdressTable {
         }
     }
     
+    
+
     func getCostAdress() {
         let headers: HTTPHeaders = [.accept("application/json")]
         
@@ -302,7 +322,25 @@ extension SimilarAdressTable {
             }
         }
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(menu)&address=\(adress)", method: .get, headers: headers).responseJSON { response in
+        print(menu)
+        
+        // Создание URLComponents для корректного кодирования параметров
+        var urlComponents = URLComponents(string: "http://arbamarket.ru/api/v1/main/get_total_cost/")
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "cafe_id", value: "\(cafeID)"),
+            URLQueryItem(name: "menu", value: menu),
+            URLQueryItem(name: "address", value: adress)
+        ]
+
+        // Получение закодированного URL
+        guard let encodedURL = urlComponents?.url else {
+            print("Ошибка: не удалось создать закодированный URL.")
+            return
+        }
+
+        // Выполнение запроса с использованием Alamofire
+        AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {
@@ -322,20 +360,14 @@ extension SimilarAdressTable {
                             self.editDelegate?.updateTable()
                             self.secondDelegate?.dismiss()
                         }
-                        
-                        
                     }
                 } else {
                     print("Invalid JSON format")
                 }
-                
             case .failure(let error):
                 print("Request failed with error:", error)
-                
             }
         }
-        
-        
     }
 }
 

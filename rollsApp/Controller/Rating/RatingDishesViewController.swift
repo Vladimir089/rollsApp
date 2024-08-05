@@ -13,7 +13,7 @@ class RatingDishesViewController: UIViewController {
     var dishArr: [(UIImage, String, Int)] = []
     var arrRatingDishesResponse: [RatingDish] = []
     var page = 1
-    var period = "per_month"
+    var period = "per_day"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -44,7 +44,7 @@ class RatingDishesViewController: UIViewController {
     }()
    
     let segmentedControl: UISegmentedControl = {
-        let items = ["Этот месяц", "Все время", "За сегодня"]
+        let items = ["За сегодня", "Этот месяц", "Все время"]
         let segmentedControl = UISegmentedControl(items: items)
         segmentedControl.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
         segmentedControl.selectedSegmentTintColor = .white
@@ -56,11 +56,11 @@ class RatingDishesViewController: UIViewController {
     @objc func segmentedControlValueChanged() {
         page = 1
         if segmentedControl.selectedSegmentIndex == 1 {
-            period = "all_time"
-        } else if segmentedControl.selectedSegmentIndex == 0 {
             period = "per_month"
-        } else if segmentedControl.selectedSegmentIndex == 2  {
+        } else if segmentedControl.selectedSegmentIndex == 0 {
             period = "per_day"
+        } else if segmentedControl.selectedSegmentIndex == 2  {
+            period = "all_time"
         }
         getRate {
             self.checkDishes()
