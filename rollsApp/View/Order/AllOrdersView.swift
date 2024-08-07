@@ -168,7 +168,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFit
 
-            imageView.image = UIImage.check1
+            imageView.image = UIImage.backs
             return imageView
         }()
         cell.addSubview(statusImageView)
@@ -180,19 +180,8 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
         }
         
         
-        if orderStatus[indexPath.row].paymentStatus != "Оплачено" && orderStatus[indexPath.row].status != "Готово" {
-            statusImageView.image = UIImage.stat4
-        }
-        
-        if orderStatus[indexPath.row].paymentStatus == "Оплачено" && orderStatus[indexPath.row].status != "Готово" {
-            statusImageView.image = UIImage.stat2
-        }
-        if orderStatus[indexPath.row].paymentStatus != "Оплачено" && orderStatus[indexPath.row].status == "Готово" {
-            statusImageView.image = UIImage.stat3
-        }
-        if orderStatus[indexPath.row].paymentStatus == "Оплачено" && orderStatus[indexPath.row].status == "Готово" {
-            statusImageView.image = UIImage.stat1
-        }
+       
+       
         
         
         
@@ -211,6 +200,25 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
             return button
         }()
+        
+        
+        if orderStatus[indexPath.row].paymentStatus != "Оплачено" /*&& orderStatus[indexPath.row].status != "Готово"*/ {
+            statusImageView.image = UIImage.backs
+        }
+        
+        if orderStatus[indexPath.row].paymentStatus == "Оплачено"/* && orderStatus[indexPath.row].status != "Готово"*/ {
+            statusImageView.image = UIImage.fillBakc
+            
+        }
+        
+        if orderStatus[indexPath.row].status == "Готово" {
+            inCellButton.backgroundColor = .systemBlue
+            animateButtonWave(for: inCellButton)
+            inCellButton.setTitleColor(.white, for: .normal)
+        }
+        
+
+        
         
        
         
@@ -390,6 +398,19 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 85)
+    }
+    
+    func animateButtonWave(for button: UIButton) {
+        // Создаем анимацию изменения прозрачности
+        let animation = CABasicAnimation(keyPath: "backgroundColor")
+        animation.fromValue = UIColor.systemBlue.withAlphaComponent(0.7).cgColor
+        animation.toValue = UIColor.blue.withAlphaComponent(0.2).cgColor
+        animation.duration = 1
+        animation.autoreverses = true // Позволяет анимации возвращаться к начальному состоянию
+        animation.repeatCount = .infinity // Бесконечное повторение
+
+        // Добавляем анимацию на слой кнопки
+        button.layer.add(animation, forKey: "backgroundColorAnimation")
     }
     
     //MARK: -change ststus
