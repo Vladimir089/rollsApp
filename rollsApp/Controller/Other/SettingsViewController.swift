@@ -314,6 +314,7 @@ class SettingsViewController: UIViewController {
         let yesAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
             UserDefaults.standard.removeObject(forKey: "authKey")
             authKey = ""
+            UserDefaults.standard.removeObject(forKey: "info")
             
             
             if let splitVC = self.splitViewController {

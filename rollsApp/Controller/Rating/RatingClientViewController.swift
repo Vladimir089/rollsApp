@@ -64,6 +64,9 @@ class RatingClientViewController: UIViewController {
         } else if segmentedControl.selectedSegmentIndex == 2  {
             period = "all_time"
         }
+        clientArr.removeAll()
+        arrRatingClientResponse.removeAll()
+        
         getRate {
             self.checkCleints()
         }
@@ -116,21 +119,19 @@ class RatingClientViewController: UIViewController {
 
     
     func getRate(completion: @escaping () -> Void) {
-        clientArr.removeAll()
-        arrRatingClientResponse.removeAll()
+       
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
             HTTPHeader.accept("*/*")
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/get_rating_clients/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).response { response in
-            debugPrint(response)
             switch response.result {
             case .success(_):
                 do {
                     if let data = response.data {
                         let client = try JSONDecoder().decode(RatingCleintResponse.self, from: data)
-                        self.arrRatingClientResponse = client.orders
+                        self.arrRatingClientResponse = client.clients
                     }
                 } catch {
                     print("Error decoding JSON:", error)
@@ -142,7 +143,8 @@ class RatingClientViewController: UIViewController {
         }
     }
 
-
+//сделать сортировку как в вацапе
+    
     func checkCleints() {
         guard !allDishes.isEmpty else {
             getRate {

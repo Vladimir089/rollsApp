@@ -62,6 +62,8 @@ class RatingDishesViewController: UIViewController {
         } else if segmentedControl.selectedSegmentIndex == 2  {
             period = "all_time"
         }
+        dishArr.removeAll()
+        arrRatingDishesResponse.removeAll()
         getRate {
             self.checkDishes()
         }
@@ -115,8 +117,8 @@ class RatingDishesViewController: UIViewController {
     
     
     func getRate(completion: @escaping () -> Void) {
-        dishArr.removeAll()
-        arrRatingDishesResponse.removeAll()
+//        dishArr.removeAll()
+//        arrRatingDishesResponse.removeAll()
         
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey),
@@ -124,10 +126,11 @@ class RatingDishesViewController: UIViewController {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/get_rating_dishes/?cafe_id=\(cafeID)&period=\(period)&page_size=20&page=\(page)", method: .get, headers: headers).response { response in
+            
             switch response.result {
             case .success(_):
                 if let data = response.data, let dish = try? JSONDecoder().decode(RatingDishesResponse.self, from: data) {
-                    self.arrRatingDishesResponse = dish.dishes
+                    self.arrRatingDishesResponse += dish.dishes
                     self.arrRatingDishesResponse.sort(by: { $0.quantity > $1.quantity})
                 }
                 completion()

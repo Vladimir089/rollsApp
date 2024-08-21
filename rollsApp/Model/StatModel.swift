@@ -35,7 +35,7 @@ struct OrderStatistics: Codable {
 var stat: StatisticsResponse?
 
 struct RatingCleintResponse: Codable {
-    let orders: [RatingClient]
+    let clients: [RatingClient]
 }
 
 struct RatingClient: Codable {

@@ -33,6 +33,7 @@ struct Order: Codable {
     let step: Int?
     let orderForCourierStatus: String?
     let issued: Bool?
+    let modifications: String?
 
     var formattedCreatedTime: String? {
         guard let date = createdDate else { return nil }
@@ -63,7 +64,7 @@ struct Order: Codable {
 
 
     enum CodingKeys: String, CodingKey {
-        case id, phone, address, status, cookingTime, orderOnTime
+        case id, phone, address, status, cookingTime, orderOnTime, modifications
         case menuItems = "menu_items"
         case totalCost = "total_cost"
         case clientsNumber = "clients_number"
@@ -74,6 +75,7 @@ struct Order: Codable {
         case step = "step"
         case orderForCourierStatus = "order_for_courier__status"
         case issued = "issued"
+        
     }
 }
 

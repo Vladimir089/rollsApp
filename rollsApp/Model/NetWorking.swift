@@ -8,6 +8,7 @@ import Alamofire
 
 var newOrdersForInsert: [Order] = []
 
+
 extension OrderViewController { //для обновления чтобы таблица не моргала
     
     func formatPhoneNumber(_ phone: String) -> String {
@@ -38,7 +39,8 @@ extension OrderViewController { //для обновления чтобы таб�
             HTTPHeader.accept("application/json")
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)&filter_type=\(selectedParam)", method: .get, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 if self.isOpen == false {
@@ -166,7 +168,7 @@ extension LoginViewController {
                     indexPathsToUpdate.removeAll()
                     orderStatus.removeAll()
                     
-                    
+                    print(cafeID, "DIDDDDDD")
                     
                     completion(.success(()))
                 } else {
@@ -278,7 +280,7 @@ extension SimilarAdressTable {
 
         // Выполнение запроса с использованием Alamofire
         AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
+            
             switch response.result {
             case .success(let value):
                 guard let json = value as? [String: Any] else {
