@@ -40,7 +40,7 @@ extension OrderViewController { //для обновления чтобы таб�
         ]
         
         AF.request("http://arbamarket.ru/api/v1/main/get_today_orders/?cafe_id=\(cafeID)&filter_type=\(selectedParam)", method: .get, headers: headers).response { response in
-            debugPrint(response)
+            //debugPrint(response)
             switch response.result {
             case .success(_):
                 if self.isOpen == false {
@@ -157,7 +157,7 @@ extension LoginViewController {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/accounts/login/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-            debugPrint(response)
+//            debugPrint(response)
             switch response.result {
             case .success( _):
                 if let data = response.data, let login = try? JSONDecoder().decode(Login.self, from: data) {
@@ -192,6 +192,7 @@ extension LoginViewController {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/accounts/get_cafe_info/?auth_token=\(authKey)", method: .post, headers: headers).response { response in
+            //debugPrint(response)
             switch response.result {
             case .success( _):
                 if let data = response.data, let cafe = try? JSONDecoder().decode(Cafe.self, from: data) {
@@ -243,7 +244,7 @@ extension StatViewController {
         let headers: HTTPHeaders = [
             HTTPHeader.authorization(bearerToken: authKey)]
         AF.request("http://arbamarket.ru/api/v1/main/get_statistics/?cafe_id=\(cafeID)", method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
-            debugPrint(response)
+            //debugPrint(response, "stata")
             switch response.result {
             case .success( _):
                 if let data = response.data, let statistic = try? JSONDecoder().decode(StatisticsResponse.self, from: data) {
@@ -342,7 +343,7 @@ extension SimilarAdressTable {
 
         // Выполнение запроса с использованием Alamofire
         AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
+            //debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {

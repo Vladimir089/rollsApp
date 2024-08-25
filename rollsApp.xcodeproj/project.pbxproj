@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15000ADE2C7B7ADF00DB45BC /* ExtensionMainpageOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15000ADD2C7B7ADF00DB45BC /* ExtensionMainpageOrder.swift */; };
 		150FE3302C27534400206E69 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 150FE32F2C27534400206E69 /* Kingfisher */; };
 		159D8BFF2BC9F3120075DCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */; };
 		159D8C022BCA9CF10075DCB5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 159D8C012BCA9CF10075DCB5 /* Alamofire */; };
@@ -59,6 +60,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15000ADD2C7B7ADF00DB45BC /* ExtensionMainpageOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMainpageOrder.swift; sourceTree = "<group>"; };
 		159D8BFE2BC9F3120075DCB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdressViewController.swift; sourceTree = "<group>"; };
 		159D8C142BCEA7E90075DCB5 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		15D7E4A32BD9521F007100AB /* RatingDishesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingDishesViewController.swift; sourceTree = "<group>"; };
 		15D7E4A62BDA9DA1007100AB /* DishRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRate.swift; sourceTree = "<group>"; };
 		15D7E4A82BDAD08C007100AB /* RatingClientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingClientViewController.swift; sourceTree = "<group>"; };
+		15DFED202C7626EE00E707FD /* rollsApp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = rollsApp.entitlements; sourceTree = "<group>"; };
 		15E908C92BBC49950086E9F5 /* Экосистема №9.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Экосистема №9.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E908CC2BBC49950086E9F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15E908CE2BBC49950086E9F5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +124,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15000ADC2C7B7AC500DB45BC /* MainOrderPage */ = {
+			isa = PBXGroup;
+			children = (
+				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
+				15000ADD2C7B7ADF00DB45BC /* ExtensionMainpageOrder.swift */,
+			);
+			path = MainOrderPage;
+			sourceTree = "<group>";
+		};
 		15A7309A2C42FB6200DAC4E8 /* Lottie */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,9 +164,9 @@
 		15D7E4AA2BDD500E007100AB /* Orders */ = {
 			isa = PBXGroup;
 			children = (
+				15000ADC2C7B7AC500DB45BC /* MainOrderPage */,
 				15B8FF4A2BC03AAE005E3562 /* NewOrderViewController.swift */,
 				159D8C142BCEA7E90075DCB5 /* EditViewController.swift */,
-				15E908E32BBC4E4D0086E9F5 /* OrderViewController.swift */,
 				159D8C0B2BCD5B420075DCB5 /* AdressViewController.swift */,
 				15B8FF542BC595DB005E3562 /* DishesMenuViewControllerController.swift */,
 			);
@@ -211,6 +223,7 @@
 		15E908CB2BBC49950086E9F5 /* rollsApp */ = {
 			isa = PBXGroup;
 			children = (
+				15DFED202C7626EE00E707FD /* rollsApp.entitlements */,
 				15E908E52BBC50870086E9F5 /* Dops */,
 				15E908E22BBC4B0D0086E9F5 /* Model */,
 				15E908E12BBC4B080086E9F5 /* View */,
@@ -393,6 +406,7 @@
 				15B8FF5C2BC6C221005E3562 /* SimilarAdressTable.swift in Sources */,
 				15BE2B6B2C42F29600F5A6E2 /* IpadViewController.swift in Sources */,
 				15D7E4A12BD926AE007100AB /* SettingsViewController.swift in Sources */,
+				15000ADE2C7B7ADF00DB45BC /* ExtensionMainpageOrder.swift in Sources */,
 				15AB13D92BD2960C009BC4EB /* NetWorking.swift in Sources */,
 				15B8FF532BC5702A005E3562 /* CreateOrder.swift in Sources */,
 				159D8C0C2BCD5B420075DCB5 /* AdressViewController.swift in Sources */,
@@ -578,6 +592,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = rollsApp/rollsApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A3JK6544MF;
@@ -590,7 +606,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -598,6 +614,7 @@
 				MARKETING_VERSION = 1.4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.arbamarket.employees;
 				PRODUCT_NAME = "Экосистема №9";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -613,6 +630,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = rollsApp/rollsApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A3JK6544MF;
@@ -625,7 +644,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -633,6 +652,7 @@
 				MARKETING_VERSION = 1.4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.arbamarket.employees;
 				PRODUCT_NAME = "Экосистема №9";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

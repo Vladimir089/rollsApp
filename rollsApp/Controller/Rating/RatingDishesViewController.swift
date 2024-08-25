@@ -130,8 +130,8 @@ class RatingDishesViewController: UIViewController {
             switch response.result {
             case .success(_):
                 if let data = response.data, let dish = try? JSONDecoder().decode(RatingDishesResponse.self, from: data) {
-                    self.arrRatingDishesResponse += dish.dishes
-                    self.arrRatingDishesResponse.sort(by: { $0.quantity > $1.quantity})
+                    self.arrRatingDishesResponse = dish.dishes
+                    //self.arrRatingDishesResponse.sort(by: { $0.quantity > $1.quantity})
                 }
                 completion()
             case .failure(_):

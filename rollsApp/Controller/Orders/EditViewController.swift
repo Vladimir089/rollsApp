@@ -320,7 +320,6 @@ extension EditViewController: EditViewControllerDelegate {
             let vc = DishesMenuViewControllerController()
             vc.coast = mainView?.similadAdressView
             vc.delegateEdit = self.mainView
-            delegate?.openSplitEdit(vc: self) //ЭТО НЕПОНЯТНО ЧТО
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = DishesMenuViewControllerController()

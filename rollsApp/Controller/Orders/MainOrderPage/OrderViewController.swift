@@ -13,7 +13,6 @@ protocol OrderViewControllerDelegate: AnyObject {
     func detailVC(index: Int)
     func close()
     func issued(index: Int, completion: @escaping () -> Void)
-    func openSplitEdit(vc: UIViewController)
 }
 
 class OrderViewController: UIViewController {
@@ -28,6 +27,29 @@ class OrderViewController: UIViewController {
     var isWorkCicle = false
     var refreshControl = UIRefreshControl()
     
+    //alert
+    var alertController: UIAlertController?
+    var customView: UIView?
+
+
+    var stackViewAlert: UIStackView?
+    var cancelButton, okButtn: UIButton?
+    var arrButtoms: [UIButton] = []
+    var selectedTimeforButText = "Сейчас"
+    
+    
+    let arrTextBut = [15,20,30,40]
+    var noTimeButton: UIButton?
+    var timeTextField: UITextField?
+    var selectTime: String?
+    
+    let timePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .time
+        picker.preferredDatePickerStyle = .wheels
+        return picker
+    }()
+    
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +61,96 @@ class OrderViewController: UIViewController {
         startAuthCheckTimer()
         
         
+        
+    }
+    
+    func fillArrButtoms() {
+        arrButtoms.removeAll()
+        let arr = [15,20,30,40]
+        var t = 0
+        for i in arr {
+            let button = UIButton(type: .system)
+            button.tag = t
+            button.setTitle("\(i)", for: .normal)
+            button.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+            button.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+            button.layer.cornerRadius = 10
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.addTarget(self, action: #selector(buttonAlertTap(sender:)), for: .touchUpInside)
+            arrButtoms.append(button)
+            t += 1
+        }
+    }
+    
+    @objc func buttonAlertTap(sender: UIButton) {
+        for i in arrButtoms {
+            i.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+            i.setTitleColor(.systemBlue, for: .normal)
+            i.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+        }
+        
+        
+        sender.backgroundColor = .systemBlue
+        sender.setTitleColor(.white, for: .normal)
+        sender.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        
        
+        selectedTimeforButText = "Время"
+        textFieldORTimeButtonsTapped()
+        
+       
+        let time = Date()
+
+        
+        
+        let timeWithAddedMinutes = time.addingTimeInterval(TimeInterval(arrTextBut[sender.tag] * 60))
+
+        // Создаем DateFormatter и устанавливаем нужный формат
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        // Форматируем дату и выводим её
+        let formattedTime = dateFormatter.string(from: timeWithAddedMinutes)
+        selectTime = formattedTime
+        formatTime(time: timeWithAddedMinutes)
+        
+        
+        
+    }
+    
+    @objc func noTimeButtonTapped() {
+        selectedTimeforButText = "Сейчас"
+        noTimeButton!.backgroundColor = .systemBlue
+        noTimeButton!.setTitleColor(.white, for: .normal)
+        noTimeButton!.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        for i in arrButtoms {
+            i.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+            i.setTitleColor(.systemBlue, for: .normal)
+            i.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+        }
+        timeTextField?.text = "На Время"
+        selectTime = nil
+        timeTextField?.layer.borderColor = UIColor.clear.cgColor
+        timeTextField?.layer.borderWidth = 0
+        timeTextField?.resignFirstResponder()
+    }
+    
+    
+    func formatTime(time: Date) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let formattedTime = dateFormatter.string(from: time)
+        timeTextField?.text = formattedTime
+    }
+    
+    
+    func textFieldORTimeButtonsTapped() {
+        noTimeButton?.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        noTimeButton?.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+        noTimeButton!.setTitleColor(.systemBlue, for: .normal)
+        timeTextField?.layer.borderColor = UIColor.systemBlue.cgColor
+        timeTextField?.layer.borderWidth = 1
+        
         
         
     }
@@ -168,117 +279,12 @@ class OrderViewController: UIViewController {
     deinit {
         stopAuthCheckTimer()
     }
+    
+    
+    
+    
+    
+    
+    
 }
 
-extension OrderViewController: OrderViewControllerDelegate {
-    func openSplitEdit(vc: UIViewController) {
-        //УЗНАТЬ ЧТО С ЭТИМ ДЕЛАТЬ 
-        print(1234)
-    }
-    
-    func close() {
-        isOpen = false
-    }
-    
-    func detailVC(index: Int) {
-        // Проверяем, есть ли уже открытый EditViewController
-        if let existingDetailVC = navigationController?.viewControllers.first(where: { $0 is EditViewController }) as? EditViewController {
-            // Если есть, удаляем его из стека
-            if let indexToRemove = navigationController?.viewControllers.firstIndex(of: existingDetailVC) {
-                navigationController?.viewControllers.remove(at: indexToRemove)
-            }
-        }
-
-        print(123123123123)
-        let vc = EditViewController()
-        vc.delegate = self
-        vc.indexOne = index
-        let backItem = UIBarButtonItem()
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 17),
-            .foregroundColor: UIColor.black
-        ]
-        backItem.title = "Заказ №\(orderStatus[index].id)"
-        backItem.setTitleTextAttributes(attributes, for: .normal)
-        navigationController?.navigationBar.topItem?.backBarButtonItem = backItem
-        self.refreshControl.endRefreshing()
-
-        if let splitVC = self.splitViewController {
-            menuItemsArr.removeAll()
-            menuItemIndex.removeAll()
-            adress = ""
-            totalCoast = 0
-            let detailNavController = UINavigationController(rootViewController: vc)
-            splitVC.showDetailViewController(detailNavController, sender: nil)
-        } else {
-            isLoad = true
-            isOpen = true
-            navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-
-    
-    func createButtonGo(index: Int, completion: @escaping () -> Void) {
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("*/*")
-        ]
-        if orderStatus.count < index {
-            return
-        }
-        let currentOrder = orderStatus[index]
-        print(currentOrder.id, 324)
-        
-        let messageText = "Вызвать курьера на адрес \(currentOrder.address) ?"
-        let attributedString = NSMutableAttributedString(string: messageText)
-
-        let boldAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
-        let range = (messageText as NSString).range(of: currentOrder.address)
-        attributedString.addAttributes(boldAttribute, range: range)
-        
-        let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        alertController.setValue(attributedString, forKey: "attributedMessage")
-
-        let action1 = UIAlertAction(title: "Отмена", style: .destructive) { _ in
-            return
-        }
-
-        let action2 = UIAlertAction(title: "Вызвать", style: .default) { _ in
-            AF.request("http://arbamarket.ru/api/v1/delivery/create_order/?order_id=\(currentOrder.id)&cafe_id=\(currentOrder.cafeID)", method: .post, headers: headers).responseJSON { response in
-                switch response.result {
-                case .success(_):
-                    print(response)
-                case .failure(_):
-                    print(1)
-                }
-            }
-            completion()
-        }
-
-        alertController.addAction(action1)
-        alertController.addAction(action2)
-        
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    func issued(index: Int, completion: @escaping () -> Void) {
-        let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: authKey),
-            HTTPHeader.accept("*/*")
-        ]
-        if orderStatus.count < index {
-            return
-        }
-        let currentOrder = orderStatus[index]
-
-        AF.request("http://arbamarket.ru/api/v1/main/change_issued_filed/?cafe_id=\(currentOrder.cafeID)&order_id=\(currentOrder.id)", method: .post, headers: headers).responseJSON { response in
-            switch response.result {
-            case .success(_):
-                print(response)
-            case .failure(_):
-                print(1)
-            }
-        }
-        completion()
-    }
-}

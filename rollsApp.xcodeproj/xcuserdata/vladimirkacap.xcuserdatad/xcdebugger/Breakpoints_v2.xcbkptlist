@@ -62,8 +62,8 @@
             filePath = "rollsApp/Model/NetWorking.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
             landmarkName = "getCafeInfo()"
             landmarkType = "7">
             <Locations>
@@ -189,10 +189,10 @@
             filePath = "rollsApp/Controller/Orders/OrderViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
-            landmarkName = "detailVC(index:)"
-            landmarkType = "7">
+            startingLineNumber = "302"
+            endingLineNumber = "302"
+            landmarkName = "OrderViewController"
+            landmarkType = "21">
             <Locations>
                <Location
                   uuid = "CF3CC144-6761-4EB8-8F1A-48EAF6B920EF - ba53b10e5ca666bd"
@@ -237,10 +237,10 @@
             filePath = "rollsApp/Controller/Orders/OrderViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "newOrder()"
-            landmarkType = "7">
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "OrderViewController"
+            landmarkType = "3">
             <Locations>
                <Location
                   uuid = "0E736A1C-16DC-4963-958E-076E0D7CBD9A - 60f36e7d2ed1a8de"
