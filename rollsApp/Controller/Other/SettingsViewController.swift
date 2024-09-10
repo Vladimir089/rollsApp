@@ -8,7 +8,6 @@
 import UIKit
 import StoreKit
 
-var isHide = false
 
 class SettingsViewController: UIViewController {
     
@@ -30,7 +29,6 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .settingBG
-        checkHide()
         settingsAlert()
         settingsView()
     }
@@ -154,72 +152,18 @@ class SettingsViewController: UIViewController {
         stackView.addArrangedSubview(shareApp)
         stackView.addArrangedSubview(rateApp)
         
-        var hideView: UIView = {
-            let view = UIView()
-            view.backgroundColor = .settings
-            view.layer.cornerRadius = 12
-            return view
-        }()
-        
-        view.addSubview(hideView)
-        hideView.snp.makeConstraints { make in
+        view.addSubview(exitButton)
+        exitButton.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
             make.height.equalTo(44)
             make.top.equalTo(secondView.snp.bottom).inset(-15)
         }
         
-        view.addSubview(exitButton)
-        exitButton.snp.makeConstraints { make in
-            make.height.equalTo(44)
-            make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(hideView.snp.bottom).inset(-30)
-        }
-        
-        var hideLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Скрыть завершенные"
-            label.textColor = .TC
-            label.font = .systemFont(ofSize: 18, weight: .regular)
-            return label
-        }()
-        hideView.addSubview(hideLabel)
-        hideLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(15)
-        }
-        
-        hideAndShowEndOrderToggle = {
-            let swich = UISwitch()
-            swich.setOn(isHide, animated: true)
-            return swich
-        }()
-        hideView.addSubview(hideAndShowEndOrderToggle!)
-        hideAndShowEndOrderToggle?.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(15)
-        }
-        hideAndShowEndOrderToggle?.addTarget(self, action: #selector(hideAndShow), for: .touchUpInside)
+       
         
     }
     
-    @objc func hideAndShow() {
-        if isHide == true {
-            isHide = false
-            UserDefaults.standard.setValue(isHide, forKey: "isHide")
-            hideAndShowEndOrderToggle?.setOn(false, animated: true)
-        } else {
-            isHide = true
-            UserDefaults.standard.setValue(isHide, forKey: "isHide")
-            hideAndShowEndOrderToggle?.setOn(true, animated: true)
-        }
-    }
     
-    func checkHide() {
-        if UserDefaults.standard.object(forKey: "isHide") != nil {
-            isHide = UserDefaults.standard.bool(forKey: "isHide")
-            hideAndShowEndOrderToggle?.setOn(isHide, animated: true)
-        }
-    }
     
     
     @objc func shareAppFunc() {

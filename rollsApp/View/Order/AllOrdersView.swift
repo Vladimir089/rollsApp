@@ -251,11 +251,6 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                 inCellButton.setTitleColor(.white, for: .normal)
             }
             
-
-            
-            
-           
-            
             if orderStatus[indexPath.row].orderForCourierStatus == nil && (orderStatus[indexPath.row].address != adresCafe && orderStatus[indexPath.row].address != "С собой, 0, самовывоз") && orderStatus[indexPath.row].issued == false {
                 inCellButton.setTitle("Вызвать", for: .normal)
             }
@@ -330,6 +325,7 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
             if inCellButton.titleLabel?.text == "Заказ отменен" || inCellButton.titleLabel?.text == "Заказ выполнен" || inCellButton.titleLabel?.text == "Отклонен" || inCellButton.titleLabel?.text == "Завершен" {
                 inCellButton.setTitleColor(.clear, for: .normal)
                 inCellButton.backgroundColor = UIColor.clear
+                inCellButton.layer.removeAnimation(forKey: "backgroundColorAnimation")
             }
             
            
@@ -339,18 +335,22 @@ extension AllOrdersView: UICollectionViewDelegate, UICollectionViewDataSource, U
                 inCellButton.isHidden = false
                 inCellButton.isUserInteractionEnabled = false
                 inCellButton.backgroundColor = UIColor(hex: "#ffff00")
+                inCellButton.layer.removeAnimation(forKey: "backgroundColorAnimation")
             case "Курьер назначен":
                 inCellButton.isHidden = false
                 inCellButton.isUserInteractionEnabled = false
                 inCellButton.backgroundColor = UIColor(hex: "#ffb7b7")
+                inCellButton.layer.removeAnimation(forKey: "backgroundColorAnimation")
             case "Курьер подъехал":
                 inCellButton.isHidden = false
                 inCellButton.isUserInteractionEnabled = false
                 inCellButton.backgroundColor = UIColor(hex: "#fa00a3")
+                inCellButton.layer.removeAnimation(forKey: "backgroundColorAnimation")
             case "В исполнении":
                 inCellButton.isHidden = false
                 inCellButton.isUserInteractionEnabled = false
                 inCellButton.backgroundColor = UIColor(hex: "#a5b307")
+                inCellButton.layer.removeAnimation(forKey: "backgroundColorAnimation")
             case .none:
                 break
             case .some(_):

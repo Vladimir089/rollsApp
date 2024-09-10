@@ -98,6 +98,7 @@ extension SimilarAdressTable: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         adress = adressArr[indexPath.row]
+        print(adress)
         getCostAdress()
     }
     

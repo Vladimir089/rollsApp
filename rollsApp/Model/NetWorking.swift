@@ -49,16 +49,14 @@ extension OrderViewController { //для обновления чтобы таб�
                         var newOrders = order.orders
                         let newOrderIDs = Set(newOrders.map { $0.id })
                         var newOrdersForInsert: [Order] = []
-                        print(isHide)
                         
-                        // Удаляем заказы, которых больше нет в новых данных или которые завершены и isHide == true
                         for (index, existingOrder) in orderStatus.enumerated().reversed() {
-                            if !newOrderIDs.contains(existingOrder.id) || (isHide && (existingOrder.orderForCourierStatus == "Заказ выполнен" || existingOrder.orderForCourierStatus == "Заказ отменен" || existingOrder.orderForCourierStatus == "Заказ завершен" ||
-                                existingOrder.issued == true)) {
+                            if !newOrderIDs.contains(existingOrder.id)  {
                                 orderStatus.remove(at: index)
                                 indexPathsToDelete.append(IndexPath(item: index, section: 0))
                             }
                         }
+                        
                         
                         for newOrder in newOrders {
                             var order = newOrder
@@ -79,10 +77,7 @@ extension OrderViewController { //для обновления чтобы таб�
                                     indexPathsToUpdate.append(indexPath)
                                 }
                             } else {
-                                // Добавляем новый заказ, если isHide == false или если заказ не завершен
-                                if isHide == false || (order.orderForCourierStatus != "Заказ завершен" && order.orderForCourierStatus != "Заказ выполнен" && order.orderForCourierStatus != "Заказ отменен" && order.issued == false )   {
-                                    newOrdersForInsert.append(order)
-                                }
+                                newOrdersForInsert.append(order)
                             }
                         }
                         
@@ -340,10 +335,10 @@ extension SimilarAdressTable {
             print("Ошибка: не удалось создать закодированный URL.")
             return
         }
-
+        print(adress)
         // Выполнение запроса с использованием Alamofire
         AF.request(encodedURL, method: .get, headers: headers).responseJSON { response in
-            //debugPrint(response)
+            debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {
