@@ -11,7 +11,7 @@ import Alamofire
 protocol EditViewControllerDelegate: AnyObject {
     func showVC()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
-    func updateOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void)
+    func updateOrder(phonee: String, menuItems: String, clientsNumber: String, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
     func showAdressVC()
     func cell()
@@ -331,7 +331,7 @@ extension EditViewController: EditViewControllerDelegate {
     }
     
     
-    func updateOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void) {
+    func updateOrder(phonee: String, menuItems: String, clientsNumber: String, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, orderId: Int, completion: @escaping (Bool) -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.accept("application/json"),
             HTTPHeader.contentType("application/json"),

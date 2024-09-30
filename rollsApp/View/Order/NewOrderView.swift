@@ -359,7 +359,7 @@ class NewOrderView: UIView {
         
         var phone = phoneTextField?.text ?? ""
         var menuItems = ""
-        let clientNumber = Int(commentTextField?.text ?? "1") ?? 1
+        let clientNumber: String = commentTextField?.text ?? ""
         var adress = adress
         let coast = totalCoast
         let payMethod = itemsForSegmented[oplataSegmentedControl!.selectedSegmentIndex]

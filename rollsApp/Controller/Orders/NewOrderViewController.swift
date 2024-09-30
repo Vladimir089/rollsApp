@@ -16,7 +16,7 @@ protocol NewOrderViewControllerDelegate: AnyObject {
 protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func showVC()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: String, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
     func showAdressVC()
 }
@@ -171,7 +171,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
         
     }
     
-    func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
+    func createNewOrder(phonee: String, menuItems: String, clientsNumber: String, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.accept("application/json"),
             HTTPHeader.contentType("application/json"),

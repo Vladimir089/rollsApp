@@ -262,12 +262,15 @@ class OrderViewController: UIViewController {
 
     func getImage(d: Dish, completion: @escaping () -> Void) {
         if let url = d.img {
+            
             KingfisherManager.shared.retrieveImage(with: URL(string: "http://arbamarket.ru\(url)")!) { response in
                 switch response {
                 case .success(let image):
                     allDishes.append((d, image.image))
+                    print(d, "ok")
                 case .failure(let error):
                     allDishes.append((d, imageSatandart ?? UIImage()))
+                    print(d, "fail")
                 }
                 completion()
             }
