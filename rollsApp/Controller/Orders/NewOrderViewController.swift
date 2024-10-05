@@ -34,6 +34,7 @@ class NewOrderViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        returnClearView()
         if  isMediumPage == false {
             if let splitVC = self.splitViewController  {
                 vcDishes = DishesMenuViewControllerController()
@@ -58,19 +59,15 @@ class NewOrderViewController: UIViewController {
     }
     
     private func returnClearView() {
-        if  isMediumPage == false {
-            if let splitVC = self.splitViewController {
-                menuItemsArr.removeAll()
-                menuItemIndex.removeAll()
-                adress = ""
-                totalCoast = 0
-                vcDishes = DishesMenuViewControllerController()
-                vcDishes.coast = mainView?.similadAdressView
-                vcDishes.delegate = self.mainView
-                let newNavController = UINavigationController(rootViewController: vcDishes)
-                splitVC.showDetailViewController(newNavController, sender: nil)
-            }
-        }
+        
+        menuItemsArr.removeAll()
+        menuItemIndex.removeAll()
+        adress = ""
+        totalCoast = 0
+        self.mainView = NewOrderView()
+        self.mainView?.delegate = self
+        self.view = self.mainView
+ 
     }
     
     private func settingsLottie() {
@@ -218,9 +215,20 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     
     func succesCreate() {
         if let splitVC = self.splitViewController {
-            let newNavController = UINavigationController(rootViewController: lottieVC)
+            let newNavController = lottieVC
             splitVC.showDetailViewController(newNavController, sender: nil)
             lottieVC.changeInterface(named: "Done")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                menuItemsArr.removeAll()
+                menuItemIndex.removeAll()
+                adress = ""
+                totalCoast = 0
+                self.mainView = NewOrderView()
+                self.mainView?.delegate = self
+                self.view = self.mainView
+                self.returnClearView()
+            }
+          
         } else {
             UIView.animate(withDuration: 0.4) {
                 self.animationView.alpha = 1
@@ -240,10 +248,10 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
                 self.mainView = NewOrderView()
                 self.mainView?.delegate = self
                 self.view = self.mainView
-                
+                self.returnClearView()
             }
         } 
-        returnClearView()
+       
     }
     
 

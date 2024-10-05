@@ -26,6 +26,13 @@ class SettingsViewController: UIViewController {
     
     //MARK: -viewDidLoad()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let splitVC = self.splitViewController  {
+            splitVC.showDetailViewController(StatViewController(), sender: nil)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .settingBG
