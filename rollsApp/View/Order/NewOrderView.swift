@@ -734,6 +734,7 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
             })
             self.layoutIfNeeded()
             self.scrollView.layoutIfNeeded()
+            self.delegate?.reloadDishes()   
             self.updateContentSize()
         }
     }

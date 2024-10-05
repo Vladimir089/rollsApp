@@ -10,7 +10,7 @@ import UIKit
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     let orderVC = OrderViewController()
-    let statVC = StatViewController()
+    let newOrderVC = NewOrderViewController()
     let settingsVC = SettingsViewController()
     
     let separatorView: UIView = {
@@ -38,12 +38,12 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
         orderVC.title = "Заказы"
         orderVC.tabBarItem.image = UIImage.orders.resize(targetSize: CGSize(width: 30, height: 30))
-        let statNavController = UINavigationController(rootViewController: statVC)
-        statNavController.title = "Статистика"
-        statNavController.tabBarItem.image = UIImage.stat.resize(targetSize: CGSize(width: 30, height: 30))
+        let newNavController = UINavigationController(rootViewController: newOrderVC)
+        newNavController.title = "Новый"
+        newNavController.tabBarItem.image = UIImage.newOrderTap.resize(targetSize: CGSize(width: 30, height: 30))
         settingsVC.title = "Настройки"
         settingsVC.tabBarItem.image = UIImage.settings.resize(targetSize: CGSize(width: 30, height: 30))
-        let controllers = [statNavController, orderVC, settingsVC]
+        let controllers = [newNavController, orderVC, settingsVC]
         self.viewControllers = controllers
         tabBar.backgroundColor = .tabBar
         tabBar.unselectedItemTintColor = .iconsUnselected

@@ -21,7 +21,9 @@ class StatViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        
     }
     
     override func viewDidLoad() {
@@ -40,6 +42,8 @@ class StatViewController: UIViewController {
     func stopAuthCheckTimer() {
         authCheckTimer?.invalidate()
         authCheckTimer = nil
+        loadTimer?.invalidate()
+        loadTimer = nil
     }
     
     @objc func checkAuthKey() {

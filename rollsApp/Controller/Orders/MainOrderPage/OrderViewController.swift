@@ -43,6 +43,13 @@ class OrderViewController: UIViewController {
     var timeTextField: UITextField?
     var selectTime: String?
     
+    var isLoadView = false
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        handleInactivity()
+    }
+    
     let timePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .time
@@ -59,9 +66,17 @@ class OrderViewController: UIViewController {
         mainView?.delegate = self
         setupRefreshControl()
         startAuthCheckTimer()
-        
-        
-        
+        handleInactivity()
+        isLoadView = true
+    }
+    
+    @objc func handleInactivity() {
+        if let splitVC = self.splitViewController {
+            let newNavController = lottieVC
+            splitVC.showDetailViewController(newNavController, sender: nil)
+            lottieVC.changeInterface(named: "wait")
+        }
+        print("Прошла минута без активности")
     }
     
     func fillArrButtoms() {
@@ -189,8 +204,10 @@ class OrderViewController: UIViewController {
             menuItemIndex.removeAll()
             adress = ""
             totalCoast = 0
+            vc.isMediumPage = true
             let newNavController = UINavigationController(rootViewController: vc)
             splitVC.showDetailViewController(newNavController, sender: nil)
+           
         } else {
             isLoad = true
             isOpen = true

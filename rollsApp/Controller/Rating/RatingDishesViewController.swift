@@ -22,7 +22,6 @@ class RatingDishesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = .red
         getRate {
             self.checkDishes()
         }

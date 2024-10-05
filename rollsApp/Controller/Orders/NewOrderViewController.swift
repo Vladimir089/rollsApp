@@ -7,7 +7,7 @@
 
 import UIKit
 import Alamofire
-
+import Lottie
 
 protocol NewOrderViewControllerDelegate: AnyObject {
     func removeDelegates()
@@ -15,6 +15,7 @@ protocol NewOrderViewControllerDelegate: AnyObject {
 
 protocol NewOrderViewControllerShowWCDelegate: AnyObject {
     func showVC()
+    func reloadDishes()
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void)
     func createNewOrder(phonee: String, menuItems: String, clientsNumber: String, adress: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void)
     func succesCreate()
@@ -26,6 +27,24 @@ class NewOrderViewController: UIViewController {
     var mainView: NewOrderView?
     weak var delegate: OrderViewControllerDelegate?
     
+    private lazy var animationView = UIView()
+    private var animationViewLottie: LottieAnimationView = .init()
+    var vcDishes = DishesMenuViewControllerController()
+    var isMediumPage = false //если нажата кнопка нового заказа из меню
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if  isMediumPage == false {
+            if let splitVC = self.splitViewController  {
+                vcDishes = DishesMenuViewControllerController()
+                vcDishes.coast = mainView?.similadAdressView
+                vcDishes.delegate = self.mainView
+                let newNavController = UINavigationController(rootViewController: vcDishes)
+                splitVC.showDetailViewController(newNavController, sender: nil)
+            }
+        }
+       
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +52,65 @@ class NewOrderViewController: UIViewController {
         mainView = NewOrderView()
         mainView?.delegate = self
         self.view = mainView
+        settingsLottie()
+        returnClearView()
+        
+    }
+    
+    private func returnClearView() {
+        if  isMediumPage == false {
+            if let splitVC = self.splitViewController {
+                menuItemsArr.removeAll()
+                menuItemIndex.removeAll()
+                adress = ""
+                totalCoast = 0
+                vcDishes = DishesMenuViewControllerController()
+                vcDishes.coast = mainView?.similadAdressView
+                vcDishes.delegate = self.mainView
+                let newNavController = UINavigationController(rootViewController: vcDishes)
+                splitVC.showDetailViewController(newNavController, sender: nil)
+            }
+        }
+    }
+    
+    private func settingsLottie() {
+        
+        animationView.backgroundColor = .white
+        animationView.layer.cornerRadius = 16
+        animationView.layer.shadowColor = UIColor.black.cgColor
+        animationView.layer.shadowOpacity = 0.25
+        animationView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        animationView.layer.shadowRadius = 4
+        animationView.layer.masksToBounds = false
+        view.addSubview(animationView)
+        animationView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(40)
+            make.height.equalTo(400)
+            make.center.equalToSuperview()
+        }
+        animationView.alpha = 0
+        
+        
+      
+        animationViewLottie.animation = LottieAnimation.named("Done")
+        animationViewLottie.loopMode = .loop
+        animationView.addSubview(animationViewLottie)
+        animationViewLottie.snp.makeConstraints({ make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.width.equalTo(300)
+        })
+        
+        let label = UILabel()
+        label.textColor = .systemGreen.withAlphaComponent(0.4)
+        label.text = "Заказ успешно\nсоздан"
+        label.numberOfLines = 2
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        animationView.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(20)
+            make.bottom.equalTo(animationViewLottie.snp.bottom)
+        }
         
     }
     
@@ -79,6 +157,11 @@ extension NewOrderViewController: NewOrderViewControllerDelegate {
 }
 
 extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
+    func reloadDishes() {
+        vcDishes.settingsView()
+        vcDishes.collectionView?.reloadData()
+    }
+    
     func getLastAdress(phoneNumber: String, cafeID: String, completion: @escaping (String) -> Void) {
         var resultAddress = ""
 
@@ -139,9 +222,28 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
             splitVC.showDetailViewController(newNavController, sender: nil)
             lottieVC.changeInterface(named: "Done")
         } else {
-            dismiss(animated: true, completion: nil)
-        }
-        
+            UIView.animate(withDuration: 0.4) {
+                self.animationView.alpha = 1
+                self.animationViewLottie.play()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                
+                UIView.animate(withDuration: 0.3) {
+                    self.animationView.alpha = 0
+                    self.animationViewLottie.stop()
+                }
+                
+                menuItemsArr.removeAll()
+                menuItemIndex.removeAll()
+                adress = ""
+                totalCoast = 0
+                self.mainView = NewOrderView()
+                self.mainView?.delegate = self
+                self.view = self.mainView
+                
+            }
+        } 
+        returnClearView()
     }
     
 
@@ -151,12 +253,6 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
     func showVC() {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-//            let vc = DishesMenuViewControllerController()
-//            vc.coast = mainView?.similadAdressView
-//            vc.delegate = self.mainView
-//            self.navigationController?.pushViewController(vc, animated: true)
-            //ПОКА ДЕЛАЕМ РЕДАКТИРОВАНИЕ ПО ЭТОМУ ТАК
-            
             let vc = DishesMenuViewControllerController()
             vc.coast = mainView?.similadAdressView
             vc.delegate = self.mainView

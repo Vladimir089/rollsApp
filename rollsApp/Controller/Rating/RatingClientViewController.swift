@@ -22,7 +22,6 @@ class RatingClientViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = .red
         getRate {
             self.checkCleints()
         }

@@ -50,6 +50,13 @@ class SettingsViewController: UIViewController {
         return view
     }()
     
+    let firstView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .settings
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    
     
     
     //MARK: -create interface
@@ -116,13 +123,48 @@ class SettingsViewController: UIViewController {
             make.left.equalTo(cafeImageView.snp.right).inset(-15)
             make.top.equalTo(cafeImageView.snp.centerY)
         }
+
+        view.addSubview(firstView)
+        firstView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(15)
+            make.height.equalTo(140)
+            make.top.equalTo(nameView.snp.bottom).inset(-15)
+        }
+        
+        let oneStackView = UIStackView()
+        oneStackView.axis = .vertical
+        oneStackView.distribution = .fillEqually
+        
+        let cashButton = generateButton(text: "Касса", image: .cashSettings.resize(targetSize: CGSize(width: 29, height: 29)), isBottomSeparator: true)
+        oneStackView.addArrangedSubview(cashButton)
+        var gestureCash = UITapGestureRecognizer(target: self, action: #selector(openCashStat))
+        cashButton.addGestureRecognizer(gestureCash)
+        cashButton.isUserInteractionEnabled = true
+        
+        let rateBludeButton = generateButton(text: "Рейтинг блюд", image: .bludeSettings.resize(targetSize: CGSize(width: 29, height: 29)), isBottomSeparator: true)
+        oneStackView.addArrangedSubview(rateBludeButton)
+        var gestureDish = UITapGestureRecognizer(target: self, action: #selector(openBludeStat))
+        rateBludeButton.addGestureRecognizer(gestureDish)
+        rateBludeButton.isUserInteractionEnabled = true
+        
+        let rateClientsButton = generateButton(text: "Рейтинг клиентов", image: .rateSettings.resize(targetSize: CGSize(width: 29, height: 29)), isBottomSeparator: false)
+        oneStackView.addArrangedSubview(rateClientsButton)
+        var gestureClient = UITapGestureRecognizer(target: self, action: #selector(openClientStat))
+        rateClientsButton.addGestureRecognizer(gestureClient)
+        rateClientsButton.isUserInteractionEnabled = true
+        
+        firstView.addSubview(oneStackView)
+        oneStackView.snp.makeConstraints { make in
+            make.left.right.top.bottom.equalTo(firstView)
+        }
+        
         
         
         view.addSubview(secondView)
         secondView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(15)
             make.height.equalTo(88)
-            make.top.equalTo(nameView.snp.bottom).inset(-15)
+            make.top.equalTo(firstView.snp.bottom).inset(-15)
         }
         
         let stackView: UIStackView = {
@@ -158,12 +200,34 @@ class SettingsViewController: UIViewController {
             make.height.equalTo(44)
             make.top.equalTo(secondView.snp.bottom).inset(-15)
         }
-        
-       
-        
     }
     
+    @objc private func openCashStat() {
+        let newNavController = StatViewController()
+        if let splitVC = self.splitViewController  {
+            splitVC.showDetailViewController(newNavController, sender: nil)
+        } else {
+            self.navigationController?.pushViewController(newNavController, animated: true)
+        }
+    }
     
+    @objc private func openBludeStat() {
+        let newNavController = RatingDishesViewController()
+        if let splitVC = self.splitViewController  {
+            splitVC.showDetailViewController(newNavController, sender: nil)
+        } else {
+            self.navigationController?.pushViewController(newNavController, animated: true)
+        }
+    }
+    
+    @objc private func openClientStat() {
+        let newNavController = RatingClientViewController()
+        if let splitVC = self.splitViewController  {
+            splitVC.showDetailViewController(newNavController, sender: nil)
+        } else {
+            self.navigationController?.pushViewController(newNavController, animated: true)
+        }
+    }
     
     
     @objc func shareAppFunc() {
@@ -199,6 +263,8 @@ class SettingsViewController: UIViewController {
             }
         }
     }
+    
+
     
     
     func generateButton(text: String, image: UIImage, isBottomSeparator: Bool) -> UIView {

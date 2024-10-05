@@ -29,10 +29,11 @@ class StatView: UIView {
     //MARK: -Func
     
     private func createInterface() {
-        backgroundColor = .BG
+        backgroundColor = .settingBG
         let imageView: UIImageView = {
             let imageView = UIImageView(image: imageSatandart)
             imageView.clipsToBounds = true
+            imageView.layer.cornerRadius = 45
             return imageView
         }()
         addSubview(imageView)
@@ -138,115 +139,9 @@ class StatView: UIView {
             make.top.equalTo(courerCash.snp.bottom).inset(-10)
         }
         
-        let secondView = createView(color: .ratingCenterView, cornerRadius: 10)
-        addSubview(secondView)
-        secondView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(15)
-            make.top.equalTo(centerView.snp.bottom).inset(-15)
-            make.height.equalTo(88)
-        }
         
-        let rateDishesView: UIView = {
-            let view = UIView()
-            let gesture = UITapGestureRecognizer(target: self, action: #selector(showRatingDishes))
-            view.addGestureRecognizer(gesture)
-            view.backgroundColor = .clear
-            return view
-        }()
-        secondView.addSubview(rateDishesView)
-        rateDishesView.snp.makeConstraints { make in
-            make.height.equalTo(44)
-            make.left.right.equalToSuperview()
-            make.top.equalToSuperview()
-        }
         
-        let imageViewColocol: UIImageView = {
-            let image: UIImage = .colocol
-            let imageView = UIImageView(image: image)
-            return imageView
-        }()
-        rateDishesView.addSubview(imageViewColocol)
-        imageViewColocol.snp.makeConstraints { make in
-            make.height.width.equalTo(29)
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
-        }
-        let labelRatingDishes = generateLaels(text: "Рейтинг блюд", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .TC)
-        rateDishesView.addSubview(labelRatingDishes)
-        labelRatingDishes.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalTo(imageViewColocol.snp.right).inset(-10)
-        }
-        
-        let imageViewTopArrow: UIImageView = {
-            let image: UIImage = .arrow
-            let imageView = UIImageView(image: image)
-            return imageView
-        }()
-        rateDishesView.addSubview(imageViewTopArrow)
-        imageViewTopArrow.snp.makeConstraints { make in
-            make.width.equalTo(10)
-            make.height.equalTo(18)
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(10)
-        }
-        
-        let secondSeparatorView = UIView()
-        secondSeparatorView.backgroundColor = .separator
-        rateDishesView.addSubview(secondSeparatorView)
-        secondSeparatorView.snp.makeConstraints { make in
-            make.height.equalTo(0.5)
-            make.bottom.equalToSuperview()
-            make.left.equalTo(labelRatingDishes.snp.left)
-            make.right.equalTo(imageViewTopArrow.snp.left).inset(-15)
-        }
-        
-        //MARK: -Second
-        
-        let rateClientView: UIView = {
-            let view = UIView()
-            let gesture = UITapGestureRecognizer(target: self, action: #selector(showClientRating))
-            view.addGestureRecognizer(gesture)
-            view.backgroundColor = .clear
-            return view
-        }()
-        secondView.addSubview(rateClientView)
-        rateClientView.snp.makeConstraints { make in
-            make.top.equalTo(rateDishesView.snp.bottom)
-            make.left.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
-        
-        let imageViewTime: UIImageView = {
-            let image: UIImage = .time
-            let imageView = UIImageView(image: image)
-            return imageView
-        }()
-        rateClientView.addSubview(imageViewTime)
-        imageViewTime.snp.makeConstraints { make in
-            make.height.width.equalTo(29)
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
-        }
-        let labelRatingClient = generateLaels(text: "Рейтинг клиентов", fonc: .systemFont(ofSize: 18, weight: .regular), textColor: .TC)
-        rateClientView.addSubview(labelRatingClient)
-        labelRatingClient.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalTo(imageViewColocol.snp.right).inset(-10)
-        }
-        
-        let imageViewBotArrow: UIImageView = {
-            let image: UIImage = .arrow
-            let imageView = UIImageView(image: image)
-            return imageView
-        }()
-        rateClientView.addSubview(imageViewBotArrow)
-        imageViewBotArrow.snp.makeConstraints { make in
-            make.width.equalTo(10)
-            make.height.equalTo(18)
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(10)
-        }
+       
         
     }
     
