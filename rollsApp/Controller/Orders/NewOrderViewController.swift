@@ -55,7 +55,6 @@ class NewOrderViewController: UIViewController {
         self.view = mainView
         settingsLottie()
         returnClearView()
-        
     }
     
     private func returnClearView() {
