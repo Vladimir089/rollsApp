@@ -48,6 +48,7 @@ class OrderViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         handleInactivity()
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     let timePicker: UIDatePicker = {

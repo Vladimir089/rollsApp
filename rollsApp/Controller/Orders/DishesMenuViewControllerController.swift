@@ -78,15 +78,13 @@ class DishesMenuViewControllerController: UIViewController {
     
     func createMenu() {
 
-       
-        
         let hideView: UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 1)
-            view.layer.cornerRadius = 1
+            view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 0.4)
+            view.layer.cornerRadius = 2.5
             return view
         }()
-        
+
         view.addSubview(hideView)
         hideView.snp.makeConstraints { make in
             if UIDevice.current.userInterfaceIdiom == .pad {
@@ -95,13 +93,11 @@ class DishesMenuViewControllerController: UIViewController {
                 make.centerX.equalToSuperview()
                 make.top.equalToSuperview()
             } else {
-                make.height.equalTo(2)
-                make.width.equalTo(55)
+                make.height.equalTo(5)
+                make.width.equalTo(36)
                 make.centerX.equalToSuperview()
                 make.top.equalToSuperview().inset(20)
             }
-
-           
         }
         
         collectionView = {

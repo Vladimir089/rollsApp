@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import Lottie
 
 //MARK: -Protocol
 
@@ -33,6 +33,8 @@ class NewOrderView: UIView {
     var oplataSegmentedControl: UISegmentedControl?
     var createOrderButton: UIButton?
     let itemsForSegmented = ["Перевод", "Наличка", "На кассе"]
+    lazy var animationView = UIView()
+    var animationViewLottie: LottieAnimationView = .init()
 
     var oldAdress = ""
     
@@ -74,15 +76,15 @@ class NewOrderView: UIView {
         
         let hideView: UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 1)
-            view.layer.cornerRadius = 1
+            view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 0.4)
+            view.layer.cornerRadius = 2.5
             return view
         }()
         
         addSubview(hideView)
         hideView.snp.makeConstraints { make in
-            make.height.equalTo(2)
-            make.width.equalTo(55)
+            make.height.equalTo(5)
+            make.width.equalTo(36)
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(20)
         }
@@ -299,13 +301,50 @@ class NewOrderView: UIView {
             make.left.right.equalToSuperview()
             make.top.equalTo((createOrderButton?.snp.bottom)!).inset(-15)
         }
+        settingsLottie()
+    }
+    
+    private func settingsLottie() {
         
-       
+        animationView.backgroundColor = .white
+        animationView.layer.cornerRadius = 16
+        animationView.layer.shadowColor = UIColor.black.cgColor
+        animationView.layer.shadowOpacity = 0.25
+        animationView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        animationView.layer.shadowRadius = 4
+        animationView.layer.masksToBounds = false
+        addSubview(animationView)
+        animationView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(40)
+            make.height.equalTo(400)
+            make.center.equalToSuperview()
+        }
+        animationView.alpha = 0
         
         
+      
+        animationViewLottie.animation = LottieAnimation.named("Done")
+        animationViewLottie.loopMode = .loop
+        animationView.addSubview(animationViewLottie)
+        animationViewLottie.snp.makeConstraints({ make in
+            make.centerX.centerY.equalToSuperview()
+            make.height.width.equalTo(300)
+        })
         
+        let label = UILabel()
+        label.textColor = .systemGreen.withAlphaComponent(0.4)
+        label.text = "Заказ успешно\nсоздан"
+        label.numberOfLines = 2
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        animationView.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(20)
+            make.bottom.equalTo(animationViewLottie.snp.bottom)
+        }
         
     }
+    
     
     func butonIsEnabled() {
         if menuItemsArr.count != 0 {

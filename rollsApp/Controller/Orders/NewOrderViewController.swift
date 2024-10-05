@@ -27,8 +27,6 @@ class NewOrderViewController: UIViewController {
     var mainView: NewOrderView?
     weak var delegate: OrderViewControllerDelegate?
     
-    private lazy var animationView = UIView()
-    private var animationViewLottie: LottieAnimationView = .init()
     var vcDishes = DishesMenuViewControllerController()
     var isMediumPage = false //если нажата кнопка нового заказа из меню
     
@@ -53,7 +51,6 @@ class NewOrderViewController: UIViewController {
         mainView = NewOrderView()
         mainView?.delegate = self
         self.view = mainView
-        settingsLottie()
         returnClearView()
     }
     
@@ -69,47 +66,7 @@ class NewOrderViewController: UIViewController {
  
     }
     
-    private func settingsLottie() {
-        
-        animationView.backgroundColor = .white
-        animationView.layer.cornerRadius = 16
-        animationView.layer.shadowColor = UIColor.black.cgColor
-        animationView.layer.shadowOpacity = 0.25
-        animationView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        animationView.layer.shadowRadius = 4
-        animationView.layer.masksToBounds = false
-        view.addSubview(animationView)
-        animationView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(40)
-            make.height.equalTo(400)
-            make.center.equalToSuperview()
-        }
-        animationView.alpha = 0
-        
-        
-      
-        animationViewLottie.animation = LottieAnimation.named("Done")
-        animationViewLottie.loopMode = .loop
-        animationView.addSubview(animationViewLottie)
-        animationViewLottie.snp.makeConstraints({ make in
-            make.centerX.centerY.equalToSuperview()
-            make.height.width.equalTo(300)
-        })
-        
-        let label = UILabel()
-        label.textColor = .systemGreen.withAlphaComponent(0.4)
-        label.text = "Заказ успешно\nсоздан"
-        label.numberOfLines = 2
-        label.font = .systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .center
-        animationView.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(20)
-            make.bottom.equalTo(animationViewLottie.snp.bottom)
-        }
-        
-    }
-    
+   
     
     deinit {
         if UIDevice.current.userInterfaceIdiom != .pad {
@@ -229,15 +186,17 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
             }
           
         } else {
+            
             UIView.animate(withDuration: 0.4) {
-                self.animationView.alpha = 1
-                self.animationViewLottie.play()
+                self.mainView?.animationView.alpha = 1
+                self.mainView?.animationViewLottie.play()
             }
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 
                 UIView.animate(withDuration: 0.3) {
-                    self.animationView.alpha = 0
-                    self.animationViewLottie.stop()
+                    self.mainView?.animationView.alpha = 0
+                    self.mainView?.animationViewLottie.stop()
                 }
                 
                 menuItemsArr.removeAll()
@@ -248,6 +207,7 @@ extension NewOrderViewController: NewOrderViewControllerShowWCDelegate {
                 self.mainView?.delegate = self
                 self.view = self.mainView
                 self.returnClearView()
+                self.dismiss(animated: true)
             }
         } 
        
