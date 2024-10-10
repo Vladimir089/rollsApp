@@ -43,6 +43,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         newNavController.tabBarItem.image = UIImage.newOrderTap.resize(targetSize: CGSize(width: 30, height: 30))
         settingsVC.title = "Настройки"
         settingsVC.tabBarItem.image = UIImage.settings.resize(targetSize: CGSize(width: 30, height: 30))
+        
         let controllers = [newNavController, orderVC, settingsVC]
         self.viewControllers = controllers
         tabBar.backgroundColor = .tabBar

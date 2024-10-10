@@ -29,6 +29,7 @@ class NewOrderViewController: UIViewController {
     
     var vcDishes = DishesMenuViewControllerController()
     var isMediumPage = false //если нажата кнопка нового заказа из меню
+    var isModal = false 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,6 +41,8 @@ class NewOrderViewController: UIViewController {
                 vcDishes.delegate = self.mainView
                 let newNavController = UINavigationController(rootViewController: vcDishes)
                 splitVC.showDetailViewController(newNavController, sender: nil)
+                
+            
             }
         }
        
@@ -47,7 +50,7 @@ class NewOrderViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(menuItemsArr)
+        //print(menuItemsArr)
         mainView = NewOrderView()
         mainView?.delegate = self
         self.view = mainView
@@ -63,7 +66,17 @@ class NewOrderViewController: UIViewController {
         self.mainView = NewOrderView()
         self.mainView?.delegate = self
         self.view = self.mainView
- 
+        
+        if let splitVC = self.splitViewController {
+            mainView?.hideIphoneComponents = true
+            self.isModal = false
+        }
+        
+        mainView?.isModal = isModal
+        mainView?.checkIphone()
+       
+       
+        
     }
     
    

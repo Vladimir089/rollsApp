@@ -197,8 +197,9 @@ class OrderViewController: UIViewController {
         
         
         let vc = NewOrderViewController()
+        vc.isModal = true
         vc.delegate = self
-        
+       
         
         if let splitVC = self.splitViewController {
             menuItemsArr.removeAll()

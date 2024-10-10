@@ -23,7 +23,7 @@ class NewOrderView: UIView {
     let contentView = UIView()
     var phoneTextField: UITextField?
     var tableView: UITableView?
-    var addButton: UIButton?
+    lazy var addButton = UIButton(type: .system)
     weak var delegate: NewOrderViewControllerShowWCDelegate?
     var adressButton: UIButton?
     var adressTextField: UITextField?
@@ -37,7 +37,9 @@ class NewOrderView: UIView {
     var animationViewLottie: LottieAnimationView = .init()
 
     var oldAdress = ""
+    var hideIphoneComponents = false
     
+    var isModal = false
     //MARK: -init
     
     override init(frame: CGRect) {
@@ -65,7 +67,27 @@ class NewOrderView: UIView {
     
     //MARK: -Func create interface
     
-    private func settingsView() {
+    private lazy var  hideView = UIView()
+    private lazy var newOrderLabel = generateLabel(text: "Новый Заказ", font: .systemFont(ofSize: 41, weight: .bold), isUnderlining: false, textColor: .TC)
+    
+    func checkIphone() {
+        if hideIphoneComponents == true {
+            hideView.isHidden = true
+            addButton.isEnabled = false
+            
+            layoutIfNeeded()
+        }
+        if isModal == true {
+            newOrderLabel.snp.remakeConstraints { make in
+                make.left.equalToSuperview().inset(15)
+                make.top.equalToSuperview().inset(50)
+            }
+            layoutIfNeeded()
+        }
+        
+    }
+    
+     func settingsView() {
         backgroundColor = .settingBG
         
         let tapInViewGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -74,12 +96,14 @@ class NewOrderView: UIView {
         scrollView.isUserInteractionEnabled = true
         contentView.isUserInteractionEnabled = true
         
-        let hideView: UIView = {
+        hideView = {
             let view = UIView()
             view.backgroundColor = UIColor(red: 98/255, green: 119/255, blue: 128/255, alpha: 0.4)
             view.layer.cornerRadius = 2.5
             return view
         }()
+        hideView.isHidden = hideIphoneComponents
+
         
         addSubview(hideView)
         hideView.snp.makeConstraints { make in
@@ -89,12 +113,17 @@ class NewOrderView: UIView {
             make.top.equalToSuperview().inset(20)
         }
         
-        let newOrderLabel = generateLabel(text: "Новый Заказ", font: .systemFont(ofSize: 41, weight: .bold), isUnderlining: false, textColor: .TC)
+        
         addSubview(newOrderLabel)
-        newOrderLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(15)
-            make.top.equalToSuperview().inset(50)
-        }
+         newOrderLabel.snp.makeConstraints { make in
+             make.left.equalToSuperview().inset(15)
+             make.top.equalToSuperview().inset(75)
+         }
+        
+        
+       
+        
+        
         
         scrollView.showsVerticalScrollIndicator = false
         addSubview(scrollView)
@@ -647,11 +676,12 @@ extension NewOrderView: UITableViewDelegate, UITableViewDataSource {
                 button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
                 return button
             }()
-            cell.addSubview(addButton!)
-            addButton?.snp.makeConstraints { make in
+            cell.addSubview(addButton)
+            addButton.snp.makeConstraints { make in
                 make.left.equalToSuperview().inset(13)
                 make.centerY.equalToSuperview()
             }
+            addButton.isEnabled = hideIphoneComponents == true ? false : true
             cell.accessoryView = addButton
         } else {
             let delButton: UIButton = {

@@ -45,6 +45,7 @@ class LoginViewController: UIViewController {
             let splitVC = UISplitViewController()
             splitVC.viewControllers = [orderNavController]
             splitVC.preferredDisplayMode = .allVisible
+            splitVC.preferredPrimaryColumnWidthFraction = 1
             
             if let window = UIApplication.shared.windows.first {
                 window.rootViewController = splitVC
@@ -231,8 +232,10 @@ class LoginViewController: UIViewController {
     
     //MARK: -objc func
     
+    
+    
     @objc func keyboardWillShow(notification: Notification) {
-        self.view.frame.origin.y = -100
+        self.view.frame.origin.y = -330
     }
     
     @objc func keyboardWillHide(notification: Notification) {
@@ -246,6 +249,7 @@ class LoginViewController: UIViewController {
     
     @objc func goLogin() {
         
+        view.endEditing(true)
         animationView.animation = LottieAnimation.named("loading")
         animationView.loopMode = .loop
         animationView.play()
